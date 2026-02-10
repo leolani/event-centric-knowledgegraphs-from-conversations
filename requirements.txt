@@ -1,0 +1,5 @@
+cltl.brain
+cltl.combot
+pydantic
+openai
+dateutil
