@@ -230,3 +230,15 @@ def get_capsules_from_turn (turn_data):
             }
             capsules.append(capsule)
     return capsules
+
+
+def get_triples_from_turn(turn_data):
+    turn = turn_data['Input']
+    event_data = turn_data['Output']
+    turn_id = turn['turn']
+    triples = None
+    if event_data:
+        event_id = random.random()
+        triples = get_triples(event_data, event_id)
+    return triples
+

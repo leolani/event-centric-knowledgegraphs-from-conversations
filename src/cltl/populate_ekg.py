@@ -50,7 +50,7 @@ def main():
     # Create brain connection
     brain = LongTermMemory(address="http://localhost:7200/repositories/diabetes",  # Location to save accumulated graph
                            log_dir=graph_filepath,  # Location to save step-wise graphs
-                           clear_all=False)  # To start from an empty brain
+                           clear_all=True)  # To start from an empty brain
 
     # Loop through capsules
     all_capsules = []
