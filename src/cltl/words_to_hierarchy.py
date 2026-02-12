@@ -126,7 +126,8 @@ def build_hybrid_tree_with_single_word_parents(phrases, k=3, model_name="all-Min
                 remaining_multi.append(mw)
 
         # Build subtree for remaining multi-word phrases (if any)
-        if remaining_multi:
+        if len(remaining_multi)>1:
+           # print("Building subtree for remaining multi-word phrases:", remaining_multi)
             sub_X = model.encode(remaining_multi, normalize_embeddings=True)
             Z = linkage(sub_X, method="ward")
             root, _ = to_tree(Z, rd=True)
