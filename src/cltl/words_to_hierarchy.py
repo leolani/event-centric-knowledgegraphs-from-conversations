@@ -190,8 +190,8 @@ def draw_tree(G, output_dir, name):
     pos = nx.nx_agraph.graphviz_layout(G, prog="dot")
     labels = nx.get_node_attributes(G, "label")
 
-    plt.figure(figsize=(18, 14))
-    plt.figure(figsize=(100, 80))
+    #plt.figure(figsize=(18, 14))
+    plt.figure(figsize=(50, 40))
     nx.draw(G, pos, with_labels=False, node_size=400)
 
     for node, (x, y) in pos.items():
@@ -206,86 +206,12 @@ def draw_tree(G, output_dir, name):
         )
 
     plt.axis("off")
-  #  nx.draw_networkx_labels(G, pos, labels, font_size=9)
     plt.title("Hybrid Macro Categories + Subtrees")
    # plt.tight_layout()
     file = name+".png"
     path = os.path.join(output_dir, file)
     plt.savefig(path, format="png", bbox_inches="tight")
-   # plt.show()
-   plt.close()
-#
-# def render_subgraph_to_svg(G, path):
-#     pos = nx.nx_agraph.graphviz_layout(G, prog="dot")
-#     labels = nx.get_node_attributes(G, "label")
-#
-#     plt.figure(figsize=(18, 14))
-#     nx.draw(G, pos, with_labels=False, node_size=2000)
-#
-#     for node, (x, y) in pos.items():
-#         plt.text(x, y, labels.get(node, ""), fontsize=9, ha="center", va="center")
-#
-#     plt.axis("off")
-#     plt.tight_layout()
-#     plt.savefig(path, format="png", bbox_inches="tight")
-#     plt.close()
-#
-#
-# def paginate_subtree_by_depth(G, root, max_depth=3):
-#     pages = []
-#     current_nodes = {root}
-#     frontier = [(root, 0)]
-#
-#     while frontier:
-#         node, depth = frontier.pop(0)
-#         if depth < max_depth:
-#             for child in G.successors(node):
-#                 current_nodes.add(child)
-#                 frontier.append((child, depth + 1))
-#
-#     pages.append(G.subgraph(current_nodes).copy())
-#     return pages
-#
-#
-# def paginate_subtree_by_size(G, root, max_nodes=100):
-#     nodes = list(nx.descendants(G, root) | {root})
-#     pages = []
-#
-#     for i in range(0, len(nodes), max_nodes):
-#         chunk = nodes[i:i + max_nodes]
-#         pages.append(G.subgraph(chunk).copy())
-#
-#     return pages
-#
-#
-# def export_forest_to_html(G, output_dir="forest_html", max_nodes=100):
-#     os.makedirs(output_dir, exist_ok=True)
-#
-#     roots = [n for n in G.nodes() if G.in_degree(n) == 0]
-#     index_links = []
-#
-#     for i, root in enumerate(roots, 1):
-#         label = G.nodes[root].get("label", root)
-#         pages = paginate_subtree_by_size(G, root, max_nodes=max_nodes)
-#
-#         for j, subG in enumerate(pages, 1):
-#             svg_path = os.path.join(output_dir, f"tree_{i}_page_{j}.svg")
-#             html_path = os.path.join(output_dir, f"tree_{i}_page_{j}.html")
-#
-#             render_subgraph_to_svg(subG, svg_path)
-#             svg_to_html(svg_path, html_path, title=f"{label} (page {j})")
-#
-#             index_links.append((label, f"tree_{i}_page_{j}.html"))
-#
-#     # Index page
-#     index_html = "<h1>Hierarchy Browser</h1><ul>"
-#     for label, link in index_links:
-#         index_html += f'<li><a href="{link}">{label}</a></li>'
-#     index_html += "</ul>"
-#
-#     with open(os.path.join(output_dir, "index.html"), "w") as f:
-#         f.write(index_html)
-
+    plt.close()
 
 if __name__ == "__main__":
     phrases = [

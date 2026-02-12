@@ -1,5 +1,11 @@
 cltl.brain
 cltl.combot
+torch==2.2.2
+transformers==4.51.3
 pydantic
 openai
-dateutil
+sentence_transformers
+numpy
+scipy
+matplotlib
+pygraphviz

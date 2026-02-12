@@ -60,28 +60,9 @@ def get_statistics(annotated_conversations):
                                 time_dict[time] = 1
     return activity_dict, agent_dict, patient_dict, instrument_dict, manner_dict, location_dict, time_dict
 
-def extract_subclass_relations(dictionary:{}):
-    # create a hierarchy for the items in a dictionary by subtyping items
-    # based on the similarity with other items such that shorter strings are the parents of longer strings
-    words = list(dictionary.keys())
-    hierarchy = infer_word_hierarchy(words)
-    print(hierarchy)
-
-def main():
-
-    output_dir = "/Users/piek/Desktop/Diabetes/code/event-centric-knowledgegraphs-from-conversations/output"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    f = open("/Users/piek/Desktop/Diabetes/load_datasets/diabetes/event_srl.json", "r")
-    annotated_conversations = json.load(f)
-    print(len(annotated_conversations))
-    activity_dict, agent_dict, patient_dict, instrument_dict, manner_dict, location_dict, time_dict = get_statistics(annotated_conversations)
-
-    name = "activities"
-    activities = list(activity_dict.keys())
-    #G = tree.build_hybrid_tree(activities, k=3)
-    G = tree.build_hybrid_tree_with_single_word_parents(activities, k=10)
+def get_analysis_for_srl_dict(srl_dict, name, output_dir, threshold = 2):
+    phrases = list(srl_dict.keys())
+    G = tree.build_hybrid_tree_with_single_word_parents(phrases, k=10)
     tree.draw_tree(G, output_dir, name)
 
     roots = tree.get_roots(G)
@@ -97,15 +78,30 @@ def main():
     cluster_nodes = [n for n, d in G.nodes(data=True) if d.get("type") == "cluster"]
     macro_nodes = [n for n, d in G.nodes(data=True) if d.get("type") == "macro"]
     depth = tree.get_tree_depth(G, root=None)
-    print(name)
-    print("Total nodes:", total_nodes)
-    print("Leaves:", len(leaf_nodes))
-    print("Clusters:", len(cluster_nodes))
-    print("Macros:", len(macro_nodes))
-    print("Edges:", total_edges)
-    print("Average depth:", depth)
+
+    stats = {"name": name, "Total phrases": len(phrases), "Phrase counts": srl_dict, "Leaf nodes": len(leaf_nodes), "Cluster nodes": len(cluster_nodes), "Macro nodes": len(macro_nodes), "Total edges": total_edges, "Average depth": depth}
+    f = open(output_dir+"/"+name+".json", "w")
+    json.dump(stats, f)
 
 
+def main():
+
+    output_dir = "/Users/piek/Desktop/Diabetes/code/event-centric-knowledgegraphs-from-conversations/output"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    f = open("/Users/piek/Desktop/Diabetes/load_datasets/diabetes/event_srl.json", "r")
+    annotated_conversations = json.load(f)
+    print(len(annotated_conversations))
+    activity_dict, agent_dict, patient_dict, instrument_dict, manner_dict, location_dict, time_dict = get_statistics(annotated_conversations)
+
+    get_analysis_for_srl_dict(activity_dict, "activities", output_dir)
+    # get_analysis_for_srl_dict(agent_dict, "agents", output_dir)
+    # get_analysis_for_srl_dict(patient_dict, "patients", output_dir)
+    # get_analysis_for_srl_dict(instrument_dict, "instruments", output_dir)
+    # get_analysis_for_srl_dict(manner_dict, "manners", output_dir)
+    # get_analysis_for_srl_dict(location_dict, "locations", output_dir)
+    # get_analysis_for_srl_dict(time_dict, "times", output_dir)
 
 if __name__ == '__main__':
     main()
