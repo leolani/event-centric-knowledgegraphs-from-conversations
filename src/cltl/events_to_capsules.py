@@ -224,8 +224,8 @@ def get_capsules_from_turn (turn_data):
                 "subject" : triple["subject"],
                 "predicate" : triple["predicate"],
                 "object" : triple["object"],
-                "perspective": get_dummy_perspective(),
-                 "timestamp": chat_date,
+                "perspective":  get_dummy_perspective(),
+                 "timestamp": datetime.combine(chat_date, datetime.now().time()),
                  "context_id": event_id
             }
             capsules.append(capsule)
