@@ -69,7 +69,7 @@ def read_conversations_diabetes(path_to_data):
 
 
 def main():
-    filepath = "/Users/piek/Desktop/Diabetes/load_datasets/diabetes/conversations.json"
+    filepath = "../../data/conversations.json"
     f = open(filepath, "r")
     conversations = json.load(f)
 
@@ -80,24 +80,15 @@ def main():
         #annotations = llm_extractor.annotate_speaker1_conversation(conversation)
         ### Both human turns and agent turns are annotated
         annotations = llm_extractor.annotate_all_turns_in_conversation(conversation)
-        # print('annotations', annotations)
         all_annotations.append(annotations)
-        #break
-
-
-    f = open("/Users/piek/Desktop/Diabetes/load_datasets/diabetes/event_data2.pkl", "wb")
-    pickle.dump(all_annotations, f)
-
 
     # subclass JSONEncoder
     class EventEncoder(JSONEncoder):
         def default(self, o):
             return o.__dict__
 
-
-    f = open("/Users/piek/Desktop/Diabetes/load_datasets/diabetes/event_srl2.json", "w")
+    f = open("../../data/event_srl.json", "w")
     json.dump(all_annotations, f, indent=4, cls=EventEncoder)
-
 
 
 if __name__ == "__main__":

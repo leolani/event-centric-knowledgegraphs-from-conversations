@@ -102,7 +102,7 @@ def deep_copy_without_circular(obj, memo=None):
 
 
 def main():
-    f = open("/Users/piek/Desktop/Diabetes/load_datasets/diabetes/event_srl.json", "r")
+    f = open("../../data/event_srl.json", "r")
     annotated_conversations = json.load(f)
     print(len(annotated_conversations))
     print(annotated_conversations[0])
@@ -110,7 +110,7 @@ def main():
     print(len(scenarios))
 
     # Create folders
-    scenario_filepath = Path('/Users/piek/Desktop/Diabetes/load_datasets/diabetes/')
+    scenario_filepath = Path('../../data/')
     graph_filepath = scenario_filepath / Path('graph/')
     graph_filepath.mkdir(parents=True, exist_ok=True)
 

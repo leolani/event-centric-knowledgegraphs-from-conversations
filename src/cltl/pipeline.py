@@ -52,7 +52,7 @@ _LABEL2ID ={'open_question_factual': 0,
 
 def main():
     # Path to your fine-tuned model directory
-    local_model_path = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta"
+    local_model_path = "cltl/midas-da-xlmroberta"
 
     # Load tokenizer and model
 
