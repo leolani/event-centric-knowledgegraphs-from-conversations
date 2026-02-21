@@ -114,13 +114,24 @@ def get_analysis_for_srl_dict(srl_dict, name, output_dir):
     stats = {"name": name, "Total phrases": len(phrases), "Phrase counts": srl_dict, "Leaf nodes": len(leaf_nodes), "Cluster nodes": len(cluster_nodes), "Macro nodes": len(macro_nodes), "Macro nodes depth": macro_nodes_depths, "Total nodes": total_nodes, "Total edges": total_edges}
     f = open(output_dir+"/"+name+".json", "w")
     json.dump(stats, f, indent=4)
+    f.close()
 
-    tree.draw_tree(G, output_dir, name)
-    roots = tree.get_roots(G)
-    for root in roots:
-        subtree = tree.extract_subtree_with_depth(G, root, max_depth=0)
-        label = name+"_"+subtree.nodes[root].get("label")
-        tree.draw_tree(subtree, output_dir, label)
+    f = open(output_dir+"/"+name+".ttl", "w")
+    triples = tree.get_subtype_relations(G)
+    for triple in triples:
+        f.write(tree.triple_to_turtle(triple)+"\n")
+    f.close()
+
+    f = open(output_dir+"/"+name+"_triples.json", "w")
+    json.dump(triples, f, indent=4)
+    f.close()
+
+    # tree.draw_tree(G, output_dir, name)
+    # roots = tree.get_roots(G)
+    # for root in roots:
+    #     subtree = tree.extract_subtree_with_depth(G, root, max_depth=0)
+    #     label = name+"_"+subtree.nodes[root].get("label")
+    #     tree.draw_tree(subtree, output_dir, label)
 
 
 

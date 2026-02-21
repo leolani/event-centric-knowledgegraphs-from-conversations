@@ -189,7 +189,7 @@ def get_tree_depth(G, root):
 
 def draw_tree(G, output_dir, name):
     pos = nx.nx_agraph.graphviz_layout(G, prog="dot")
-    labels = nx.get_node_attributes(G, "label")
+    labels = nx.get_node_attributes(G, name="label")
 
     #plt.figure(figsize=(18, 14))
     plt.figure(figsize=(50, 40))
@@ -214,6 +214,33 @@ def draw_tree(G, output_dir, name):
     plt.savefig(path, format="png", bbox_inches="tight")
     plt.close()
 
+
+def clean_label(label):
+    # Remove the count pattern " (number)" from the end of the label
+    return re.sub(r'\s*\(\d+\)$', '', label)
+
+
+def get_subtype_relations(G):
+    triples = []
+    for parent, child in G.edges():
+        # Get node types and labels
+        parent_type = G.nodes[parent].get('type', '')
+        child_type = G.nodes[child].get('type', '')
+        parent_label = G.nodes[parent].get('label', parent)
+        child_label = G.nodes[child].get('label', child)
+
+        parent_label = clean_label(parent_label)
+        parent_label = parent_label.replace(" ", "_")
+        child_label = clean_label(child_label)
+        child_label = child_label.replace(" ", "_")
+        triple = {"subject": "n2mu:"+child_label, "predicate": "a", "object":"n2mu:"+parent_label}
+
+        triples.append(triple)
+    return triples
+
+def triple_to_turtle(triple):
+    return f"""{triple['subject']} a {triple['object']} ."""
+
 if __name__ == "__main__":
     phrases = [
         "neural network",
@@ -236,10 +263,14 @@ if __name__ == "__main__":
         os.makedirs(output_dir)
 
     G = build_hybrid_tree(phrases, k=3)
-    draw_tree(G, output_dir, "test")
+    # draw_tree(G, output_dir, "test")
+    #
+    # roots = get_roots(G)
+    # for root in roots:
+    #     subtree = extract_subtree_with_depth(G, root, max_depth=0)
+    #     label = subtree.nodes[root].get("label")
+    #     draw_tree(subtree, output_dir, label)
 
-    roots = get_roots(G)
-    for root in roots:
-        subtree = extract_subtree_with_depth(G, root, max_depth=0)
-        label = subtree.nodes[root].get("label")
-        draw_tree(subtree, output_dir, label)
+    triples = get_subtype_relations(G)
+    for triple in triples:
+        print(triple)
