@@ -94,11 +94,11 @@ def get_statistics(annotated_conversations, threshold=3):
 
     return trimmed_activity_dict, trimmed_agent_dict, trimmed_patient_dict, trimmed_instrument_dict, trimmed_manner_dict, trimmed_location_dict, trimmed_time_dict
 
-def get_analysis_for_srl_dict(srl_dict, name, output_dir):
+def get_analysis_for_srl_dict(srl_dict, name, output_dir, head_first = True):
     phrases = list(srl_dict.keys())
     print(name)
     print(phrases)
-    G = tree.build_hybrid_tree_with_single_word_parents(phrases, k=10)
+    G = tree.build_hybrid_tree_with_single_word_parents(phrases, k=10, head_first=head_first, labels_as_ids=True)
     total_nodes = G.number_of_nodes()
     total_edges = G.number_of_edges()
     print(name, total_nodes, total_edges)
@@ -118,7 +118,10 @@ def get_analysis_for_srl_dict(srl_dict, name, output_dir):
 
     f = open(output_dir+"/"+name+".ttl", "w")
     triples = tree.get_subtype_relations(G)
+    print('Nr of triples: ', len(triples))
+
     for triple in triples:
+        #print(tree.print_parent_child(triple))
         f.write(tree.triple_to_turtle(triple)+"\n")
     f.close()
 
@@ -126,12 +129,12 @@ def get_analysis_for_srl_dict(srl_dict, name, output_dir):
     json.dump(triples, f, indent=4)
     f.close()
 
-    # tree.draw_tree(G, output_dir, name)
-    # roots = tree.get_roots(G)
-    # for root in roots:
-    #     subtree = tree.extract_subtree_with_depth(G, root, max_depth=0)
-    #     label = name+"_"+subtree.nodes[root].get("label")
-    #     tree.draw_tree(subtree, output_dir, label)
+    tree.draw_tree(G, output_dir, name)
+    roots = tree.get_roots(G)
+    for root in roots:
+        subtree = tree.extract_subtree_with_depth(G, root, max_depth=0)
+        label = name+"_"+subtree.nodes[root].get("label")
+        tree.draw_tree(subtree, output_dir, label)
 
 
 
@@ -147,19 +150,19 @@ def main():
     activity_dict, agent_dict, patient_dict, instrument_dict, manner_dict, location_dict, time_dict = get_statistics(annotated_conversations, threshold=threshold)
 
     if len(activity_dict)>0:
-        get_analysis_for_srl_dict(activity_dict, "activities_"+str(threshold), output_dir)
+        get_analysis_for_srl_dict(activity_dict, "activities_"+str(threshold), output_dir, head_first = True)
     if len(agent_dict)>0:
-        get_analysis_for_srl_dict(agent_dict, "agents_"+str(threshold), output_dir)
+        get_analysis_for_srl_dict(agent_dict, "agents_"+str(threshold), output_dir, head_first=True)
     if len(patient_dict)>0:
-        get_analysis_for_srl_dict(patient_dict, "patients_"+str(threshold), output_dir)
+        get_analysis_for_srl_dict(patient_dict, "patients_"+str(threshold), output_dir, head_first = True)
     if len(instrument_dict)>0:
-        get_analysis_for_srl_dict(instrument_dict, "instruments_"+str(threshold), output_dir)
+        get_analysis_for_srl_dict(instrument_dict, "instruments_"+str(threshold), output_dir, head_first = True)
     if len(manner_dict)>0:
-        get_analysis_for_srl_dict(manner_dict, "manners_"+str(threshold), output_dir)
+        get_analysis_for_srl_dict(manner_dict, "manners_"+str(threshold), output_dir, head_first = True)
     if len(location_dict)>0:
-        get_analysis_for_srl_dict(location_dict, "locations_"+str(threshold), output_dir)
-    if len(time_dict)>0:
-        get_analysis_for_srl_dict(time_dict, "times_"+str(threshold), output_dir)
+        get_analysis_for_srl_dict(location_dict, "locations_"+str(threshold), output_dir, head_first = True)
+    # if len(time_dict)>0:
+    #     get_analysis_for_srl_dict(time_dict, "times_"+str(threshold), output_dir, head_first = True)
 
 if __name__ == '__main__':
     main()

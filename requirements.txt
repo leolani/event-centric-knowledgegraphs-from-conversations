@@ -9,3 +9,4 @@ numpy
 scipy
 matplotlib
 pygraphviz
+nltk==3.9.2

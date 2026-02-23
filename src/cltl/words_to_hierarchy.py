@@ -1,5 +1,6 @@
+import wordnet as wn
 from sentence_transformers import SentenceTransformer
-from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import AgglomerativeClustering, DBSCAN, HDBSCAN
 from scipy.cluster.hierarchy import linkage, to_tree
 from sklearn.feature_extraction.text import TfidfVectorizer
 import networkx as nx
@@ -26,7 +27,26 @@ def build_hybrid_tree(phrases, k=3, model_name="all-MiniLM-L6-v2"):
     X = model.encode(phrases, normalize_embeddings=True)
 
     # Stage 1: Macro clustering
+
     macro_labels = AgglomerativeClustering(n_clusters=k, linkage="ward").fit_predict(X)
+    # linkage{‘ward’, ‘complete’, ‘average’, ‘single’}, default=’ward’
+    # Which linkage criterion to use. The linkage criterion determines which distance to use between sets of observation.
+    # The algorithm will merge the pairs of cluster that minimize this criterion.
+    #
+    # ‘ward’ minimizes the variance of the clusters being merged.
+    #
+    # ‘average’ uses the average of the distances of each observation of the two sets.
+    #
+    # ‘complete’ or ‘maximum’ linkage uses the maximum distances between all observations of the two sets.
+    #
+    # ‘single’ uses the minimum of the distances between all observations of the two sets.
+
+    ### Other clustering techniques
+    # clustering = DBSCAN(eps=3, min_samples=2).fit(X)
+    # clustering = HDBSCAN(copy=True, min_cluster_size=20).fit(X)
+    # macro_labels = clustering.labels_
+
+    # print('macro_labels are:', macro_labels)
     macro_groups = {}
     for phrase, label in zip(phrases, macro_labels):
         macro_groups.setdefault(int(label), []).append(phrase)
@@ -82,13 +102,18 @@ def build_hybrid_tree(phrases, k=3, model_name="all-MiniLM-L6-v2"):
 
     return G
 
-def build_hybrid_tree_with_single_word_parents(phrases, k=3, model_name="all-MiniLM-L6-v2"):
+def build_hybrid_tree_with_single_word_parents(phrases, k=3, model_name="all-MiniLM-L6-v2", use_wordnet=True, head_first=True, labels_as_ids=True):
     phrases = list(dict.fromkeys(normalize_phrase(p) for p in phrases))
     model = SentenceTransformer(model_name)
     X = model.encode(phrases, normalize_embeddings=True)
 
     # Macro clustering
     macro_labels = AgglomerativeClustering(n_clusters=k, linkage="ward").fit_predict(X)
+    ### Other clustering techniques
+    # clustering = DBSCAN(eps=3, min_samples=k).fit(X)
+    # clustering = HDBSCAN(copy=True, min_cluster_size=k).fit(X)
+    # macro_labels = clustering.labels_
+
     macro_groups = {}
     for phrase, label in zip(phrases, macro_labels):
         macro_groups.setdefault(int(label), []).append(phrase)
@@ -97,8 +122,21 @@ def build_hybrid_tree_with_single_word_parents(phrases, k=3, model_name="all-Min
     cluster_counter = [0]
 
     for macro_id, macro_phrases in macro_groups.items():
-        macro_node = f"macro_{macro_id}"
-        macro_label = extract_keywords(macro_phrases)
+
+        wn_label = None
+        # --- WordNet macro label ---
+        if use_wordnet:
+            wn_label = wn.lowest_common_hypernym(macro_phrases)
+
+        if not wn_label:
+            macro_label = extract_keywords(macro_phrases)
+        else:
+            macro_label = wn_label
+        if labels_as_ids:
+            macro_node = macro_label
+        else:
+            macro_node = f"macro_{macro_id}"
+
         if macro_node not in G:
             G.add_node(macro_node, label=f"{macro_label} ({len(macro_phrases)})", type="macro")
 
@@ -110,20 +148,20 @@ def build_hybrid_tree_with_single_word_parents(phrases, k=3, model_name="all-Min
         for sw in single_words:
             if sw not in G:
                 G.add_node(sw, label=sw, type="leaf")
-            G.add_edge(macro_node, sw)
+                G.add_edge(macro_node, sw)
 
         # Attach multi-word phrases to matching single-word parent if possible
         remaining_multi = []
         for mw in multi_words:
             matched = False
             for sw in single_words:
-                if sw in mw:
+                if (mw.startswith(sw) and head_first) or (mw.endswith(mw) and not head_first):
                     G.add_node(mw, label=mw, type="leaf")
                     G.add_edge(sw, mw)
                     matched = True
                     break
             if not matched:
-                remaining_multi.append(mw)
+               remaining_multi.append(mw)
 
         # Build subtree for remaining multi-word phrases (if any)
         if len(remaining_multi)>1:
@@ -149,17 +187,38 @@ def build_hybrid_tree_with_single_word_parents(phrases, k=3, model_name="all-Min
                 cluster_label = extract_keywords(leaf_phrases)
 
                 cluster_counter[0] += 1
-                node_id = f"{parent_id}_cluster_{cluster_counter[0]}"
+
+                if labels_as_ids:
+                    node_id = cluster_label
+                else:
+                    node_id = f"{parent_id}_cluster_{cluster_counter[0]}"
 
                 if node_id not in G:
-                    G.add_node(node_id, label=cluster_label, type="cluster")
-                    G.add_edge(parent_id, node_id)
-                    add_subtree(node.left, node_id)
-                    add_subtree(node.right, node_id)
+                    parent_label = G.nodes[parent_id].get("label", parent_id)
+                    if check_label_match(cluster_label, parent_label):
+                        ## We skip the child and add the grandchildren
+                        #print("Skipping child and adding grandchildren", cluster_label, parent_label)
+                        add_subtree(node.left, parent_id)
+                        add_subtree(node.right, parent_id)
+                    else:
+                        G.add_node(node_id, label=cluster_label, type="cluster")
+                        G.add_edge(parent_id, node_id)
+                        add_subtree(node.left, node_id)
+                        add_subtree(node.right, node_id)
 
             add_subtree(root, macro_node)
 
     return G
+
+def check_label_match(label1, label2):
+    labels1 = label1.replace(",", "").split(" ")
+    labels2 = label2.replace(",", "").split(" ")
+    match = True
+    for label in labels1:
+        if label not in labels2:
+            match = False
+            break
+    return match
 
 def get_roots(G):
     return [n for n in G.nodes() if G.in_degree(n) == 0]
@@ -191,8 +250,8 @@ def draw_tree(G, output_dir, name):
     pos = nx.nx_agraph.graphviz_layout(G, prog="dot")
     labels = nx.get_node_attributes(G, name="label")
 
-    #plt.figure(figsize=(18, 14))
-    plt.figure(figsize=(50, 40))
+    plt.figure(figsize=(18, 14))
+    #plt.figure(figsize=(50, 40))
     nx.draw(G, pos, with_labels=False, node_size=400)
 
     for node, (x, y) in pos.items():
@@ -233,13 +292,16 @@ def get_subtype_relations(G):
         parent_label = parent_label.replace(" ", "_")
         child_label = clean_label(child_label)
         child_label = child_label.replace(" ", "_")
-        triple = {"subject": "n2mu:"+child_label, "predicate": "a", "object":"n2mu:"+parent_label}
+        triple = {"subject": child_label, "predicate": "a", "object": parent_label}
 
         triples.append(triple)
     return triples
 
-def triple_to_turtle(triple):
-    return f"""{triple['subject']} a {triple['object']} ."""
+def triple_to_turtle(triple, ns="n2mu:"):
+    return f"""{ns}{triple['subject']} a {ns}{triple['object']} ."""
+
+def print_parent_child(triple, ns="n2mu:"):
+    return f"""{ns}{triple['object']} : {ns}{triple['subject']} ."""
 
 if __name__ == "__main__":
     phrases = [
