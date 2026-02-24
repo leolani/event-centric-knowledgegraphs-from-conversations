@@ -1,6 +1,6 @@
 # Ontology modeling using ChatGPT
 
-## Input
+## INPUT
 
 The input is a counted list of terms and phrases that make reference to activities in which a patient is involved and that are mentioned in a conversation between a patient and a caretaker.
 
@@ -11,7 +11,9 @@ These terms are extracted from:
 
 The activity phrases with counts are given to ChatGpt to derived a concept hierarchy as described below
 
-## Convert the phrases into a concept hiearchy
+## Convert the phrases into a concept hierarchy
+
+### T-BOX
 
 PROMPT: Create a conceptual hierarchy from the following phrases with their counts: "Phrase counts": {"gardening": 31, "walking": 25, "exercise": 20, "managing diabetes": 19,...etc...}
 
@@ -63,13 +65,20 @@ PROMPT: A fully merged OWL file importing OWL-Time
 
 PROMPT: Can you put these together in a single file
 
-PROMPT: A TBox + ABox instance dataset
+* Here’s a concrete OWL file:
 
-Perfect. You want a full OWL ontology with a TBox (schema) plus an ABox (instances/data). I can create a merged RDF/XML file with:
-* TBox – the class hierarchy from your previous ontology.
-* ABox – example individuals for each main class, including relationships.
 
-* Here’s a concrete OWL file with both TBox and ABox:
+COMMENT: Not all phrases are represented so prompt again to get maximal coverage:
+
+PROMPT: Can you expand the subclasses to capture as many of the following phrases as possible: "Phrase counts": { "gardening": 31, "walking": 25, "exercise": 20,..etc...}
+
+#### RESULTS
+
+The T-BOX results are saved in:
+
+* activities_chat_gpt_tbox.ttl
+
+### A-BOX
 
 If you want, I can expand this to a full dataset with dozens of individuals, linking:
 Symptoms → Measurements → Medication → Activities → Diet
@@ -80,10 +89,6 @@ Do you want me to produce that extended dataset?
 Do you want me to produce that extended dataset?
 
 PROMPT: yes
-
-COMMENT: Not all phrases are represented so prompt again for all:
-
-PROMPT: Can you expand the subclasses to capture as many of the following phrases as possible: "Phrase counts": { "gardening": 31, "walking": 25, "exercise": 20,..etc...}
 
 Below is a complete 5-patient × 7-day expanded ABox TTL file built against your supplied ontology.
 Design assumptions (explicit and deterministic):
@@ -104,13 +109,41 @@ Plus:
 Total individuals ≈ 530+ named individuals
 The file is fully expanded (no templates, no ellipsis).
 
-The results are saved in:
+#### RESULTS
+The A-BOX results are saved:
 
-* activities_chat_gpt_tbox.ttl
 * activities_chat_gpt_abox.ttl
 
+### SKOS lexicon
+We prompt it to create a SKOS lexicon that maps all the input phrases to the corresponding classes. This SKOS lexicon can be used to
+annotate the conversations with class labels and next extract the population from the conversation as well.
 
-## SPARQL queries to obtain patient timelines
+## Getting patient timelines
+The T-BOX and A-BOX can be imported in the triple store. We prompted ChatGPT to generate SPARQL queries to extract a timeline for a patient based on the instantiation. Next, we make it generate the Javascript code to visualise this.
+
+### SPARQL queries to obtain patient timelines
 PROMPT: Generate a SPARQL query to get the timeline for a patient
+
+#### RESULTS
+The SPARQL queries are saved in:
+
+* timeline_sparql.txt
+
+The CONSTRUCT query generates the output that needs to be saved to a TTL file
+
+### Visualise the timeline
+
+The timeline4.html file has the code to load the TTL file and visualise it. Because most browsers do not allow loading the local html file with Javascript, you need to launch a server in the same folder from the terminal:
+```
+> python -m http.server 8000  
+```
+
+Next open the file in the browser using:
+
+```aiignore
+localhost:8000/timeline4.html
+```
+
+The Javascript will load the local file "query-result.ttl" which is the saved CONSTRUCT result.
 
 

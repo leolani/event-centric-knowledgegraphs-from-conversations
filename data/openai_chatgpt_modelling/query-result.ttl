@@ -20,6 +20,47 @@
     :P1D1_FootCare, :P1D1_FootInspect, :P1D1_MedMgmt, :P1D1_Stress, :P1D1_Stretching,
     :P1D1_Thirst, :P1D1_Walking .
 
+:Patient1_Day1_Node
+    :refersToDay :Day1 ;
+    :hasDate "2025-01-01T08:00:00"^^xsd:dateTime ;
+    :hasEvent :P1D1_BPM .
+
+
+:Patient1_Day2_Node
+    :refersToDay :Day2 ;
+    :hasDate "2025-01-02T08:00:00"^^xsd:dateTime ;
+    :hasEvent :P1D2_BPM .
+    
+    
+:Patient1_Day3_Node
+    :refersToDay :Day3 ;
+    :hasDate "2025-01-03T08:00:00"^^xsd:dateTime ;
+    :hasEvent :P1D3_BPM .
+    
+    
+:Patient1_Day4_Node
+    :refersToDay :Day4 ;
+    :hasDate "2025-01-04T08:00:00"^^xsd:dateTime ;
+    :hasEvent :P1D4_BPM .
+    
+    
+:Patient1_Day5_Node
+    :refersToDay :Day5 ;
+    :hasDate "2025-01-05T08:00:00"^^xsd:dateTime ;
+    :hasEvent :P1D5_BPM .
+    
+    
+:Patient1_Day6_Node
+    :refersToDay :Day6 ;
+    :hasDate "2025-01-06T08:00:00"^^xsd:dateTime ;
+    :hasEvent :P1D6_BPM .
+    
+    
+:Patient1_Day7_Node
+    :refersToDay :Day7 ;
+    :hasDate "2025-01-07T08:00:00"^^xsd:dateTime ;
+    :hasEvent :P1D7_BPM .
+    
 :P1D1_BPM a :MonitoringAndMeasurement, :BloodPressureMonitoring .
 
 :P1D1_BSM a :MonitoringAndMeasurement, :BloodSugarMonitoring .
@@ -237,3 +278,5 @@
 :P1D7_Vision a :SymptomExperience, :VisionChangeSymptom .
 
 :P1D7_Walking a :LifestyleBehavior, :PhysicalActivity, :WalkingActivity .
+
+
