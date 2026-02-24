@@ -2,18 +2,22 @@
 
 ## Input
 
-The input is a list of terms and phrases that make reference to activities in which a patient is involved and that are mentioned in a conversation between a patient and a caretaker.
+The input is a counted list of terms and phrases that make reference to activities in which a patient is involved and that are mentioned in a conversation between a patient and a caretaker.
 
+These terms are extracted from:
+
+1. Prompting an LLM to apply semantic role labelling to conversations (conversations.json) to pull out activities in which the interlocutor is involved: what, who, how, when and here. The result is saved in event_srl.json: see the code in llm_event_extraction.py
+2. Obtaining a count dictionary from the annotated conversations: srl_statistics.py
+
+The activity phrases with counts are given to ChatGpt to derived a concept hierarchy as described below
 
 ## Convert the phrases into a concept hiearchy
 
-PROMPT: Create a conceptual hierarchy from the following phrases with their counts: "Phrase counts": {"gardening": 31, "walking": 25, "exercise": 20, "managing diabetes": 19,....}
+PROMPT: Create a conceptual hierarchy from the following phrases with their counts: "Phrase counts": {"gardening": 31, "walking": 25, "exercise": 20, "managing diabetes": 19,...etc...}
 
-
-
+Result:
 Below is a normalized conceptual hierarchy constructed from the full phrase inventory.
-Lexical variants (case, tense, gerunds, duplicates, minor paraphrases) were consolidated into canonical forms before aggregation.
-The corpus is strongly centered on Type 2 Diabetes self-management, with secondary domains of anxiety, arthritis, lifestyle change, and clinician–patient communication.
+Lexical variants (case, tense, gerunds, duplicates, minor paraphrases) were consolidated into canonical forms before aggregation. The corpus is strongly centered on Type 2 Diabetes self-management, with secondary domains of anxiety, arthritis, lifestyle change, and clinician–patient communication.
 
 Health Self-Management
 ├── A. Diabetes Management
@@ -62,9 +66,10 @@ PROMPT: Can you put these together in a single file
 PROMPT: A TBox + ABox instance dataset
 
 Perfect. You want a full OWL ontology with a TBox (schema) plus an ABox (instances/data). I can create a merged RDF/XML file with:
-TBox – the class hierarchy from your previous ontology.
-ABox – example individuals for each main class, including relationships.
-Here’s a concrete OWL file with both TBox and ABox:
+* TBox – the class hierarchy from your previous ontology.
+* ABox – example individuals for each main class, including relationships.
+
+* Here’s a concrete OWL file with both TBox and ABox:
 
 If you want, I can expand this to a full dataset with dozens of individuals, linking:
 Symptoms → Measurements → Medication → Activities → Diet
@@ -99,5 +104,13 @@ Plus:
 Total individuals ≈ 530+ named individuals
 The file is fully expanded (no templates, no ellipsis).
 
+The results are saved in:
+
+* activities_chat_gpt_tbox.ttl
+* activities_chat_gpt_abox.ttl
+
+
+## SPARQL queries to obtain patient timelines
 PROMPT: Generate a SPARQL query to get the timeline for a patient
+
 
