@@ -1,0 +1,143 @@
+# Below is a precise SPARQL 1.1 query to retrieve the chronological timeline of all events for a given patient, based on the structure in your TTL:
+# Assumptions from your model:
+# A patient-day context node:
+# :hasPatient
+# :hasDay
+# :hasEvent
+# Each event individual is explicitly typed
+# Days are :Day1–:Day7 (IRI sortable lexically)
+# 
+# 
+# This returns:
+# ?day → Day individual
+# ?event → Event instance
+# ?eventType → Class of the event
+
+
+PREFIX : <http://example.org/diabetes#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?day ?event ?eventType
+WHERE {
+  ?context :hasPatient :Patient1 ;
+           :hasDay ?day ;
+           :hasEvent ?event .
+
+  ?event rdf:type ?eventType .
+  }
+ORDER BY ?day ?event
+
+
+# Cleaned Timeline (Only Domain Classes)
+# To exclude meta-classes like owl:NamedIndividual, use:
+
+PREFIX : <http://example.org/diabetes#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT ?day ?event ?eventType
+WHERE {
+  ?context :hasPatient :Patient1 ;
+           :hasDay ?day ;
+           :hasEvent ?event .
+
+  ?event rdf:type ?eventType .
+
+  FILTER(?eventType != owl:NamedIndividual)
+}
+ORDER BY ?day ?eventType
+
+
+# Domain-Grouped Timeline (By Semantic Domain)
+# If you want to see which upper domain each event belongs to:
+
+PREFIX : <http://example.org/diabetes#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?day ?event ?eventType ?upperDomain
+WHERE {
+  ?context :hasPatient :Patient1 ;
+           :hasDay ?day ;
+           :hasEvent ?event .
+
+  ?event rdf:type ?eventType .
+
+  ?eventType rdfs:subClassOf* ?upperDomain .
+
+  FILTER(?upperDomain IN (
+      :HealthManagement,
+      :LifestyleBehavior,
+      :SymptomExperience,
+      :ClinicalInteraction,
+      :MonitoringAndMeasurement
+  ))
+}
+ORDER BY ?day ?upperDomain ?eventType
+
+
+
+# Below is a SPARQL 1.1 CONSTRUCT query that materializes a patient-centric timeline graph from your 5×7 dataset.
+# This query:
+# Extracts all patient-day contexts
+# Links them chronologically
+# Reconstructs a clean timeline subgraph
+# Preserves event typing
+# Groups events under each day
+# Timeline Graph Construct
+
+PREFIX : <http://example.org/diabetes#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT {
+
+  # Patient timeline root
+  :Patient1 :hasTimeline ?timeline .
+
+  ?timeline a :PatientTimeline ;
+            :forPatient :Patient1 ;
+            :hasDayNode ?dayNode .
+
+  ?dayNode a :TimelineDay ;
+           :refersToDay ?day ;
+           :hasEvent ?event .
+
+  ?event rdf:type ?eventType .
+
+}
+WHERE {
+
+  # Create synthetic timeline node
+  BIND(IRI(CONCAT("http://example.org/diabetes#",
+       "Patient1_Timeline")) AS ?timeline)
+
+  # Context pattern
+  ?context :hasPatient :Patient1 ;
+           :hasDay ?day ;
+           :hasEvent ?event .
+
+  ?event rdf:type ?eventType .
+
+  # Create synthetic day nodes (timeline-specific)
+  BIND(IRI(CONCAT("http://example.org/diabetes#",
+       "Patient1_",
+       STRAFTER(STR(?day), "#"),
+       "_Node")) AS ?dayNode)
+
+}
+ORDER BY ?day ?event
+
+
+### 
+
+SELECT ?patient ?day ?event ?domain
+WHERE {
+  ?patientTimeline a :PatientTimeline ;
+      :forPatient ?patient ;
+      :onDay ?day ;
+      :hasEvent ?eventInd .
+  ?eventInd :eventName ?event ;
+            :eventDomain ?domain .
+}
+ORDER BY ?patient ?day

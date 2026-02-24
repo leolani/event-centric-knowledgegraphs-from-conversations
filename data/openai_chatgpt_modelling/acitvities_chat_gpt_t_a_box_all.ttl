@@ -1,0 +1,282 @@
+# Below is an expanded OWL class hierarchy (TBox) that captures and normalizes as many of your phrases as possible.
+# The model is organized around five upper semantic domains:
+# HealthManagement
+# LifestyleBehavior
+# SymptomExperience
+# ClinicalInteraction
+# MonitoringAndMeasurement
+# It is designed for high lexical coverage, supporting normalization of variants (e.g., “walking”, “walk”, “take a walk”, “daily walks”) under canonical activity classes.
+
+# Coverage Highlights
+# This structure captures:
+# 	Physical activity variants
+# 	walking / walks / daily walks / take a walk → WalkingActivity
+# 	indoor exercises / chair exercises / mobility exercises → IndoorExercise, MobilityExercise
+# 	cycling / biking → Cycling
+# 	swimming → Swimming
+# 	strength training / light weights → StrengthTraining
+# 	stretching → Stretching
+# 	gardening / tending garden → GardeningActivity
+# Diet-related expressions
+# 	managing diet / balanced meals / Mediterranean diet → DietManagement
+# 	recipe modification / traditional recipes / Surinamese / Turkish / Moroccan foods → TraditionalRecipeModification
+# 	meal planning / portion control → DietManagement
+# 	Ramadan fasting / fasting → RamadanFastingManagement
+# Monitoring phrases
+# 	check blood sugar / testing blood sugar / logging glucose → BloodSugarMonitoring
+# 	checking feet → FootInspection
+# 	blood pressure monitoring → BloodPressureMonitoring
+# 	reminders for insulin → MedicationAdherenceMonitoring
+# Symptoms
+# 	fatigue / tired → FatigueSymptom
+# 	dizzy / lightheaded → DizzinessSymptom
+# 	thirsty / dry mouth → ThirstSymptom, DryMouthSymptom
+# 	numbness / tingling → NumbnessSymptom, TinglingSymptom
+# 	blurry vision → VisionChangeSymptom
+# 	joint pain / stiffness → JointPainSymptom
+# Smoking phrases
+# 	quit smoking / nicotine patches / nicotine gum → SmokingCessationManagement
+# Clinical discourse verbs
+# 	discuss / inquire / explain / consult → subclasses of ClinicalInteraction
+
+@prefix : <http://example.org/diabetes#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+############################
+# UPPER LEVEL DOMAINS
+############################
+
+:HealthManagement a owl:Class .
+:LifestyleBehavior a owl:Class .
+:SymptomExperience a owl:Class .
+:ClinicalInteraction a owl:Class .
+:MonitoringAndMeasurement a owl:Class .
+
+########################################################
+# 1. HEALTH MANAGEMENT
+########################################################
+
+:DiabetesManagement a owl:Class ;
+    rdfs:subClassOf :HealthManagement .
+
+:BloodSugarManagement a owl:Class ;
+    rdfs:subClassOf :DiabetesManagement .
+
+:HyperglycemiaManagement a owl:Class ;
+    rdfs:subClassOf :BloodSugarManagement .
+
+:HypoglycemiaManagement a owl:Class ;
+    rdfs:subClassOf :BloodSugarManagement .
+
+:DietManagement a owl:Class ;
+    rdfs:subClassOf :DiabetesManagement .
+
+:ExerciseManagement a owl:Class ;
+    rdfs:subClassOf :DiabetesManagement .
+
+:MedicationManagement a owl:Class ;
+    rdfs:subClassOf :DiabetesManagement .
+
+:WeightManagement a owl:Class ;
+    rdfs:subClassOf :DiabetesManagement .
+
+:SmokingCessationManagement a owl:Class ;
+    rdfs:subClassOf :HealthManagement .
+
+:StressManagement a owl:Class ;
+    rdfs:subClassOf :HealthManagement .
+
+:AnxietyManagement a owl:Class ;
+    rdfs:subClassOf :StressManagement .
+
+:SleepManagement a owl:Class ;
+    rdfs:subClassOf :HealthManagement .
+
+:PeripheralNeuropathyManagement a owl:Class ;
+    rdfs:subClassOf :DiabetesManagement .
+
+:FootCareManagement a owl:Class ;
+    rdfs:subClassOf :DiabetesManagement .
+
+:EyeHealthManagement a owl:Class ;
+    rdfs:subClassOf :DiabetesManagement .
+
+:ArthritisManagement a owl:Class ;
+    rdfs:subClassOf :HealthManagement .
+
+:HypertensionManagement a owl:Class ;
+    rdfs:subClassOf :HealthManagement .
+
+:SocialEventDietManagement a owl:Class ;
+    rdfs:subClassOf :DietManagement .
+
+:RamadanFastingManagement a owl:Class ;
+    rdfs:subClassOf :DietManagement .
+
+########################################################
+# 2. LIFESTYLE BEHAVIOR
+########################################################
+
+:PhysicalActivity a owl:Class ;
+    rdfs:subClassOf :LifestyleBehavior .
+
+:WalkingActivity a owl:Class ;
+    rdfs:subClassOf :PhysicalActivity .
+
+:IndoorExercise a owl:Class ;
+    rdfs:subClassOf :PhysicalActivity .
+
+:Aerobics a owl:Class ;
+    rdfs:subClassOf :PhysicalActivity .
+
+:Cycling a owl:Class ;
+    rdfs:subClassOf :PhysicalActivity .
+
+:Swimming a owl:Class ;
+    rdfs:subClassOf :PhysicalActivity .
+
+:StrengthTraining a owl:Class ;
+    rdfs:subClassOf :PhysicalActivity .
+
+:Stretching a owl:Class ;
+    rdfs:subClassOf :PhysicalActivity .
+
+:MobilityExercise a owl:Class ;
+    rdfs:subClassOf :PhysicalActivity .
+
+:GardeningActivity a owl:Class ;
+    rdfs:subClassOf :PhysicalActivity .
+
+:RecreationalActivity a owl:Class ;
+    rdfs:subClassOf :LifestyleBehavior .
+
+:PlayingOud a owl:Class ;
+    rdfs:subClassOf :RecreationalActivity .
+
+:PlayingPiano a owl:Class ;
+    rdfs:subClassOf :RecreationalActivity .
+
+:ChessPlaying a owl:Class ;
+    rdfs:subClassOf :RecreationalActivity .
+
+:CookingActivity a owl:Class ;
+    rdfs:subClassOf :LifestyleBehavior .
+
+:TraditionalRecipeModification a owl:Class ;
+    rdfs:subClassOf :CookingActivity .
+
+:HealthyEatingBehavior a owl:Class ;
+    rdfs:subClassOf :LifestyleBehavior .
+
+:SmokingBehavior a owl:Class ;
+    rdfs:subClassOf :LifestyleBehavior .
+
+:FastingBehavior a owl:Class ;
+    rdfs:subClassOf :LifestyleBehavior .
+
+########################################################
+# 3. SYMPTOM EXPERIENCE
+########################################################
+
+:FatigueSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:DizzinessSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:ThirstSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:DryMouthSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:HeadacheSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:AnxietySymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:NumbnessSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:TinglingSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:FootPainSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:JointPainSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:VisionChangeSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:WeightGainSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:WeightLossSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:SwellingSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:ColdFeetSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+:SleepDisturbanceSymptom a owl:Class ;
+    rdfs:subClassOf :SymptomExperience .
+
+########################################################
+# 4. CLINICAL INTERACTION
+########################################################
+
+:Consultation a owl:Class ;
+    rdfs:subClassOf :ClinicalInteraction .
+
+:AdviceGiving a owl:Class ;
+    rdfs:subClassOf :ClinicalInteraction .
+
+:AdviceSeeking a owl:Class ;
+    rdfs:subClassOf :ClinicalInteraction .
+
+:SymptomDiscussion a owl:Class ;
+    rdfs:subClassOf :ClinicalInteraction .
+
+:MedicationDiscussion a owl:Class ;
+    rdfs:subClassOf :ClinicalInteraction .
+
+:HealthEducation a owl:Class ;
+    rdfs:subClassOf :ClinicalInteraction .
+
+:SupportGroupParticipation a owl:Class ;
+    rdfs:subClassOf :ClinicalInteraction .
+
+########################################################
+# 5. MONITORING AND MEASUREMENT
+########################################################
+
+:BloodSugarMonitoring a owl:Class ;
+    rdfs:subClassOf :MonitoringAndMeasurement .
+
+:BloodPressureMonitoring a owl:Class ;
+    rdfs:subClassOf :MonitoringAndMeasurement .
+
+:FootInspection a owl:Class ;
+    rdfs:subClassOf :MonitoringAndMeasurement .
+
+:WeightMonitoring a owl:Class ;
+    rdfs:subClassOf :MonitoringAndMeasurement .
+
+:MedicationAdherenceMonitoring a owl:Class ;
+    rdfs:subClassOf :MonitoringAndMeasurement .
+
+:SymptomTracking a owl:Class ;
+    rdfs:subClassOf :MonitoringAndMeasurement .
+
+:FoodLogging a owl:Class ;
+    rdfs:subClassOf :MonitoringAndMeasurement .
+
+:AppointmentScheduling a owl:Class ;
+    rdfs:subClassOf :ClinicalInteraction .
+    

@@ -1,0 +1,239 @@
+﻿@prefix : <http://example.org/diabetes#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf4j: <http://rdf4j.org/schema/rdf4j#> .
+@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+
+:Patient1 :hasTimeline :Patient1_Timeline .
+
+:Patient1_Timeline a :PatientTimeline;
+  :forPatient :Patient1;
+  :hasDayNode :Patient1_Day1_Node, :Patient1_Day2_Node, :Patient1_Day3_Node, :Patient1_Day4_Node,
+    :Patient1_Day5_Node, :Patient1_Day6_Node, :Patient1_Day7_Node .
+
+:Patient1_Day1_Node a :TimelineDay;
+  :refersToDay :Day1;
+  :hasEvent :P1D1_BPM, :P1D1_BSM, :P1D1_Consult, :P1D1_Diet, :P1D1_ExerciseMgmt, :P1D1_Fatigue,
+    :P1D1_FootCare, :P1D1_FootInspect, :P1D1_MedMgmt, :P1D1_Stress, :P1D1_Stretching,
+    :P1D1_Thirst, :P1D1_Walking .
+
+:P1D1_BPM a :MonitoringAndMeasurement, :BloodPressureMonitoring .
+
+:P1D1_BSM a :MonitoringAndMeasurement, :BloodSugarMonitoring .
+
+:P1D1_Consult a :ClinicalInteraction, :Consultation .
+
+:P1D1_Diet a :HealthManagement, :DiabetesManagement, :DietManagement .
+
+:P1D1_ExerciseMgmt a :HealthManagement, :DiabetesManagement, :ExerciseManagement .
+
+:P1D1_Fatigue a :SymptomExperience, :FatigueSymptom .
+
+:P1D1_FootCare a :HealthManagement, :DiabetesManagement, :FootCareManagement .
+
+:P1D1_FootInspect a :MonitoringAndMeasurement, :FootInspection .
+
+:P1D1_MedMgmt a :HealthManagement, :DiabetesManagement, :MedicationManagement .
+
+:P1D1_Stress a :HealthManagement, :StressManagement .
+
+:P1D1_Stretching a :LifestyleBehavior, :PhysicalActivity, :Stretching .
+
+:P1D1_Thirst a :SymptomExperience, :ThirstSymptom .
+
+:P1D1_Walking a :LifestyleBehavior, :PhysicalActivity, :WalkingActivity .
+
+:Patient1_Day2_Node a :TimelineDay;
+  :refersToDay :Day2;
+  :hasEvent :P1D2_Advice, :P1D2_BSM, :P1D2_Cycling, :P1D2_DietMgmt, :P1D2_Dizziness,
+    :P1D2_Gardening, :P1D2_Headache, :P1D2_HealthyEat, :P1D2_HyperMgmt, :P1D2_SleepMgmt,
+    :P1D2_Strength, :P1D2_SymTrack, :P1D2_WeightMon .
+
+:P1D2_Advice a :ClinicalInteraction, :AdviceGiving .
+
+:P1D2_BSM a :MonitoringAndMeasurement, :BloodSugarMonitoring .
+
+:P1D2_Cycling a :LifestyleBehavior, :PhysicalActivity, :Cycling .
+
+:P1D2_DietMgmt a :HealthManagement, :DiabetesManagement, :DietManagement .
+
+:P1D2_Dizziness a :SymptomExperience, :DizzinessSymptom .
+
+:P1D2_Gardening a :LifestyleBehavior, :PhysicalActivity, :GardeningActivity .
+
+:P1D2_Headache a :SymptomExperience, :HeadacheSymptom .
+
+:P1D2_HealthyEat a :LifestyleBehavior, :HealthyEatingBehavior .
+
+:P1D2_HyperMgmt a :HealthManagement, :DiabetesManagement, :BloodSugarManagement, :HyperglycemiaManagement .
+
+:P1D2_SleepMgmt a :HealthManagement, :SleepManagement .
+
+:P1D2_Strength a :LifestyleBehavior, :PhysicalActivity, :StrengthTraining .
+
+:P1D2_SymTrack a :MonitoringAndMeasurement, :SymptomTracking .
+
+:P1D2_WeightMon a :MonitoringAndMeasurement, :WeightMonitoring .
+
+:Patient1_Day3_Node a :TimelineDay;
+  :refersToDay :Day3;
+  :hasEvent :P1D3_AnxietyMgmt, :P1D3_BPM, :P1D3_BSM, :P1D3_Cooking, :P1D3_FoodLog, :P1D3_HypoMgmt,
+    :P1D3_Mobility, :P1D3_Numbness, :P1D3_Swimming, :P1D3_SymDiscuss, :P1D3_Tingling,
+    :P1D3_Walking, :P1D3_WeightMgmt .
+
+:P1D3_AnxietyMgmt a :HealthManagement, :StressManagement, :AnxietyManagement .
+
+:P1D3_BPM a :MonitoringAndMeasurement, :BloodPressureMonitoring .
+
+:P1D3_BSM a :MonitoringAndMeasurement, :BloodSugarMonitoring .
+
+:P1D3_Cooking a :LifestyleBehavior, :CookingActivity .
+
+:P1D3_FoodLog a :MonitoringAndMeasurement, :FoodLogging .
+
+:P1D3_HypoMgmt a :HealthManagement, :DiabetesManagement, :BloodSugarManagement, :HypoglycemiaManagement .
+
+:P1D3_Mobility a :LifestyleBehavior, :PhysicalActivity, :MobilityExercise .
+
+:P1D3_Numbness a :SymptomExperience, :NumbnessSymptom .
+
+:P1D3_Swimming a :LifestyleBehavior, :PhysicalActivity, :Swimming .
+
+:P1D3_SymDiscuss a :ClinicalInteraction, :SymptomDiscussion .
+
+:P1D3_Tingling a :SymptomExperience, :TinglingSymptom .
+
+:P1D3_Walking a :LifestyleBehavior, :PhysicalActivity, :WalkingActivity .
+
+:P1D3_WeightMgmt a :HealthManagement, :DiabetesManagement, :WeightManagement .
+
+:Patient1_Day4_Node a :TimelineDay;
+  :refersToDay :Day4;
+  :hasEvent :P1D4_BPM, :P1D4_BSM, :P1D4_ColdFeet, :P1D4_Education, :P1D4_ExerciseMgmt,
+    :P1D4_Indoor, :P1D4_JointPain, :P1D4_MedAdh, :P1D4_MedMgmt, :P1D4_Strength, :P1D4_StressMgmt,
+    :P1D4_TraditionalRecipe, :P1D4_Walking .
+
+:P1D4_BPM a :MonitoringAndMeasurement, :BloodPressureMonitoring .
+
+:P1D4_BSM a :MonitoringAndMeasurement, :BloodSugarMonitoring .
+
+:P1D4_ColdFeet a :SymptomExperience, :ColdFeetSymptom .
+
+:P1D4_Education a :ClinicalInteraction, :HealthEducation .
+
+:P1D4_ExerciseMgmt a :HealthManagement, :DiabetesManagement, :ExerciseManagement .
+
+:P1D4_Indoor a :LifestyleBehavior, :PhysicalActivity, :IndoorExercise .
+
+:P1D4_JointPain a :SymptomExperience, :JointPainSymptom .
+
+:P1D4_MedAdh a :MonitoringAndMeasurement, :MedicationAdherenceMonitoring .
+
+:P1D4_MedMgmt a :HealthManagement, :DiabetesManagement, :MedicationManagement .
+
+:P1D4_Strength a :LifestyleBehavior, :PhysicalActivity, :StrengthTraining .
+
+:P1D4_StressMgmt a :HealthManagement, :StressManagement .
+
+:P1D4_TraditionalRecipe a :LifestyleBehavior, :CookingActivity, :TraditionalRecipeModification .
+
+:P1D4_Walking a :LifestyleBehavior, :PhysicalActivity, :WalkingActivity .
+
+:Patient1_Day5_Node a :TimelineDay;
+  :refersToDay :Day5;
+  :hasEvent :P1D5_AdviceSeek, :P1D5_BSM, :P1D5_Chess, :P1D5_DietMgmt, :P1D5_FootInspect,
+    :P1D5_Gardening, :P1D5_HyperMgmt, :P1D5_SleepMgmt, :P1D5_Stretching, :P1D5_Swelling,
+    :P1D5_Swimming, :P1D5_WeightGain, :P1D5_WeightMon .
+
+:P1D5_AdviceSeek a :ClinicalInteraction, :AdviceSeeking .
+
+:P1D5_BSM a :MonitoringAndMeasurement, :BloodSugarMonitoring .
+
+:P1D5_Chess a :LifestyleBehavior, :RecreationalActivity, :ChessPlaying .
+
+:P1D5_DietMgmt a :HealthManagement, :DiabetesManagement, :DietManagement .
+
+:P1D5_FootInspect a :MonitoringAndMeasurement, :FootInspection .
+
+:P1D5_Gardening a :LifestyleBehavior, :PhysicalActivity, :GardeningActivity .
+
+:P1D5_HyperMgmt a :HealthManagement, :DiabetesManagement, :BloodSugarManagement, :HyperglycemiaManagement .
+
+:P1D5_SleepMgmt a :HealthManagement, :SleepManagement .
+
+:P1D5_Stretching a :LifestyleBehavior, :PhysicalActivity, :Stretching .
+
+:P1D5_Swelling a :SymptomExperience, :SwellingSymptom .
+
+:P1D5_Swimming a :LifestyleBehavior, :PhysicalActivity, :Swimming .
+
+:P1D5_WeightGain a :SymptomExperience, :WeightGainSymptom .
+
+:P1D5_WeightMon a :MonitoringAndMeasurement, :WeightMonitoring .
+
+:Patient1_Day6_Node a :TimelineDay;
+  :refersToDay :Day6;
+  :hasEvent :P1D6_AnxietyMgmt, :P1D6_BSM, :P1D6_Cycling, :P1D6_DryMouth, :P1D6_FoodLog,
+    :P1D6_HypoMgmt, :P1D6_Mobility, :P1D6_PlayOud, :P1D6_SleepDisturb, :P1D6_Support,
+    :P1D6_SymTrack, :P1D6_Walking, :P1D6_WeightMgmt .
+
+:P1D6_AnxietyMgmt a :HealthManagement, :StressManagement, :AnxietyManagement .
+
+:P1D6_BSM a :MonitoringAndMeasurement, :BloodSugarMonitoring .
+
+:P1D6_Cycling a :LifestyleBehavior, :PhysicalActivity, :Cycling .
+
+:P1D6_DryMouth a :SymptomExperience, :DryMouthSymptom .
+
+:P1D6_FoodLog a :MonitoringAndMeasurement, :FoodLogging .
+
+:P1D6_HypoMgmt a :HealthManagement, :DiabetesManagement, :BloodSugarManagement, :HypoglycemiaManagement .
+
+:P1D6_Mobility a :LifestyleBehavior, :PhysicalActivity, :MobilityExercise .
+
+:P1D6_PlayOud a :LifestyleBehavior, :RecreationalActivity, :PlayingOud .
+
+:P1D6_SleepDisturb a :SymptomExperience, :SleepDisturbanceSymptom .
+
+:P1D6_Support a :ClinicalInteraction, :SupportGroupParticipation .
+
+:P1D6_SymTrack a :MonitoringAndMeasurement, :SymptomTracking .
+
+:P1D6_Walking a :LifestyleBehavior, :PhysicalActivity, :WalkingActivity .
+
+:P1D6_WeightMgmt a :HealthManagement, :DiabetesManagement, :WeightManagement .
+
+:Patient1_Day7_Node a :TimelineDay;
+  :refersToDay :Day7;
+  :hasEvent :P1D7_BPM, :P1D7_BSM, :P1D7_Consult, :P1D7_DietMgmt, :P1D7_FootPain, :P1D7_HealthyEat,
+    :P1D7_Indoor, :P1D7_MedAdh, :P1D7_MedMgmt, :P1D7_Strength, :P1D7_StressMgmt, :P1D7_Vision,
+    :P1D7_Walking .
+
+:P1D7_BPM a :MonitoringAndMeasurement, :BloodPressureMonitoring .
+
+:P1D7_BSM a :MonitoringAndMeasurement, :BloodSugarMonitoring .
+
+:P1D7_Consult a :ClinicalInteraction, :Consultation .
+
+:P1D7_DietMgmt a :HealthManagement, :DiabetesManagement, :DietManagement .
+
+:P1D7_FootPain a :SymptomExperience, :FootPainSymptom .
+
+:P1D7_HealthyEat a :LifestyleBehavior, :HealthyEatingBehavior .
+
+:P1D7_Indoor a :LifestyleBehavior, :PhysicalActivity, :IndoorExercise .
+
+:P1D7_MedAdh a :MonitoringAndMeasurement, :MedicationAdherenceMonitoring .
+
+:P1D7_MedMgmt a :HealthManagement, :DiabetesManagement, :MedicationManagement .
+
+:P1D7_Strength a :LifestyleBehavior, :PhysicalActivity, :StrengthTraining .
+
+:P1D7_StressMgmt a :HealthManagement, :StressManagement .
+
+:P1D7_Vision a :SymptomExperience, :VisionChangeSymptom .
+
+:P1D7_Walking a :LifestyleBehavior, :PhysicalActivity, :WalkingActivity .

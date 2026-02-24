@@ -1,0 +1,183 @@
+@prefix : <http://example.org/diabetes#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+#################################################
+# Concept Scheme
+#################################################
+
+:DiabetesLexicon
+    a skos:ConceptScheme ;
+    skos:prefLabel "Diabetes Self-Management Lexical Scheme" .
+
+#################################################
+# WalkingActivity
+#################################################
+
+:WalkingActivity
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Walking Activity" ;
+    skos:altLabel "walking" ;
+    skos:altLabel "walk" ;
+    skos:altLabel "daily walk" ;
+    skos:altLabel "daily walks" ;
+    skos:altLabel "taking a walk" ;
+    skos:altLabel "evening walk" ;
+    skos:altLabel "morning walk" .
+
+#################################################
+# IndoorExercise
+#################################################
+
+:IndoorExercise
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Indoor Exercise" ;
+    skos:altLabel "indoor exercises" ;
+    skos:altLabel "chair exercises" ;
+    skos:altLabel "home exercises" ;
+    skos:altLabel "light indoor workout" .
+
+#################################################
+# StrengthTraining
+#################################################
+
+:StrengthTraining
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Strength Training" ;
+    skos:altLabel "strength training" ;
+    skos:altLabel "light weights" ;
+    skos:altLabel "weight training" ;
+    skos:altLabel "resistance training" .
+
+#################################################
+# Cycling
+#################################################
+
+:Cycling
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Cycling" ;
+    skos:altLabel "cycling" ;
+    skos:altLabel "biking" ;
+    skos:altLabel "bike ride" .
+
+#################################################
+# Swimming
+#################################################
+
+:Swimming
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Swimming" ;
+    skos:altLabel "swimming" ;
+    skos:altLabel "swim session" .
+
+#################################################
+# DietManagement
+#################################################
+
+:DietManagement
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Diet Management" ;
+    skos:altLabel "managing diet" ;
+    skos:altLabel "balanced meals" ;
+    skos:altLabel "portion control" ;
+    skos:altLabel "meal planning" ;
+    skos:altLabel "healthy eating" ;
+    skos:altLabel "Mediterranean diet" .
+
+#################################################
+# TraditionalRecipeModification
+#################################################
+
+:TraditionalRecipeModification
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Traditional Recipe Modification" ;
+    skos:altLabel "modifying traditional recipes" ;
+    skos:altLabel "healthier traditional food" ;
+    skos:altLabel "Surinamese dishes" ;
+    skos:altLabel "Turkish food adjustments" ;
+    skos:altLabel "Moroccan recipes modified" .
+
+#################################################
+# BloodSugarMonitoring
+#################################################
+
+:BloodSugarMonitoring
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Blood Sugar Monitoring" ;
+    skos:altLabel "check blood sugar" ;
+    skos:altLabel "checking glucose" ;
+    skos:altLabel "testing blood sugar" ;
+    skos:altLabel "measure glucose" ;
+    skos:altLabel "logging glucose levels" .
+
+#################################################
+# FootInspection
+#################################################
+
+:FootInspection
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Foot Inspection" ;
+    skos:altLabel "checking feet" ;
+    skos:altLabel "foot check" ;
+    skos:altLabel "inspect feet" .
+
+#################################################
+# FatigueSymptom
+#################################################
+
+:FatigueSymptom
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Fatigue Symptom" ;
+    skos:altLabel "fatigue" ;
+    skos:altLabel "tired" ;
+    skos:altLabel "feeling exhausted" ;
+    skos:altLabel "low energy" .
+
+#################################################
+# DizzinessSymptom
+#################################################
+
+:DizzinessSymptom
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Dizziness Symptom" ;
+    skos:altLabel "dizzy" ;
+    skos:altLabel "lightheaded" ;
+    skos:altLabel "feeling faint" .
+
+#################################################
+# SmokingCessationManagement
+#################################################
+
+:SmokingCessationManagement
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Smoking Cessation Management" ;
+    skos:altLabel "quit smoking" ;
+    skos:altLabel "stopped smoking" ;
+    skos:altLabel "nicotine patch" ;
+    skos:altLabel "nicotine gum" ;
+    skos:altLabel "smoking reduction" .
+
+#################################################
+# RamadanFastingManagement
+#################################################
+
+:RamadanFastingManagement
+    a owl:Class, skos:Concept ;
+    skos:inScheme :DiabetesLexicon ;
+    skos:prefLabel "Ramadan Fasting Management" ;
+    skos:altLabel "fasting during Ramadan" ;
+    skos:altLabel "Ramadan fasting" ;
+    skos:altLabel "fasting month adjustments" .

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Patient Timeline</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  .axis path,
+  .axis line {
+    stroke: #000;
+  }
+  .tooltip {
+    position: absolute;
+    text-align: left;
+    width: auto;
+    padding: 5px;
+    font: 12px sans-serif;
+    background: #fff;
+    border: 1px solid #ccc;
+    pointer-events: none;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  }
+</style>
+</head>
+<body>
+<svg width="1000" height="500"></svg>
+
+<script>
+const svg = d3.select("svg");
+const margin = {top: 50, right: 50, bottom: 50, left: 150};
+const width = +svg.attr("width") - margin.left - margin.right;
+const height = +svg.attr("height") - margin.top - margin.bottom;
+
+const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+const domainColors = {
+  "HealthManagement": "#1f77b4",
+  "LifestyleBehavior": "#ff7f0e",
+  "SymptomExperience": "#2ca02c",
+  "ClinicalInteraction": "#d62728",
+  "MonitoringAndMeasurement": "#9467bd"
+};
+
+// Load the JSON
+d3.json("patient_timeline.json").then(data => {
+
+  // Extract unique patients, days, and event types
+  const patients = [...new Set(data.map(d => d.patient))];
+  const days = [...new Set(data.map(d => d.day))];
+  const eventTypes = [...new Set(data.map(d => d.type))];
+
+  // Scales
+  const x = d3.scalePoint().domain(days).range([0, width]).padding(0.5);
+  const y = d3.scalePoint().domain(patients).range([0, height]).padding(1);
+
+  // Axes
+  g.append("g")
+    .attr("class", "axis")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x));
+
+  g.append("g")
+    .attr("class", "axis")
+    .call(d3.axisLeft(y));
+
+  // Tooltip
+  const tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+  // Draw patient timelines
+  patients.forEach(p => {
+    const patientData = data.filter(d => d.patient === p);
+
+    g.selectAll(`.circle-${p}`)
+      .data(patientData)
+      .join("circle")
+      .attr("cx", d => x(d.day))
+      .attr("cy", d => y(d.patient))
+      .attr("r", 10)
+      .attr("fill", d => domainColors[d.domain] || "#999")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 1)
+      .on("mouseover", function(event, d) {
+        tooltip.transition().duration(200).style("opacity", 1);
+        tooltip.html(`<strong>Patient:</strong> ${d.patient}<br>
+                      <strong>Day:</strong> ${d.day}<br>
+                      <strong>Event:</strong> ${d.event}<br>
+                      <strong>Type:</strong> ${d.type}<br>
+                      <strong>Domain:</strong> ${d.domain}`)
+               .style("left", (event.pageX + 10) + "px")
+               .style("top", (event.pageY - 28) + "px");
+      })
+      .on("mouseout", function() {
+        tooltip.transition().duration(200).style("opacity", 0);
+      });
+
+    // Optional: Connect events with lines
+    const line = d3.line()
+      .x(d => x(d.day))
+      .y(d => y(d.patient));
+    
+    g.append("path")
+      .datum(patientData)
+      .attr("fill", "none")
+      .attr("stroke", "#ccc")
+      .attr("stroke-width", 1.5)
+      .attr("d", line);
+  });
+
+});
+</script>
+</body>
+</html>
