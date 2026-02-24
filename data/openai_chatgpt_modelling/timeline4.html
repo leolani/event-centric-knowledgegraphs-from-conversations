@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interactive Patient Timeline</title>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://unpkg.com/rdflib/dist/rdflib.min.js"></script>
+
+<style>
+  body { font-family: Arial; }
+  .axis path, .axis line { stroke: #000; }
+  .event { stroke: #222; }
+  .event-label { font-size: 10px; pointer-events: none; }
+  .legend rect { stroke: #333; }
+  .toggle-btn { margin: 10px; }
+</style>
+</head>
+<body>
+
+<h2>Patient Timeline</h2>
+<button class="toggle-btn" onclick="toggleLabels()">Toggle Labels</button>
+<svg width="1400" height="650"></svg>
+
+<script>
+
+const BASE = "http://example.org/diabetes#";
+let labelsVisible = true;
+
+const svg = d3.select("svg");
+const margin = {top: 50, right: 40, bottom: 60, left: 180};
+const width = +svg.attr("width") - margin.left - margin.right;
+const height = +svg.attr("height") - margin.top - margin.bottom;
+
+const container = svg.append("g")
+  .attr("transform", `translate(${margin.left},${margin.top})`);
+
+const zoomLayer = container.append("g");
+
+d3.text("query-result.ttl").then(ttlText => {
+
+  const store = $rdf.graph();
+  $rdf.parse(ttlText, store, BASE, "text/turtle");
+
+  const flatData = [];
+
+  const patients = store.each(null,
+    $rdf.sym(BASE + "hasTimeline"), null);
+
+  patients.forEach(patient => {
+
+    const timeline = store.any(patient,
+      $rdf.sym(BASE + "hasTimeline"));
+
+    const dayNodes = store.each(timeline,
+      $rdf.sym(BASE + "hasDayNode"), null);
+
+    dayNodes.forEach(dayNode => {
+
+      const dayRef = store.any(dayNode,
+        $rdf.sym(BASE + "refersToDay"));
+
+      const dayNum = parseInt(dayRef.value.replace(BASE,"").replace("Day",""));
+
+      const events = store.each(dayNode,
+        $rdf.sym(BASE + "hasEvent"), null);
+
+      events.forEach((event, index) => {
+
+        const types = store.each(event,
+          $rdf.sym("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"));
+
+        const domain = types[0] ? types[0].value.replace(BASE,"") : "Unknown";
+        const specific = types[1] ? types[1].value.replace(BASE,"") : "Unknown";
+
+        flatData.push({
+          patient: patient.value.replace(BASE,""),
+          day: dayNum,
+          event: specific,
+          domain: domain,
+          stackIndex: index
+        });
+
+      });
+
+    });
+
+  });
+
+  const patientsList = [...new Set(flatData.map(d => d.patient))];
+  const days = [...new Set(flatData.map(d => d.day))].sort((a,b)=>a-b);
+
+  const x = d3.scaleBand()
+    .domain(days)
+    .range([0, width])
+    .padding(0.1);
+
+  const y = d3.scaleBand()
+    .domain(patientsList)
+    .range([0, height])
+    .padding(0.4);
+
+  // Axes
+  zoomLayer.append("g")
+    .attr("class", "axis x-axis")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x).tickFormat(d => "Day " + d));
+
+  zoomLayer.append("g")
+    .attr("class", "axis")
+    .call(d3.axisLeft(y));
+
+  const colorMap = {
+    MonitoringAndMeasurement: "#1f77b4",
+    ClinicalInteraction: "#ff7f0e",
+    HealthManagement: "#2ca02c",
+    SymptomExperience: "#d62728"
+  };
+
+  const stackSpacing = 16;
+
+  const eventGroups = zoomLayer.selectAll(".event-group")
+    .data(flatData)
+    .enter()
+    .append("g")
+    .attr("class", "event-group")
+    .attr("transform", d => {
+      const xPos = x(d.day) + x.bandwidth()/2;
+      const yBase = y(d.patient) + y.bandwidth()/2;
+      const yOffset = (d.stackIndex - 3) * stackSpacing;
+      return `translate(${xPos},${yBase + yOffset})`;
+    });
+
+  eventGroups.append("circle")
+    .attr("r", 6)
+    .attr("class", "event")
+    .attr("fill", d => colorMap[d.domain] || "#999");
+
+  eventGroups.append("text")
+    .attr("x", 10)
+    .attr("y", 4)
+    .attr("class", "event-label")
+    .text(d => d.event);
+
+  // ---- Legend ----
+  const legend = svg.append("g")
+    .attr("class", "legend")
+    .attr("transform", `translate(${margin.left},20)`);
+
+  Object.keys(colorMap).forEach((key, i) => {
+    const row = legend.append("g")
+      .attr("transform", `translate(${i*220},0)`);
+
+    row.append("rect")
+      .attr("width", 15)
+      .attr("height", 15)
+      .attr("fill", colorMap[key]);
+
+    row.append("text")
+      .attr("x", 22)
+      .attr("y", 12)
+      .text(key)
+      .style("font-size", "12px");
+  });
+
+  // ---- Zoom / Pan ----
+  const zoom = d3.zoom()
+    .scaleExtent([0.5, 3])
+    .on("zoom", (event) => {
+      zoomLayer.attr("transform", event.transform);
+    });
+
+  svg.call(zoom);
+
+});
+
+// ---- Label toggle ----
+function toggleLabels() {
+  labelsVisible = !labelsVisible;
+  d3.selectAll(".event-label")
+    .style("display", labelsVisible ? "block" : "none");
+}
+
+</script>
+</body>
+</html>
