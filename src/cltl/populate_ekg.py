@@ -28,9 +28,18 @@ def get_scenarios_from_srl_annotations(annotated_conversations):
                                 "region": location['region'],
                                 "city": location['city']}
             capsules = []
+            ### We extract caosules for each turn to that we can ground them to specific turns
+            ### We could also create a function that aggregates all triples related to a single event (subject)
+            ### and create a capsule per event for the complete conversation. This would reduce the number of claims and capsules even further.
+            ### Problem with that is that the source of the claims becomes indistinguishable.
             for turn in conversation:
-                turn_capsules = events_to_capsules.get_capsules_from_turn(turn)
-                capsules.extend(turn_capsules)
+                ### new code that combines triples from a single turn into one single capsule
+                turn_capsule = events_to_capsules.get_capsule_with_event_details_from_turn(turn)
+                if turn_capsule:
+                    capsules.append(turn_capsule)
+                ### Old code that extracts separate capsules for each triple
+                # turn_capsules = events_to_capsules.get_capsules_from_turn(turn)
+                # capsules.extend(turn_capsules)
             if capsules:
                 scenario = (scenario_context, capsules)
                 scenarios.append(scenario)
@@ -102,37 +111,43 @@ def deep_copy_without_circular(obj, memo=None):
 
 
 def main():
-    f = open("../../data/event_srl.json", "r")
-    annotated_conversations = json.load(f)
-    print(len(annotated_conversations))
-    print(annotated_conversations[0])
-    scenarios = get_scenarios_from_srl_annotations(annotated_conversations)
-    print(len(scenarios))
 
+    ### Initialisation of the path for logging and of the GraDB repository for saving the data
     # Create folders
     scenario_filepath = Path('../../data/')
     graph_filepath = scenario_filepath / Path('graph/')
     graph_filepath.mkdir(parents=True, exist_ok=True)
 
     # Create brain connection
-    brain = LongTermMemory(address="http://localhost:7200/repositories/sandbox",  # Location to save accumulated graph
+    brain = LongTermMemory(address="http://localhost:7200/repositories/diabetes_event_details",  # Location to save accumulated graph
                            log_dir=graph_filepath,  # Location to save step-wise graphs
                            clear_all=True)  # To start from an empty brain
 
-    # Loop through capsules
+    ## Input is a JSON file that has the conversations, the meta data and the SRL results on a turn by turn basis
+    f = open("../../data/event_srl.json", "r")
+    annotated_conversations = json.load(f)
+    print('Total number of annotated conversations', len(annotated_conversations))
+    print(annotated_conversations[0])
+    ### A scenario has a context_capsule that identifies the scenario and a list of capsules extracted for a single conversation that need to be added to the brain.
+    # The context capsule contains contextual information about the scenario (e.g. location, date, etc.) and
+    # the capsules contain the information that needs to be added to the brain (e.g. triples, event details, etc.)
+    scenarios = get_scenarios_from_srl_annotations(annotated_conversations)
+    print('Total nr of scenarios', len(scenarios))
+    # Loop through the scenarios
     all_capsules = []
-    for (context_capsule, content_capsules) in tqdm(scenarios):
-        print(context_capsule['context_id'], len(content_capsules))        # Create context
+    for (context_capsule, conversation_capsules) in tqdm(scenarios):
+        print('Conversation id', context_capsule['context_id'], 'Total number of capsules extracted for this conversation', len(conversation_capsules))        # Create context
         brain.capsule_context(context_capsule)
         all_capsules.append(context_capsule)
         # Add information to the brain
-        for capsule in content_capsules:
-            print('chat', capsule['chat'], 'turn', capsule['turn'])
+        for capsule in conversation_capsules:
+            print('chat', capsule['chat'], 'out of ', len(scenarios), 'turn', capsule['turn'], 'out of', len(conversation_capsules), 'turns')
             all_capsules.append(capsule)
-            brain.capsule_statement(capsule, reason_types=True, return_thoughts=False, create_label=True)
-        break
+           # brain.capsule_statement(capsule, reason_types=True, return_thoughts=False, create_label=True)
+            brain.capsule_event(capsule, reason_types=True, return_thoughts=False, create_label=True)
+       # break
 
-    f = open(scenario_filepath / "capsules.json", "w")
+    f = open(scenario_filepath / "capsules_with_event_details.json", "w")
     safe_capsules = deep_copy_without_circular(all_capsules)
     json.dump(safe_capsules, f, indent=4)
 
