@@ -10,9 +10,9 @@ import events_to_capsules
 from dateutil import parser
 from datetime import datetime
 from types import MappingProxyType
+from emotion_extraction import GoEmotionDetector
 
-
-def get_scenarios_from_srl_annotations(annotated_conversations):
+def get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector):
     # Define contextual features
     place_id = getrandbits(8)
     location = requests.get("https://ipinfo.io").json()
@@ -34,7 +34,7 @@ def get_scenarios_from_srl_annotations(annotated_conversations):
             ### Problem with that is that the source of the claims becomes indistinguishable.
             for turn in conversation:
                 ### new code that combines triples from a single turn into one single capsule
-                turn_capsule = events_to_capsules.get_capsule_with_event_details_from_turn(turn)
+                turn_capsule = events_to_capsules.get_capsule_with_event_details_from_turn(turn, emotion_detector)
                 if turn_capsule:
                     capsules.append(turn_capsule)
                 ### Old code that extracts separate capsules for each triple
@@ -43,6 +43,7 @@ def get_scenarios_from_srl_annotations(annotated_conversations):
             if capsules:
                 scenario = (scenario_context, capsules)
                 scenarios.append(scenario)
+        break
     return scenarios
 
 class CustomEncoder(json.JSONEncoder):
@@ -123,6 +124,10 @@ def main():
                            log_dir=graph_filepath,  # Location to save step-wise graphs
                            clear_all=True)  # To start from an empty brain
 
+    model_path = "AnasAlokla/multilingual_go_emotions"
+    #  Languages: Arabic, English, French, Spanish, Dutch, Turkish
+    emotion_detector = GoEmotionDetector(model=model_path)
+
     ## Input is a JSON file that has the conversations, the meta data and the SRL results on a turn by turn basis
     f = open("../../data/event_srl.json", "r")
     annotated_conversations = json.load(f)
@@ -131,7 +136,7 @@ def main():
     ### A scenario has a context_capsule that identifies the scenario and a list of capsules extracted for a single conversation that need to be added to the brain.
     # The context capsule contains contextual information about the scenario (e.g. location, date, etc.) and
     # the capsules contain the information that needs to be added to the brain (e.g. triples, event details, etc.)
-    scenarios = get_scenarios_from_srl_annotations(annotated_conversations)
+    scenarios = get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector)
     print('Total nr of scenarios', len(scenarios))
     # Loop through the scenarios
     all_capsules = []
@@ -145,7 +150,8 @@ def main():
             all_capsules.append(capsule)
            # brain.capsule_statement(capsule, reason_types=True, return_thoughts=False, create_label=True)
             brain.capsule_event(capsule, reason_types=True, return_thoughts=False, create_label=True)
-       # break
+
+        break
 
     f = open(scenario_filepath / "capsules_with_event_details.json", "w")
     safe_capsules = deep_copy_without_circular(all_capsules)

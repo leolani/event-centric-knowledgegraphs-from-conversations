@@ -26,7 +26,6 @@ class GoEmotionDetector():
         emotions = []
 
         response = self.emotion_pipeline(utterance)
-
         emotion_labels = emo.sort_predictions(response[0])
         emotions.extend(self._filter_by_threshold(emo.EmotionType.GO, emotion_labels))
 
@@ -35,6 +34,8 @@ class GoEmotionDetector():
 
         sentiment_labels = emo.get_total_mapped_scores(emo.go_sentiment_map, emotion_labels)
         emotions.extend(self._filter_by_threshold(emo.EmotionType.SENTIMENT, sentiment_labels))
+        print(str(emotions), utterance)
+
         return emotions
 
     def _filter_by_threshold(self, emotion_type, results):

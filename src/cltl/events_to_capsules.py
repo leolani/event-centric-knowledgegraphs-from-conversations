@@ -3,42 +3,62 @@ import random
 from cltl.commons.discrete import UtteranceType
 from datetime import date, datetime
 from dateutil import parser
+from emotion_classes import EmotionType
+from emotion_extraction import GoEmotionDetector
 
-def get_dummy_perspective():
+model_path = "AnasAlokla/multilingual_go_emotions"
+#  Languages: Arabic, English, French, Spanish, Dutch, Turkish
+emotion_detector = GoEmotionDetector(model=model_path)
+
+negation_words = [    "not", "never", "nobody", "no", "none", "neither", "nor", "hardly", "scarcely", "rarely", "seldom", "little", "few"]
+certainty_words = ["certain", "sure", "definitely", "absolutely"]
+uncertainty_words = ["think", "maybe", "could", "perhaps"]
+
+
+def get_dummy_perspective(utterance: str, emotion_detector):
+
     perspective= {"certainty": 1, "polarity": 1, "sentiment": 0}
+    emotions = emotion_detector.extract_text_emotions(utterance)
+    go_values  = []
+    for emotion in emotions:
+        # Debug: Print the emotion object and its attributes
+        print(f"Emotion Object: {emotion}")
+        print(f"Emotion Type Attribute: {emotion.type}")
+        print(f"Emotion Value: {emotion.value}")
+
+
+        if emotion.type == EmotionType.SENTIMENT:
+            if emotion.value == "positive":
+                perspective["sentiment"] = 1
+            elif emotion.value == "negative":
+                perspective["sentiment"] = -1
+            print('Assigned sentiment is', perspective["sentiment"])
+        elif emotion.type == EmotionType.GO:
+            print("match", emotion.type, emotion.value)
+            go_values.append(emotion.value)
+        else:
+            print("no match", emotion.type, emotion.value)
+
+    print('Go values', go_values)
+    if len(go_values) > 0:
+            perspective["emotion"] = go_values
+
+    utterance_lower = utterance.lower()
+    utterance_tokens = utterance_lower.split(" ")
+    for negation in negation_words:
+        if negation in utterance_tokens:
+            perspective["polarity"] = -1
+            break
+    certainty_score = 0.0
+    for certainty in certainty_words:
+        if certainty in utterance_tokens:
+            certainty_score+=0.5
+    for uncertainty in uncertainty_words:
+        if uncertainty in utterance_tokens:
+            certainty_score-=0.5
+    perspective["certainty"] = certainty_score
     return perspective
 
-
-def extract_go_emotions(utterance: str) -> list:
-    """
-    Extract GO emotions from an utterance using keyword matching
-
-    Args:
-        utterance: Input text to analyze
-
-    Returns:
-        List of detected emotions
-    """
-    # Define your emotion keywords here
-    emotion_keywords = {
-        "happy": ["joy", "glad", "excited", "elated"],
-        "sad": ["sad", "unhappy", "miserable", "depressed"],
-        "angry": ["angry", "mad", "irritated", "furious"],
-        "neutral": ["neutral", "calm", "indifferent", "objective"]
-    }
-
-    detected_emotions = []
-
-    # Convert utterance to lowercase for case-insensitive matching
-    utterance_lower = utterance.lower()
-
-    for emotion, keywords in emotion_keywords.items():
-        for keyword in keywords:
-            if keyword in utterance_lower:
-                detected_emotions.append(emotion)
-                break  # Avoid duplicate entries for the same emotion
-
-    return detected_emotions
 def get_triples_from_object(event, event_id):
     triples = []
     predicate_objects = []
@@ -193,7 +213,7 @@ def get_capsules_from_turn (turn_data):
             capsules.append(capsule)
     return capsules
 
-def get_capsule_with_event_details_from_turn (turn_data):
+def get_capsule_with_event_details_from_turn (turn_data, emotion_detector):
     capsules = []
     turn = turn_data['Input']
     event_data = turn_data['Output']
@@ -204,13 +224,15 @@ def get_capsule_with_event_details_from_turn (turn_data):
         event_id = random.random()
         triples = get_triples(event_data, event_id)
         offset = "0-"+str(len(turn["utterance"]))
+        perspective_value = get_dummy_perspective(turn["utterance"], emotion_detector)
+        print('perspective_value', perspective_value)
         capsule = { "chat": chat_id,
             "turn": turn_id,
             "author": {"label":turn['speaker'], "type": ["agent"], "uri":"http://cltl.nl/leolani/friends/"+turn['speaker']},
             "utterance": turn["utterance"],
             "utterance_type": UtteranceType.STATEMENT,
             "position": offset,
-            "perspective":  get_dummy_perspective(),
+            "perspective":  perspective_value,
              "timestamp": datetime.combine(chat_date, datetime.now().time()),
              "context_id": event_id
         }
