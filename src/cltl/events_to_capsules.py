@@ -8,6 +8,37 @@ def get_dummy_perspective():
     perspective= {"certainty": 1, "polarity": 1, "sentiment": 0}
     return perspective
 
+
+def extract_go_emotions(utterance: str) -> list:
+    """
+    Extract GO emotions from an utterance using keyword matching
+
+    Args:
+        utterance: Input text to analyze
+
+    Returns:
+        List of detected emotions
+    """
+    # Define your emotion keywords here
+    emotion_keywords = {
+        "happy": ["joy", "glad", "excited", "elated"],
+        "sad": ["sad", "unhappy", "miserable", "depressed"],
+        "angry": ["angry", "mad", "irritated", "furious"],
+        "neutral": ["neutral", "calm", "indifferent", "objective"]
+    }
+
+    detected_emotions = []
+
+    # Convert utterance to lowercase for case-insensitive matching
+    utterance_lower = utterance.lower()
+
+    for emotion, keywords in emotion_keywords.items():
+        for keyword in keywords:
+            if keyword in utterance_lower:
+                detected_emotions.append(emotion)
+                break  # Avoid duplicate entries for the same emotion
+
+    return detected_emotions
 def get_triples_from_object(event, event_id):
     triples = []
     predicate_objects = []
