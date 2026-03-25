@@ -5,7 +5,7 @@ from typing import Optional, Any, List, Union
 from transformers import pipeline
 
 _MODEL_NAME = "bhadresh-savani/bert-base-go-emotion"
-_THRESHOLD = 0.5
+_THRESHOLD = 0.6
 
 # GO Emotions is a finetuned BERT transformer with the GO Emotion data
 #https://github.com/google-research/google-research/tree/master/goemotions
@@ -19,24 +19,21 @@ class GoEmotionDetector():
     def extract_audio_emotions(self, audio_signal: Any) -> List[emo.Emotion]:
         raise NotImplementedError()
 
-    def extract_text_emotions(self, utterance: str) -> List[emo.Emotion]:
+    def extract_text_emotions(self, utterance: str, threshold:0.6) -> List[emo.Emotion]:
         if not utterance:
             return []
-
-        emotions = []
-
+        _THRESHOLD = threshold
         response = self.emotion_pipeline(utterance)
         emotion_labels = emo.sort_predictions(response[0])
-        emotions.extend(self._filter_by_threshold(emo.EmotionType.GO, emotion_labels))
+        go_labels = self._filter_by_threshold(emo.EmotionType.GO, emotion_labels)
 
         ekman_labels = emo.get_total_mapped_scores(emo.go_ekman_map, emotion_labels)
-        emotions.extend(self._filter_by_threshold(emo.EmotionType.EKMAN, ekman_labels))
+        ekman_labels = self._filter_by_threshold(emo.EmotionType.EKMAN, ekman_labels)
 
         sentiment_labels = emo.get_total_mapped_scores(emo.go_sentiment_map, emotion_labels)
-        emotions.extend(self._filter_by_threshold(emo.EmotionType.SENTIMENT, sentiment_labels))
-        print(str(emotions), utterance)
+        sentiment_labels = self._filter_by_threshold(emo.EmotionType.SENTIMENT, sentiment_labels)
 
-        return emotions
+        return go_labels, ekman_labels, sentiment_labels
 
     def _filter_by_threshold(self, emotion_type, results):
         return [emo.Emotion(type=emotion_type, value=result['label'], confidence=result['score'])

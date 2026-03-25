@@ -11,37 +11,40 @@ model_path = "AnasAlokla/multilingual_go_emotions"
 emotion_detector = GoEmotionDetector(model=model_path)
 
 negation_words = [    "not", "never", "nobody", "no", "none", "neither", "nor", "hardly", "scarcely", "rarely", "seldom", "little", "few"]
-certainty_words = ["certain", "sure", "definitely", "absolutely"]
-uncertainty_words = ["think", "maybe", "could", "perhaps"]
+certainty_words = ["certain", "sure", "definitely", "absolutely", "certainly", "surely"]
+uncertainty_words = ["think", "believe", "might", "maybe", "could", "perhaps"]
+low_level_words = ["difficult", "problem", "cannot", "unable", "bad", "impossible"]
+high_level_words = ["well", "can", "easy", "good", "possible"]
 
+def prune_neutral_emotion(emotion_values):
+    for emotion in emotion_values:
+        if emotion == "neutral":
+            emotion_values.remove(emotion)
 
-def get_dummy_perspective(utterance: str, emotion_detector):
+def get_utterance_perspective(utterance: str, emotion_detector):
 
     perspective= {"certainty": 1, "polarity": 1, "sentiment": 0}
-    emotions = emotion_detector.extract_text_emotions(utterance)
-    go_values  = []
-    for emotion in emotions:
-        # Debug: Print the emotion object and its attributes
-        print(f"Emotion Object: {emotion}")
-        print(f"Emotion Type Attribute: {emotion.type}")
-        print(f"Emotion Value: {emotion.value}")
-
-
-        if emotion.type == EmotionType.SENTIMENT:
-            if emotion.value == "positive":
+    go_emotions, ekman_emotions, sentiments = emotion_detector.extract_text_emotions(utterance, threshold=0.6)
+    if len(sentiments)>0:
+        for sentiment in sentiments:
+            if sentiment.value == "positive":
                 perspective["sentiment"] = 1
-            elif emotion.value == "negative":
+            elif sentiment.value == "negative":
                 perspective["sentiment"] = -1
-            print('Assigned sentiment is', perspective["sentiment"])
-        elif emotion.type == EmotionType.GO:
-            print("match", emotion.type, emotion.value)
-            go_values.append(emotion.value)
-        else:
-            print("no match", emotion.type, emotion.value)
-
-    print('Go values', go_values)
-    if len(go_values) > 0:
+    if len(go_emotions)>0:
+        go_values = []
+        for go_emotion in go_emotions:
+            go_values.append(go_emotion.value)
+        prune_neutral_emotion(go_values)
+        if len(go_values)>0:
             perspective["emotion"] = go_values
+
+    #### OR use ekman values
+    # if len(ekman_emotions)>0:
+    #     ekman_values = []
+    #     for ekman_emotion in ekman_emotions:
+    #         ekman_values.append(ekman_emotion.value)
+    #     perspective["emotion"] = ekman_values
 
     utterance_lower = utterance.lower()
     utterance_tokens = utterance_lower.split(" ")
@@ -57,6 +60,14 @@ def get_dummy_perspective(utterance: str, emotion_detector):
         if uncertainty in utterance_tokens:
             certainty_score-=0.5
     perspective["certainty"] = certainty_score
+    level_score = 2.0
+    for level in high_level_words:
+        if level in utterance_tokens:
+            level_score+=1.0
+    for level in low_level_words:
+        if level in utterance_tokens:
+            level_score-=1.0
+    perspective["level"] = level_score
     return perspective
 
 def get_triples_from_object(event, event_id):
@@ -206,7 +217,7 @@ def get_capsules_from_turn (turn_data):
                 "subject" : triple["subject"],
                 "predicate" : triple["predicate"],
                 "object" : triple["object"],
-                "perspective":  get_dummy_perspective(),
+                "perspective":  get_utterance_perspective(turn["utterance"], emotion_detector),
                  "timestamp": datetime.combine(chat_date, datetime.now().time()),
                  "context_id": event_id
             }
@@ -214,7 +225,6 @@ def get_capsules_from_turn (turn_data):
     return capsules
 
 def get_capsule_with_event_details_from_turn (turn_data, emotion_detector):
-    capsules = []
     turn = turn_data['Input']
     event_data = turn_data['Output']
     chat_id = turn_data['chat']
@@ -224,8 +234,7 @@ def get_capsule_with_event_details_from_turn (turn_data, emotion_detector):
         event_id = random.random()
         triples = get_triples(event_data, event_id)
         offset = "0-"+str(len(turn["utterance"]))
-        perspective_value = get_dummy_perspective(turn["utterance"], emotion_detector)
-        print('perspective_value', perspective_value)
+        perspective_value =get_utterance_perspective(turn["utterance"], emotion_detector)
         capsule = { "chat": chat_id,
             "turn": turn_id,
             "author": {"label":turn['speaker'], "type": ["agent"], "uri":"http://cltl.nl/leolani/friends/"+turn['speaker']},
