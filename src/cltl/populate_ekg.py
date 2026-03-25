@@ -43,7 +43,7 @@ def get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector
             if capsules:
                 scenario = (scenario_context, capsules)
                 scenarios.append(scenario)
-        break
+       # break
     return scenarios
 
 class CustomEncoder(json.JSONEncoder):
@@ -151,7 +151,7 @@ def main():
            # brain.capsule_statement(capsule, reason_types=True, return_thoughts=False, create_label=True)
             brain.capsule_event(capsule, reason_types=True, return_thoughts=False, create_label=True)
 
-        break
+        #break
 
     f = open(scenario_filepath / "capsules_with_event_details.json", "w")
     safe_capsules = deep_copy_without_circular(all_capsules)
