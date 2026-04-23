@@ -8,28 +8,14 @@ from pydantic import BaseModel, Field
 #https://platform.openai.com/docs/guides/structured-outputs?api-mode=chat
 
 #predicates = ["sem:hasActor", "sem:hasTimne", "sem:hasPlace"]
-path = "../../../../openaikey1.txt"
+path = "../../../openaikey1.txt"
 file = open(path, "r")
 key = file.read()
 
-class Config:
-    # This allows Pydantic to export the schema in the format OpenAI expects
-    # Note: 'json_schema' is used in Pydantic v2. In v1, use 'schema'
-    json_schema_mode = "validation"
-
-# Helper to convert Pydantic model to OpenAI function definition
-def to_openai_function(self):
-    return {
-        "type": "function",
-        "function": {
-            "name": "extract_event",
-            "description": "Extract event details from the provided text.",
-            "parameters": self.model_json_schema()
-        }
-    }
-
 
 class EventTripleExtraction(BaseModel):
+    model_config = {"json_schema_mode": "validation"}
+    
     activity: str
     agent: list[str]
     patient: list[str]
@@ -37,7 +23,8 @@ class EventTripleExtraction(BaseModel):
     manner: list[str]
     location: list[str]
     time: str
-            
+
+
 class LLM_EventExtraction:
     
     def __init__(self):
@@ -102,7 +89,7 @@ class LLM_EventExtraction:
 
     def create_label_instruct_v3(self, input_text):
         # 2. Define the OpenAI function call parameters
-        function_schema = event_model.to_openai_function()
+        function_schema = EventTripleExtraction.to_openai_function()
 
         # 3. Prepare the messages
         messages = [
@@ -128,7 +115,7 @@ class LLM_EventExtraction:
         if tool_calls:
             # The model invoked the function
             available_functions = {
-                "extract_event": EventExtraction,
+                "extract_event": EventTripleExtraction,
             }
             for tool_call in tool_calls:
                 function_name = tool_call.function.name

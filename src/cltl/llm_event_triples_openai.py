@@ -6,7 +6,7 @@ from openai import OpenAI
 #https://platform.openai.com/docs/guides/structured-outputs?api-mode=chat
 
 #predicates = ["sem:hasActor", "sem:hasTimne", "sem:hasPlace"]
-path = "/Users/piek/Library/Mobile Documents/com~apple~CloudDocs/iCloud-mac/servers-key/openaikey1.txt"
+path = "../../../openaikey1.txt"
 file = open(path, "r")
 key = file.read()
 
