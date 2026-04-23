@@ -148,19 +148,18 @@ def main():
     annotated_conversations = json.load(f)
     print(len(annotated_conversations))
     activity_dict, agent_dict, patient_dict, instrument_dict, manner_dict, location_dict, time_dict = get_statistics(annotated_conversations, threshold=threshold)
-
-    # if len(activity_dict)>0:
-    #     get_analysis_for_srl_dict(activity_dict, "activities_"+str(threshold), output_dir, head_first = True)
-    # if len(agent_dict)>0:
-    #     get_analysis_for_srl_dict(agent_dict, "agents_"+str(threshold), output_dir, head_first=True)
-    # if len(patient_dict)>0:
-    #     get_analysis_for_srl_dict(patient_dict, "patients_"+str(threshold), output_dir, head_first = True)
-    # if len(instrument_dict)>0:
-    #     get_analysis_for_srl_dict(instrument_dict, "instruments_"+str(threshold), output_dir, head_first = True)
-    # if len(manner_dict)>0:
-    #     get_analysis_for_srl_dict(manner_dict, "manners_"+str(threshold), output_dir, head_first = True)
-    # if len(location_dict)>0:
-    #     get_analysis_for_srl_dict(location_dict, "locations_"+str(threshold), output_dir, head_first = True)
+    if len(activity_dict)>0:
+        get_analysis_for_srl_dict(activity_dict, "activities_"+str(threshold), output_dir, head_first = True)
+    if len(agent_dict)>0:
+        get_analysis_for_srl_dict(agent_dict, "agents_"+str(threshold), output_dir, head_first=True)
+    if len(patient_dict)>0:
+        get_analysis_for_srl_dict(patient_dict, "patients_"+str(threshold), output_dir, head_first = True)
+    if len(instrument_dict)>0:
+        get_analysis_for_srl_dict(instrument_dict, "instruments_"+str(threshold), output_dir, head_first = True)
+    if len(manner_dict)>0:
+        get_analysis_for_srl_dict(manner_dict, "manners_"+str(threshold), output_dir, head_first = True)
+    if len(location_dict)>0:
+        get_analysis_for_srl_dict(location_dict, "locations_"+str(threshold), output_dir, head_first = True)
     if len(time_dict)>0:
         get_analysis_for_srl_dict(time_dict, "times_"+str(threshold), output_dir, head_first = True)
 
