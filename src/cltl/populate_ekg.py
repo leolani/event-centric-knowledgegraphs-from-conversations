@@ -32,9 +32,12 @@ def get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector
             ### We could also create a function that aggregates all triples related to a single event (subject)
             ### and create a capsule per event for the complete conversation. This would reduce the number of claims and capsules even further.
             ### Problem with that is that the source of the claims becomes indistinguishable.
+
+            conversational_context= {}
             for turn in conversation:
                 ### new code that combines triples from a single turn into one single capsule
-                turn_capsule = events_to_capsules.get_capsule_with_event_details_from_turn(turn, emotion_detector)
+              #  turn_capsule = events_to_capsules.get_capsule_with_event_details_from_turn(turn, emotion_detector)
+                turn_capsule = events_to_capsules.get_capsule_with_event_details_from_turn_with_conversationa_context(conversational_context=conversational_context, turn_data=turn, emotion_detector=emotion_detector)
                 if turn_capsule:
                     capsules.append(turn_capsule)
                 ### Old code that extracts separate capsules for each triple
@@ -151,7 +154,7 @@ def main():
            # brain.capsule_statement(capsule, reason_types=True, return_thoughts=False, create_label=True)
             brain.capsule_event(capsule, reason_types=True, return_thoughts=False, create_label=True)
 
-        #break
+        break
 
     f = open(scenario_filepath / "capsules_with_event_details.json", "w")
     safe_capsules = deep_copy_without_circular(all_capsules)

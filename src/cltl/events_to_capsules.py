@@ -142,7 +142,6 @@ def get_triples_from_object(event, event_id):
 
 def get_triples(event, event_id):
     triples = []
-    predicate_objects = []
     if 'activity' in event:
         subject = event['activity']
         subject_uri = "http://cltl.nl/leolani/n2mu/"+subject.replace(" ", "_")+str(event_id)
@@ -231,7 +230,51 @@ def get_capsule_with_event_details_from_turn (turn_data, emotion_detector):
     chat_date = parser.parse(turn_data['date'])
     turn_id = turn['turn']
     if event_data:
+        ### We use a random digit to make the event reference unique
+        ### This random digit is combined with the activity expression to identify the event (activity or condition)
         event_id = random.random()
+        triples = get_triples(event_data, event_id)
+        offset = "0-"+str(len(turn["utterance"]))
+        perspective_value =get_utterance_perspective(turn["utterance"], emotion_detector)
+        capsule = { "chat": chat_id,
+            "turn": turn_id,
+            "author": {"label":turn['speaker'], "type": ["agent"], "uri":"http://cltl.nl/leolani/friends/"+turn['speaker']},
+            "utterance": turn["utterance"],
+            "utterance_type": UtteranceType.STATEMENT,
+            "position": offset,
+            "perspective":  perspective_value,
+             "timestamp": datetime.combine(chat_date, datetime.now().time()),
+             "context_id": event_id
+        }
+        event_details_list = []
+        for triple in triples:
+            event_details_list.append({
+                "subject" : triple["subject"],
+                "predicate" : triple["predicate"],
+                "object" : triple["object"]})
+        capsule["event_details"] = event_details_list
+    return capsule
+
+## One event identified by phrase per conversation approach
+# ## This variant taks as paramter a dict with phrases and event identifiers. If the activity phrase is in the dict, the identifier is re-used
+def get_capsule_with_event_details_from_turn_with_conversationa_context (conversational_context: {}, turn_data, emotion_detector):
+    turn = turn_data['Input']
+    event_data = turn_data['Output']
+    chat_id = turn_data['chat']
+    chat_date = parser.parse(turn_data['date'])
+    turn_id = turn['turn']
+    if event_data:
+        ### We use a random digit to make the event reference unique
+        ### This random digit is combined with the activity expression to identify the event (activity or condition)
+        ### We first check the conversational context if such a phrase was already mentioned.
+        ### If so, we re-use the ID.
+        ### @TODO add variants to the conversational context and a similarity function.
+        event_id = random.random()
+        subject_phrase = event_data['activity']
+        if subject_phrase in conversational_context:
+            event_id = conversational_context[subject_phrase]
+        else:
+            conversational_context[subject_phrase] = event_id
         triples = get_triples(event_data, event_id)
         offset = "0-"+str(len(turn["utterance"]))
         perspective_value =get_utterance_perspective(turn["utterance"], emotion_detector)
