@@ -78,7 +78,7 @@ class LLM_EventExtraction:
             model="gpt-3.5-turbo-0125",  # or your specific model
             messages=messages,
             tools=[function_schema],
-            tool_choice="auto"
+            tool_choice = "required"  # Force function call otherwise use :auto"
         )
 
         # 5. Process the response

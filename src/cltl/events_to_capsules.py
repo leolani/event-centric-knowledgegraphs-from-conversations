@@ -180,7 +180,7 @@ def get_triples(event, event_id):
                   "predicate": {"label": "instrument", "uri": "http://cltl.nl/leolani/n2mu/instrument"},
                   "object": {"label": instrument, "type": ["instrument"], "uri": ""}}
                 triples.append(triple) 
-        if 'location' in event:
+        if 'location' in event and not event['location']==None:
             if type(event['location'])==str:
                 event['location'] = [event['location']]
             for location in event['location']:
