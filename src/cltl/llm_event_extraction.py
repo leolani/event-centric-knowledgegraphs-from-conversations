@@ -2,8 +2,7 @@ from datetime import date, timedelta
 import random
 import json
 from json import JSONEncoder
-import pickle
-from llm_event_triples_openai import LLM_EventExtraction
+from llm_event_triples_openai_pydantic import LLM_EventExtraction
 
 def convert(datetime_object):
     format = '%Y,%b,%d'

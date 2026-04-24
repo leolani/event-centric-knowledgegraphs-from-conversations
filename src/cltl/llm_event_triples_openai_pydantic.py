@@ -1,11 +1,8 @@
 import json
-from json import JSONEncoder
-from datetime import datetime
-from pydantic import BaseModel
 from openai import OpenAI
-from typing import Optional
-from pydantic import BaseModel, Field
-
+from typing import Optional, Literal
+from pydantic import BaseModel
+import prompts as prompts
 
 #https://platform.openai.com/docs/guides/structured-outputs?api-mode=chat
 
@@ -14,112 +11,12 @@ path = "../../../openaikey1.txt"
 file = open(path, "r")
 key = file.read()
 
-prompt = '''You will receive a conversation in JSON format between two speakers: a diabetes patient and a lifestyle coach. 
-    The conversation contains the name of the diabetes patient and the date on which the conversation took place.
-    You need to extract activities and conditions of the diabetes patient from the last turn in the conversation. You can use the preceding turns as the context.
-    Only extract Activities of Daily Life in which the diabetes patient participates or physical, social or mentional conditions of the patient in relation to the patient's lifestyle.
-    Try to represent as much details about the Activity or the Condition from the conversation.
-    For each activity or condition, extract the WHAT as activity, the TYPE of activity or condition as activity_type, the  WHO as agent, the WHOM as patient, the HOW as manner, the WITH as instrument, WHERE as location and WHEN as time. 
-    Always include the activity_type in the output, which can be either "exercise", "take_food", "take_drink", "advise", "social", "treatment", "physical condition", "social condition" or "mental condition".
-
-    **Required Fields:**
-    - activity: the activity or condition that the patient is doing or experiencing.
-    - activity_type: the specific type or category of the activity.
-    - agent: The entity performing the activity.
-
-    **Optional Fields:**
-    - patient: The entity affected by the activity.
-    - instrument: The tool or means used.
-    - location: Where the activity takes place.
-    - time: When the activity occurs.
-
-    Text to analyze:
-    {input_text}
-
-    Output the results in the specified JSON format. Do not output any other text than the JSON. The output JSON MUST include fields for the activity, activity_type and agent, and can optionally include patient, instrument, location and time if that information is present in the text.
-
-    <start of examples>
-    Example 1:
-        Input: {
-            "chat": 6,
-            "human": "Jan",
-            "date": "2010,Dec,13",
-            "turns": [
-                {
-                    "turn": 1,
-                    "speaker": "Jan",
-                    "utterance": "I've been noticing tingling in my feet lately. Is this something common with Type 2 Diabetes?"
-                }
-                ]
-                }
-        Output: [
-                    {"activity": "tingling in my feet", "activity_type": "physical condition", "agent": ["Jan"],  "location": ["feet"], "time": ["lately"]}
-                ]
-    Example 2:
-        Input:     {
-            "chat": 7,
-            "human": "Fatima",
-            "date": "2012,Jan,31",
-            "turns": [
-                    {
-                        "turn": 1,
-                        "speaker": "agent",
-                        "utterance": "Fatima, I understand that you've been managing your Type 2 Diabetes for quite some time now. Can you tell me more about your current medication regimen?"
-                    },
-                    {
-                        "turn": 2,
-                        "speaker": "Fatima",
-                        "utterance": "I take metformin tablets twice daily, and also an evening insulin injection. Besides, I take a daily aspirin for heart health, as advised by my doctor."
-                    }
-                ]
-                }
-        Output: [
-                    {"activity": "take", "activity_type": "treatment", "agent": ["Fatima"], "patient": ["metformin tablets"], "time": "twice daily"},
-                    {"activity": "take", "activity_type": "treatment", "agent": ["Fatima"], "patient": ["aspirin"], "time": ["daily"]}
-                    {"activity": "take", "activity_type": "treatment", "agent": ["Fatima"], "patient": ["insulin injection"], "time": ["evening"]}
-                ]
-
-    Example 3:
-    Input:     {
-        "chat": 8,
-        "human": "Jan",
-        "date": "2012,Jan,31",
-        "turns": [
-                {       "turn": 1,
-                        "speaker": "agent",
-                        "utterance": "What did you eat yesterday"
-                },
-                {       "turn": 2,
-                        "speaker": "Fatima",
-                        "utterance": "Yes, for lunch, I had grilled chicken with salad, and for dinner, I cooked a fish with some steamed vegetables."
-                },
-                {       "turn": 3,
-                        "speaker": "agent",
-                        "utterance": "Any other worries?"
-                },
-                {
-                    "turn": 4,
-                    "speaker": "Fatima",
-                    "utterance": "I do have some concerns about the side effects of my medications, especially the insulin injection. I've been experiencing some weight gain and occasional dizziness. I'm not sure if these are common side effects or if I should discuss them with my doctor."
-                }
-            ]
-        }
-        Output: [
-                    {"activity": "lunch", "activity_type":"take_food", "agent": ["Fatima"], "patient": ["grilled chicken"], "time": ["yesterday"]},
-                    {"activity": "lunch",  "activity_type":"take_food","agent": ["Fatima"], "patient": ["salad"], "time": ["yesterday"]},
-                    {"activity": "dinner",  "activity_type":"take_food","agent": ["Fatima"], "patient": ["fish"], "time": ["yesterday"]},
-                    {"activity": "dinner",  "activity_type":"take_food","agent": ["Fatima"], "patient": ["steamed vegetables"], "time": ["yesterday"]},
-                    {"activity": "experience",  "activity_type":"physical condition", "agent": ["Fatima"], "patient": ["weight gain"], "time": ["recently"]},
-                    {"activity": "experience",  "activity_type":"physical condition", "agent": ["Fatima"], "patient": ["dizziness"], "time": ["occasionally"]}
-                ]  
-    <end of examples>
-    '''
 
 class EventTripleExtraction(BaseModel):
     model_config = {"json_schema_mode": "validation"}
     
     activity: str
-    activity_type: str
+    activity_type: Literal[*prompts.activity_types]
     agent: Optional[list[str]]=[]
     patient: Optional[list[str]]=[]
     instrument: Optional[list[str]]=[]
@@ -145,16 +42,14 @@ class LLM_EventExtraction:
     def __init__(self):
         self._client = OpenAI(api_key=key)
         self._history = []
-        self._instruct  =[{"role": "system",
-          #   "content": "You are an event extraction assistant. Analyze the text and extract the specified details."},
-             "content": prompt}]
+        self._instruct = [{"role": "system", "content": prompts.prompt_conversational_srl_activity_type}]
 
     def process_input(self, turn):
         # 2. Define the OpenAI function call parameters
         function_schema = EventTripleExtraction.to_openai_function()
 
         self._history.append({"role": "user", "content": "Input: {}".format(turn)})
-        print(self._history)
+
         # 3. Prepare the messages
         messages = self._instruct+self._history
 
@@ -171,7 +66,6 @@ class LLM_EventExtraction:
         # 5. Process the response
         response_message = response.choices[0].message
 
-        print('response_message', response_message)
         tool_calls = response_message.tool_calls
 
         if tool_calls:
