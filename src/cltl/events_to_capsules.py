@@ -142,13 +142,13 @@ def get_triples_from_object(event, event_id):
 
 def get_triples(event, event_id):
     triples = []
-    if 'activity' in event:
+    if 'activity' in event and not event['activity'] is None:
         subject = event['activity']
         subject_uri = "http://cltl.nl/leolani/n2mu/"+subject.replace(" ", "_")+str(event_id)
         activity_type = ["activity"]
-        if 'activity_type' in event:
+        if 'activity_type' in event and not event['activity_type']==None:
             activity_type.append(event['activity_type'])
-        if 'agent' in event:      
+        if 'agent' in event and not event['agent'] is None:
             if type(event['agent'])==str:
                 event['agent'] = [event['agent']]
             for agent in event['agent']:
@@ -156,7 +156,7 @@ def get_triples(event, event_id):
                   "predicate": {"label": "agent", "uri": "http://cltl.nl/leolani/n2mu/agent"},
                   "object": {"label":agent, "type": ["agent"], "uri": ""}}
                 triples.append(triple) 
-        if 'patient' in event:
+        if 'patient' in event and not event['patient'] is None:
             if type(event['patient'])==str:
                 event['patient'] = [event['patient']]
             for patient in event['patient']:
@@ -164,7 +164,7 @@ def get_triples(event, event_id):
                   "predicate": {"label": "patient", "uri": "http://cltl.nl/leolani/n2mu/patient"},
                   "object": {"label": patient, "type": ["agent", "object"], "uri": ""}}
                 triples.append(triple) 
-        if 'manner' in event:
+        if 'manner' in event and not event['manner'] is None:
             if type(event['manner'])==str:
                 event['manner'] = [event['manner']]
             for manner in event['manner']:
@@ -172,7 +172,7 @@ def get_triples(event, event_id):
                   "predicate": {"label": "manner", "uri": "http://cltl.nl/leolani/n2mu/manner"},
                   "object": {"label": manner, "type": ["property"], "uri": ""}}
                 triples.append(triple) 
-        if 'instrument' in event:
+        if 'instrument' in event and not event['instrument'] is None:
             if type(event['instrument'])==str:
                 event['instrument'] = [event['instrument']]
             for instrument in event['instrument']:
@@ -180,7 +180,7 @@ def get_triples(event, event_id):
                   "predicate": {"label": "instrument", "uri": "http://cltl.nl/leolani/n2mu/instrument"},
                   "object": {"label": instrument, "type": ["instrument"], "uri": ""}}
                 triples.append(triple) 
-        if 'location' in event and not event['location']==None:
+        if 'location' in event and not event['location'] is None:
             if type(event['location'])==str:
                 event['location'] = [event['location']]
             for location in event['location']:
@@ -188,7 +188,7 @@ def get_triples(event, event_id):
                   "predicate": {"label": "location", "uri": "http://cltl.nl/leolani/n2mu/location"},
                   "object": {"label": location, "type": ["place"], "uri": ""}}
                 triples.append(triple) 
-        if 'time' in event:
+        if 'time' in event and not event['time'] is None:
             if type(event['time'])==str:
                 event['time'] = [event['time']]
             for time in event['time']:
