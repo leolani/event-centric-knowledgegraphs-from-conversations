@@ -80,7 +80,7 @@ def main():
         ### Both human turns and agent turns are annotated
         annotations = llm_extractor.annotate_all_turns_in_conversation(conversation)
         all_annotations.append(annotations)
-
+        #break
     # subclass JSONEncoder
     class EventEncoder(JSONEncoder):
         def default(self, o):

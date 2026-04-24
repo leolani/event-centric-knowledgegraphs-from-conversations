@@ -16,7 +16,7 @@ class EventTripleExtraction(BaseModel):
     model_config = {"json_schema_mode": "validation"}
     
     activity: str
-    activity_type: Literal[*prompts.activity_types]
+    activity_type: prompts.ActivityType
     agent: Optional[list[str]]=[]
     patient: Optional[list[str]]=[]
     instrument: Optional[list[str]]=[]
@@ -37,6 +37,24 @@ class EventTripleExtraction(BaseModel):
         }
 
 
+class EventExtractions(BaseModel):
+    model_config = {"json_schema_mode": "validation"}
+    
+    extractions: list[EventTripleExtraction]
+    
+    @classmethod
+    def to_openai_function(cls):
+        """Convert the Pydantic model to OpenAI function definition for tool use."""
+        return {
+            "type": "function",
+            "function": {
+                "name": "extract_events",
+                "description": "Extract list of structured event details with semantic roles from text.",
+                "parameters": cls.model_json_schema()
+            }
+        }
+
+
 class LLM_EventExtraction:
     
     def __init__(self):
@@ -46,7 +64,7 @@ class LLM_EventExtraction:
 
     def process_input(self, turn):
         # 2. Define the OpenAI function call parameters
-        function_schema = EventTripleExtraction.to_openai_function()
+        function_schema = EventExtractions.to_openai_function()
 
         self._history.append({"role": "user", "content": "Input: {}".format(turn)})
 
@@ -71,7 +89,7 @@ class LLM_EventExtraction:
         if tool_calls:
             # The model invoked the function
             available_functions = {
-                "extract_event": EventTripleExtraction,
+                "extract_events": EventExtractions,
             }
             for tool_call in tool_calls:
                 function_name = tool_call.function.name
@@ -86,7 +104,7 @@ class LLM_EventExtraction:
                 except Exception as e:
                     print("Error parsing function output:", e)
                     structured_output = None
-                return structured_output
+                return structured_output.extractions
         else:
             # Fallback if the model didn't call the function
             return response_message.content

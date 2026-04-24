@@ -145,11 +145,14 @@ def get_triples(event, event_id):
     if 'activity' in event:
         subject = event['activity']
         subject_uri = "http://cltl.nl/leolani/n2mu/"+subject.replace(" ", "_")+str(event_id)
+        activity_type = ["activity"]
+        if 'activity_type' in event:
+            activity_type.append(event['activity_type'])
         if 'agent' in event:      
             if type(event['agent'])==str:
                 event['agent'] = [event['agent']]
             for agent in event['agent']:
-                triple = {"subject": {"label": subject, "type": ["activity"], "uri": subject_uri},
+                triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
                   "predicate": {"label": "agent", "uri": "http://cltl.nl/leolani/n2mu/agent"},
                   "object": {"label":agent, "type": ["agent"], "uri": ""}}
                 triples.append(triple) 
@@ -157,7 +160,7 @@ def get_triples(event, event_id):
             if type(event['patient'])==str:
                 event['patient'] = [event['patient']]
             for patient in event['patient']:
-                triple = {"subject": {"label": subject, "type": ["activity"], "uri": subject_uri},
+                triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
                   "predicate": {"label": "patient", "uri": "http://cltl.nl/leolani/n2mu/patient"},
                   "object": {"label": patient, "type": ["agent", "object"], "uri": ""}}
                 triples.append(triple) 
@@ -165,7 +168,7 @@ def get_triples(event, event_id):
             if type(event['manner'])==str:
                 event['manner'] = [event['manner']]
             for manner in event['manner']:
-                triple = {"subject": {"label": subject, "type": ["activity"], "uri": subject_uri},
+                triple = {"subject": {"label": subject, "type":activity_type, "uri": subject_uri},
                   "predicate": {"label": "manner", "uri": "http://cltl.nl/leolani/n2mu/manner"},
                   "object": {"label": manner, "type": ["property"], "uri": ""}}
                 triples.append(triple) 
@@ -173,7 +176,7 @@ def get_triples(event, event_id):
             if type(event['instrument'])==str:
                 event['instrument'] = [event['instrument']]
             for instrument in event['instrument']:
-                triple = {"subject": {"label": subject, "type": ["activity"], "uri": subject_uri},
+                triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
                   "predicate": {"label": "instrument", "uri": "http://cltl.nl/leolani/n2mu/instrument"},
                   "object": {"label": instrument, "type": ["instrument"], "uri": ""}}
                 triples.append(triple) 
@@ -181,7 +184,7 @@ def get_triples(event, event_id):
             if type(event['location'])==str:
                 event['location'] = [event['location']]
             for location in event['location']:
-                triple = {"subject": {"label": subject, "type": ["activity"], "uri": subject_uri},
+                triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
                   "predicate": {"label": "location", "uri": "http://cltl.nl/leolani/n2mu/location"},
                   "object": {"label": location, "type": ["place"], "uri": ""}}
                 triples.append(triple) 
@@ -189,7 +192,7 @@ def get_triples(event, event_id):
             if type(event['time'])==str:
                 event['time'] = [event['time']]
             for time in event['time']:
-                triple = {"subject": {"label": subject, "type": ["activity"], "uri": subject_uri},
+                triple = {"subject": {"label": subject, "type":activity_type, "uri": subject_uri},
                   "predicate": {"label": "time", "uri": "http://cltl.nl/leolani/n2mu/time"},
                   "object": {"label": time, "type": ["time"], "uri": ""}}
                 triples.append(triple) 
@@ -259,17 +262,18 @@ def get_capsule_with_event_details_from_turn (turn_data, emotion_detector):
 # ## This variant taks as paramter a dict with phrases and event identifiers. If the activity phrase is in the dict, the identifier is re-used
 def get_capsule_with_event_details_from_turn_with_conversationa_context (conversational_context: {}, turn_data, emotion_detector):
     turn = turn_data['Input']
-    event_data = turn_data['Output']
+    event_data_list = turn_data['Output']
     chat_id = turn_data['chat']
     chat_date = parser.parse(turn_data['date'])
     turn_id = turn['turn']
-    if event_data:
+    for event_data in event_data_list:
         ### We use a random digit to make the event reference unique
         ### This random digit is combined with the activity expression to identify the event (activity or condition)
         ### We first check the conversational context if such a phrase was already mentioned.
         ### If so, we re-use the ID.
         ### @TODO add variants to the conversational context and a similarity function.
         event_id = random.random()
+        print('event_data', event_data, type(event_data))
         subject_phrase = event_data['activity']
         if subject_phrase in conversational_context:
             event_id = conversational_context[subject_phrase]

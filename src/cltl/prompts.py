@@ -1,3 +1,5 @@
+from enum import Enum
+
 prompt_conversational_srl = '''You will receive a conversation in JSON format between two speakers: one a diabetes patient and one a lifestyle coach. 
         The conversation contains the name of the diabetes patient and date on which the conversation took place.
         You need to extract activities and conditions of the diabetes patient from the conversation. 
@@ -47,7 +49,22 @@ prompt_conversational_srl = '''You will receive a conversation in JSON format be
                     ]
         <end of examples>
         '''
-activity_types = ["exercise", "take_food", "take_drink", "advise", "social", "treatment", "physical condition", "social condition", "mental condition"]
+
+class ActivityType(str, Enum):
+        exercise = "exercise"
+        measurement = "measurement"
+        take_food = "take_food"
+        take_drink = "take_drink"
+        advise = "advise"
+        social = "social"
+        diet = "diet"
+        treatment = "treatment"
+        medicine = "medicine"
+        physical_condition = "physical condition"
+        social_condition = "social condition"
+        mental_condition = "mental condition"
+        symptom = "symptom"
+        disease = "disease"
 
 prompt_conversational_srl_activity_type = '''You will receive a conversation in JSON format between two speakers: a diabetes patient and a lifestyle coach. 
     The conversation contains the name of the diabetes patient and the date on which the conversation took place.
@@ -67,9 +84,6 @@ prompt_conversational_srl_activity_type = '''You will receive a conversation in 
     - instrument: The tool or means used.
     - location: Where the activity takes place.
     - time: When the activity occurs.
-
-    Text to analyze:
-    {input_text}
 
     Output the results in the specified JSON format. Do not output any other text than the JSON. The output JSON MUST include fields for the activity, activity_type and agent, and can optionally include patient, instrument, location and time if that information is present in the text.
 
@@ -109,8 +123,8 @@ prompt_conversational_srl_activity_type = '''You will receive a conversation in 
                 ]
                 }
         Output: [
-                    {"activity": "take", "activity_type": "treatment", "agent": ["Fatima"], "patient": ["metformin tablets"], "time": "twice daily"},
-                    {"activity": "take", "activity_type": "treatment", "agent": ["Fatima"], "patient": ["aspirin"], "time": ["daily"]}
+                    {"activity": "take", "activity_type": "treatment", "agent": ["Fatima"], "patient": ["metformin tablets"], "time": ["twice daily"]},
+                    {"activity": "take", "activity_type": "treatment", "agent": ["Fatima"], "patient": ["aspirin"], "time": ["daily"]},
                     {"activity": "take", "activity_type": "treatment", "agent": ["Fatima"], "patient": ["insulin injection"], "time": ["evening"]}
                 ]
 
