@@ -104,7 +104,10 @@ class LLM_EventExtraction:
                 except Exception as e:
                     print("Error parsing function output:", e)
                     structured_output = None
-                return structured_output.extractions
+                if structured_output is not None:
+                    return structured_output.extractions
+                else:
+                    return None
         else:
             # Fallback if the model didn't call the function
             return response_message.content
