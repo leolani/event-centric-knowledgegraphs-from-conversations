@@ -1,0 +1,6 @@
+PREFIX n2mu: <http://cltl.nl/leolani/n2mu/>
+SELECT (COUNT(DISTINCT ?o) AS ?count)
+where {
+    ?s n2mu:instrument ?o . #n2mu:manner, n2mu:location n2mu:time n2mu:patient n2mu:agent
+    ?s rdf:type n2mu:activity .
+}

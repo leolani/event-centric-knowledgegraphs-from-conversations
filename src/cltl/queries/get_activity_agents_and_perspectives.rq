@@ -1,0 +1,21 @@
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX n2mu: <http://cltl.nl/leolani/n2mu/>
+PREFIX grasp: <http://groundedannotationframework.org/grasp#>
+PREFIX graspf: <http://groundedannotationframework.org/grasp/factuality#>
+PREFIX graspe: <http://groundedannotationframework.org/grasp/emotion#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+select ?l ?t ?a ?u ?m ?v where {
+    ?u ?r ?m .
+    ?u rdfs:label ?l .
+    ?u a ?t .
+    ?u n2mu:agent ?a .
+    ?m grasp:hasAttribution ?s .
+    ?s rdf:value ?v .
+
+    FILTER(STRSTARTS(STR(?t), STR(n2mu:)))
+    FILTER(?t != n2mu:activity)
+    FILTER(?v != graspf:UNDERSPECIFIED)
+} limit 100
+
+

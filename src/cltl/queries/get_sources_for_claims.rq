@@ -1,0 +1,11 @@
+
+#### statements attributed to
+PREFIX gaf: <http://groundedannotationframework.org/gaf#>
+PREFIX grasp: <http://groundedannotationframework.org/grasp#>
+### choose on of the following
+select ?u ?o ### lists the claims
+#select (count(distinct ?u) as ?count) ### counts the claims
+where {
+#### Any of the following
+    ?u grasp:wasAttributedTo ?o .
+}

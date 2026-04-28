@@ -1,0 +1,21 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX n2mu: <http://cltl.nl/leolani/n2mu/>
+SELECT (COUNT(DISTINCT ?o) AS ?count)
+where {
+### any of the following to count
+    ?o rdf:type n2mu:activity.
+#                ?o rdf:type n2mu:exercise .
+#            ?o rdf:type n2mu:measurement .
+#            ?o rdf:type n2mu:take_food .
+#            ?o rdf:type n2mu:take_drink .
+#            ?o rdf:type n2mu:advise .
+#            ?o rdf:type n2mu:social .
+#            ?o rdf:type n2mu:diet.
+#            ?o rdf:type n2mu:treatment .
+#            ?o rdf:type n2mu:medicine .
+#            ?o rdf:type n2mu:physical_condition .
+#            ?o rdf:type n2mu:social_condition .
+#            ?o rdf:type n2mu:mental_condition .
+#            ?o rdf:type n2mu:symptom .
+#            ?o rdf:type n2mu:disease.
+}

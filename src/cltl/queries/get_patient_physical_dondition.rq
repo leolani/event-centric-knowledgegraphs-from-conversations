@@ -1,0 +1,10 @@
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX n2mu: <http://cltl.nl/leolani/n2mu/>
+PREFIX sem: <http://semanticweb.cs.vu.nl/2009/11/sem/>
+select * where {
+    ?o n2mu:patient ?p .
+    ?o n2mu:time ?t .
+    ?o n2mu:location ?l .
+    ?o rdf:type n2mu:physical_condition
+} limit 100
