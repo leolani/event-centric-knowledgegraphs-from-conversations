@@ -1,0 +1,6 @@
+n2mu:agent rdf:type sem:hasActor .
+n2mu:patient rdf:type sem:hasActor .
+n2mu:instrument rdf:type sem:hasActor .
+n2mu:manner rdf:type sem:hasActor .
+n2mu:location rdf:type sem:hasPlace .
+n2mu:time rdf:type sem:hasTime .
