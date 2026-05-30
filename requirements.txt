@@ -1,4 +1,4 @@
-cltl.brain
+cltl.brain[service] @ git+https://github.com/leolani/cltl-knowledgerepresentation
 cltl.combot
 torch==2.2.2
 transformers==4.51.3
