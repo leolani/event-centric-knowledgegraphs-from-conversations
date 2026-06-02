@@ -1,10 +1,8 @@
 # Event-centricKnowledge Graph tutorial
 
-Sample code to represent 
-
 ## Description
 
-This repository contains a Jupyter notebook ```event-centric-capsules.ipynb``` that showcases how to turn dialogue about eventys into an event-centric RDF graph.
+This repository contains a Jupyter notebook ```event-centric-capsules.ipynb``` that showcases how to turn a dialogue about eventys into an event-centric RDF graph.
 
 ## Getting started
 
