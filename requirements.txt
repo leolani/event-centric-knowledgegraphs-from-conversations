@@ -1,5 +1,5 @@
 cltl.brain[service] @ git+https://github.com/leolani/cltl-knowledgerepresentation
-cltl.combot
+cltl.combot @ git+https://github.com/leolani/cltl-combot@main
 torch==2.2.2
 transformers==4.51.3
 pydantic

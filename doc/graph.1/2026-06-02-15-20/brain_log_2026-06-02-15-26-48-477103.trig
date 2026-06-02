@@ -1,0 +1,145 @@
+@prefix gaf: <http://groundedannotationframework.org/gaf#> .
+@prefix grasp: <http://groundedannotationframework.org/grasp#> .
+@prefix graspe: <http://groundedannotationframework.org/grasp/emotion#> .
+@prefix graspf: <http://groundedannotationframework.org/grasp/factuality#> .
+@prefix graspl: <http://groundedannotationframework.org/grasp/level#> .
+@prefix grasps: <http://groundedannotationframework.org/grasp/sentiment#> .
+@prefix leolaniContext: <http://cltl.nl/leolani/context/> .
+@prefix leolaniFriends: <http://cltl.nl/leolani/friends/> .
+@prefix leolaniTalk: <http://cltl.nl/leolani/talk/> .
+@prefix leolaniWorld: <http://cltl.nl/leolani/world/> .
+@prefix n2mu: <http://cltl.nl/leolani/n2mu/> .
+@prefix ns1: <sem:> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix xml1: <https://www.w3.org/TR/xmlschema-2/#> .
+
+leolaniWorld:drink-2_hasActor_john-1 {
+    leolaniWorld:drink-2 ns1:hasActor leolaniWorld:beer,
+            leolaniWorld:john-1 ;
+        ns1:hasPlace leolaniWorld:pub ;
+        ns1:hasTime leolaniWorld:8-3-2026 .
+}
+
+leolaniWorld:Claims {
+    leolaniFriends:luis-1 owl:sameAs leolaniWorld:luis .
+
+    leolaniWorld:drink-2_hasActor_john-1 a gaf:Assertion,
+            sem:Event ;
+        rdfs:label "drink-2_hasActor_john-1" ;
+        gaf:denotedBy leolaniTalk:chat12_utterance2_char0-15 .
+
+    leolaniWorld:leolani_know_luis-1 a gaf:Assertion,
+            sem:Event ;
+        rdfs:label "leolani_know_luis-1" .
+}
+
+leolaniWorld:leolani_know_luis-1 {
+    leolaniWorld:leolani n2mu:know leolaniFriends:luis-1 .
+}
+
+leolaniTalk:Interactions {
+    leolaniContext:context227 sem:hasEvent leolaniTalk:chat12 .
+
+    leolaniTalk:chat12 a grasp:Chat,
+            sem:Event ;
+        rdfs:label "chat12" ;
+        n2mu:id "12"^^xml1:string ;
+        sem:hasSubEvent leolaniTalk:chat12_utterance2 .
+
+    leolaniTalk:chat12_utterance2 a grasp:Utterance,
+            sem:Event ;
+        rdfs:label "chat12_utterance2" ;
+        n2mu:id "2"^^xml1:string ;
+        sem:hasActor leolaniFriends:luis-1 .
+
+    leolaniFriends:luis-1 a n2mu:person,
+            gaf:Instance,
+            grasp:Source,
+            sem:Actor ;
+        rdfs:label "luis" .
+}
+
+leolaniWorld:Instances {
+    leolaniWorld:8-3-2026 a n2mu:date,
+            gaf:Instance ;
+        rdfs:label "8-3-2026" ;
+        gaf:denotedIn leolaniTalk:chat12_utterance2_char0-15 .
+
+    leolaniWorld:beer a n2mu:drink,
+            gaf:Instance ;
+        rdfs:label "beer" ;
+        gaf:denotedIn leolaniTalk:chat12_utterance2_char0-15 .
+
+    leolaniWorld:drink-2 a n2mu:event,
+            gaf:Instance ;
+        rdfs:label "drink" ;
+        gaf:denotedIn leolaniTalk:chat12_utterance2_char0-15 .
+
+    leolaniWorld:john-1 a n2mu:person,
+            gaf:Instance ;
+        rdfs:label "john" ;
+        gaf:denotedIn leolaniTalk:chat12_utterance2_char0-15 .
+
+    leolaniWorld:leolani a n2mu:robot ;
+        rdfs:label "leolani" .
+
+    leolaniWorld:luis a n2mu:person,
+            gaf:Instance ;
+        rdfs:label "luis" .
+
+    leolaniWorld:pub a n2mu:place,
+            gaf:Instance ;
+        rdfs:label "pub" ;
+        gaf:denotedIn leolaniTalk:chat12_utterance2_char0-15 .
+}
+
+leolaniTalk:Perspectives {
+    leolaniTalk:drink-2_hasActor_john-1_3-1-1-1-1 a grasp:Attribution ;
+        rdfs:label "drink-2_hasActor_john-1_3-1-1-1-1" ;
+        grasp:isAttributionFor leolaniTalk:chat12_utterance2_char0-15 ;
+        rdf:value graspe:UNDERSPECIFIED,
+            graspf:CERTAIN,
+            graspf:NEGATIVE,
+            graspl:UNDERSPECIFIED,
+            grasps:NEGATIVE .
+
+    graspe:UNDERSPECIFIED a grasp:AttributionValue,
+            graspe:EmotionValue ;
+        rdfs:label "UNDERSPECIFIED" .
+
+    graspf:CERTAIN a grasp:AttributionValue,
+            graspf:CertaintyValue ;
+        rdfs:label "CERTAIN" .
+
+    graspf:NEGATIVE a grasp:AttributionValue,
+            graspf:PolarityValue ;
+        rdfs:label "NEGATIVE" .
+
+    graspl:UNDERSPECIFIED a n2mu:LevelValue,
+            grasp:AttributionValue ;
+        rdfs:label "UNDERSPECIFIED" .
+
+    grasps:NEGATIVE a grasp:AttributionValue,
+            grasps:SentimentValue ;
+        rdfs:label "NEGATIVE" .
+
+    leolaniTalk:chat12_utterance2_char0-15 a gaf:Mention,
+            grasp:Statement ;
+        rdfs:label "chat12_utterance2_char0-15" ;
+        gaf:containsDenotation leolaniWorld:8-3-2026,
+            leolaniWorld:beer,
+            leolaniWorld:drink-2,
+            leolaniWorld:john-1,
+            leolaniWorld:pub ;
+        gaf:denotes leolaniWorld:drink-2_hasActor_john-1 ;
+        grasp:hasAttribution leolaniTalk:drink-2_hasActor_john-1_3-1-1-1-1 ;
+        grasp:wasAttributedTo leolaniFriends:luis-1 ;
+        sem:hasBeginTimeStamp "2021-03-12 15:26:44.271302"^^xml1:string ;
+        rdf:value "John does not drink beer"^^xml1:string ;
+        prov:wasDerivedFrom leolaniTalk:chat12_utterance2 .
+}
+
