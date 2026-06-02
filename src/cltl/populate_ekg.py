@@ -3,13 +3,14 @@ import json
 import requests
 from cltl.brain.long_term_memory import LongTermMemory
 from cltl.commons.discrete import UtteranceType
+from cltl.brain.infrastructure.api import Perspective, Triple, RDFBase, Entity, Predicate
 from tqdm import tqdm
 from random import getrandbits
 from pathlib import Path
 import events_to_capsules
 from dateutil import parser
 from datetime import datetime
-from types import MappingProxyType
+from enum import Enum
 from emotion_extraction import GoEmotionDetector
 
 def get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector):
@@ -46,73 +47,114 @@ def get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector
             if capsules:
                 scenario = (scenario_context, capsules)
                 scenarios.append(scenario)
-       # break
+        break
     return scenarios
 
-class CustomEncoder(json.JSONEncoder):
+# class CustomEncoder(json.JSONEncoder):
+#     def default(self, obj):
+#         if isinstance(obj, datetime):
+#             return obj.isoformat()
+#         elif hasattr(obj, '__dict__'):
+#             return obj.__dict__
+#         return super().default(obj)
+#
+#
+# class CustomEncoder(json.JSONEncoder):
+#     def default(self, obj):
+#         if isinstance(obj, datetime):
+#             return obj.isoformat()
+#         elif isinstance(obj, MappingProxyType):
+#             return dict(obj)
+#         elif hasattr(obj, '__dict__'):
+#             return obj.__dict__
+#         elif isinstance(obj, (list, tuple)):
+#             return list(obj)
+#         elif isinstance(obj, set):
+#             return list(obj)
+#         try:
+#             return json.JSONEncoder.default(self, obj)
+#         except TypeError:
+#             return str(obj)
+#
+# def deep_copy_without_circular(obj, memo=None):
+#     if memo is None:
+#         memo = set()
+#
+#     # Check for basic types that can be returned as-is
+#     if isinstance(obj, (str, int, float, bool, type(None))):
+#         return obj
+#
+#     # Handle datetime objects
+#     if isinstance(obj, datetime):
+#         return obj.isoformat()
+#
+#     # Get object's id to check for circular references
+#     obj_id = id(obj)
+#     if obj_id in memo:
+#         return "<circular reference>"
+#     memo.add(obj_id)
+#
+#     try:
+#         if isinstance(obj, dict):
+#             return {k: deep_copy_without_circular(v, memo.copy())
+#                    for k, v in obj.items()}
+#         elif isinstance(obj, (list, tuple)):
+#             return [deep_copy_without_circular(x, memo.copy())
+#                    for x in obj]
+#         elif isinstance(obj, MappingProxyType):
+#             return dict(obj)
+#         elif hasattr(obj, '__dict__'):
+#             # For objects, only copy their dictionary
+#             return {k: deep_copy_without_circular(v, memo.copy())
+#                    for k, v in obj.__dict__.items()
+#                    if not k.startswith('_')}  # Skip private attributes
+#         else:
+#             # If we can't handle it, convert to string
+#             return str(obj)
+#     except Exception:
+#         return str(obj)
+
+
+def _serialize_enum(val):
+    """Serialize a Perspective field: handles None, single Enum, or list of Enum/scalar values."""
+    if val is None:
+        return None
+    if isinstance(val, list):
+        return [e.name if isinstance(e, Enum) else e for e in val]
+    if isinstance(val, Enum):
+        return val.name
+    return val
+
+
+class CapsuleEncoder(json.JSONEncoder):
+    """Serializes capsule objects: Perspective/Triple/RDFBase → dict, Enum → name, datetime → ISO."""
     def default(self, obj):
+        if isinstance(obj, Perspective):
+            return {
+                "certainty": _serialize_enum(obj.certainty),
+                "polarity": _serialize_enum(obj.polarity),
+                "sentiment": _serialize_enum(obj.sentiment),
+                "time": _serialize_enum(obj.time),
+                "emotion": _serialize_enum(obj.emotion),
+                "level": _serialize_enum(obj.level),
+            }
+        if isinstance(obj, Triple):
+            return {
+                "subject": obj.subject,
+                "predicate": obj.predicate,
+                "complement": obj.complement,
+            }
+        if isinstance(obj, Entity):
+            return {"id": str(obj.id), "label": str(obj.label), "types": obj.types}
+        if isinstance(obj, Predicate):
+            return {"id": str(obj.id), "label": str(obj.label)}
+        if isinstance(obj, RDFBase):
+            return {"id": str(obj.id), "label": str(obj.label)}
+        if isinstance(obj, Enum):
+            return obj.name
         if isinstance(obj, datetime):
             return obj.isoformat()
-        elif hasattr(obj, '__dict__'):
-            return obj.__dict__
         return super().default(obj)
-
-
-class CustomEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        elif isinstance(obj, MappingProxyType):
-            return dict(obj)
-        elif hasattr(obj, '__dict__'):
-            return obj.__dict__
-        elif isinstance(obj, (list, tuple)):
-            return list(obj)
-        elif isinstance(obj, set):
-            return list(obj)
-        try:
-            return json.JSONEncoder.default(self, obj)
-        except TypeError:
-            return str(obj)
-
-def deep_copy_without_circular(obj, memo=None):
-    if memo is None:
-        memo = set()
-
-    # Check for basic types that can be returned as-is
-    if isinstance(obj, (str, int, float, bool, type(None))):
-        return obj
-
-    # Handle datetime objects
-    if isinstance(obj, datetime):
-        return obj.isoformat()
-
-    # Get object's id to check for circular references
-    obj_id = id(obj)
-    if obj_id in memo:
-        return "<circular reference>"
-    memo.add(obj_id)
-
-    try:
-        if isinstance(obj, dict):
-            return {k: deep_copy_without_circular(v, memo.copy())
-                   for k, v in obj.items()}
-        elif isinstance(obj, (list, tuple)):
-            return [deep_copy_without_circular(x, memo.copy())
-                   for x in obj]
-        elif isinstance(obj, MappingProxyType):
-            return dict(obj)
-        elif hasattr(obj, '__dict__'):
-            # For objects, only copy their dictionary
-            return {k: deep_copy_without_circular(v, memo.copy())
-                   for k, v in obj.__dict__.items()
-                   if not k.startswith('_')}  # Skip private attributes
-        else:
-            # If we can't handle it, convert to string
-            return str(obj)
-    except Exception:
-        return str(obj)
-
 
 def main():
 
@@ -123,7 +165,7 @@ def main():
     graph_filepath.mkdir(parents=True, exist_ok=True)
 
     # Create brain connection
-    brain = LongTermMemory(address="http://localhost:7200/repositories/diabetes_event_details",  # Location to save accumulated graph
+    brain = LongTermMemory(address="http://localhost:7200/repositories/diabetes_event_details_jan",  # Location to save accumulated graph
                            log_dir=graph_filepath,  # Location to save step-wise graphs
                            clear_all=True)  # To start from an empty brain
 
@@ -150,15 +192,14 @@ def main():
         # Add information to the brain
         for capsule in conversation_capsules:
             print('chat', capsule['chat'], 'out of ', len(scenarios), 'turn', capsule['turn'], 'out of', len(conversation_capsules), 'turns')
-            all_capsules.append(capsule)
            # brain.capsule_statement(capsule, reason_types=True, return_thoughts=False, create_label=True)
             brain.capsule_event(capsule, reason_types=True, return_thoughts=False, create_label=True)
+            all_capsules.append(capsule)
+        break
 
-      #  break
 
     f = open(scenario_filepath / "capsules_with_event_details.json", "w")
-    safe_capsules = deep_copy_without_circular(all_capsules)
-    json.dump(safe_capsules, f, indent=4)
+    json.dump(all_capsules, f, indent=4, cls=CapsuleEncoder)
 
 
 if __name__ == '__main__':
