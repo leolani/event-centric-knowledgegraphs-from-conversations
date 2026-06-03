@@ -1,0 +1,117 @@
+@prefix gaf: <http://groundedannotationframework.org/gaf#> .
+@prefix grasp: <http://groundedannotationframework.org/grasp#> .
+@prefix graspe: <http://groundedannotationframework.org/grasp/emotion#> .
+@prefix graspf: <http://groundedannotationframework.org/grasp/factuality#> .
+@prefix graspl: <http://groundedannotationframework.org/grasp/level#> .
+@prefix grasps: <http://groundedannotationframework.org/grasp/sentiment#> .
+@prefix leolaniContext: <http://cltl.nl/leolani/context/> .
+@prefix leolaniFriends: <http://cltl.nl/leolani/friends/> .
+@prefix leolaniTalk: <http://cltl.nl/leolani/talk/> .
+@prefix leolaniWorld: <http://cltl.nl/leolani/world/> .
+@prefix n2mu: <http://cltl.nl/leolani/n2mu/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix xml1: <https://www.w3.org/TR/xmlschema-2/#> .
+
+leolaniWorld:Instances {
+    n2mu:cycling0.6598833213731631 a n2mu:activity,
+            n2mu:exercise,
+            gaf:Instance ;
+        rdfs:label "cycling" ;
+        gaf:denotedIn leolaniTalk:chat0_utterance3_char0-264 .
+
+    leolaniWorld:Jan a n2mu:agent,
+            gaf:Instance ;
+        rdfs:label "Jan" ;
+        gaf:denotedIn leolaniTalk:chat0_utterance3_char0-264 .
+
+    leolaniWorld:leolani a n2mu:robot ;
+        rdfs:label "leolani" .
+}
+
+leolaniWorld:leolani_know_agent {
+    leolaniWorld:leolani n2mu:know leolaniFriends:agent .
+}
+
+leolaniWorld:cycling0.6598833213731631_agent_Jan {
+    n2mu:cycling0.6598833213731631 n2mu:agent leolaniWorld:Jan .
+}
+
+leolaniTalk:Interactions {
+    leolaniContext:context106 sem:hasEvent leolaniTalk:chat0 .
+
+    leolaniTalk:chat0 a grasp:Chat,
+            sem:Event ;
+        rdfs:label "chat0" ;
+        n2mu:id "0"^^xml1:string ;
+        sem:hasSubEvent leolaniTalk:chat0_utterance3 .
+
+    leolaniTalk:chat0_utterance3 a grasp:Utterance,
+            sem:Event ;
+        rdfs:label "chat0_utterance3" ;
+        n2mu:id "3"^^xml1:string ;
+        sem:hasActor leolaniFriends:agent .
+
+    leolaniFriends:agent a n2mu:agent,
+            gaf:Instance,
+            grasp:Source,
+            sem:Actor ;
+        rdfs:label "agent" .
+}
+
+leolaniWorld:Claims {
+    leolaniWorld:cycling0.6598833213731631_agent_Jan a gaf:Assertion,
+            sem:Event ;
+        rdfs:label "cycling0.6598833213731631_agent_Jan" ;
+        gaf:denotedBy leolaniTalk:chat0_utterance3_char0-264 .
+
+    leolaniWorld:leolani_know_agent a gaf:Assertion,
+            sem:Event ;
+        rdfs:label "leolani_know_agent" .
+}
+
+leolaniTalk:Perspectives {
+    leolaniTalk:cycling0.6598833213731631_agent_Jan_0113-1 a grasp:Attribution ;
+        rdfs:label "cycling0.6598833213731631_agent_Jan_0113-1" ;
+        grasp:isAttributionFor leolaniTalk:chat0_utterance3_char0-264 ;
+        rdf:value graspe:UNDERSPECIFIED,
+            graspf:POSITIVE,
+            graspf:UNDERSPECIFIED,
+            graspl:ALMOST_FULLY,
+            grasps:POSITIVE .
+
+    graspe:UNDERSPECIFIED a grasp:AttributionValue,
+            graspe:EmotionValue ;
+        rdfs:label "UNDERSPECIFIED" .
+
+    graspf:POSITIVE a grasp:AttributionValue,
+            graspf:PolarityValue ;
+        rdfs:label "POSITIVE" .
+
+    graspf:UNDERSPECIFIED a grasp:AttributionValue,
+            graspf:CertaintyValue ;
+        rdfs:label "UNDERSPECIFIED" .
+
+    graspl:ALMOST_FULLY a n2mu:LevelValue,
+            grasp:AttributionValue ;
+        rdfs:label "ALMOST_FULLY" .
+
+    grasps:POSITIVE a grasp:AttributionValue,
+            grasps:SentimentValue ;
+        rdfs:label "POSITIVE" .
+
+    leolaniTalk:chat0_utterance3_char0-264 a gaf:Mention,
+            grasp:Statement ;
+        rdfs:label "chat0_utterance3_char0-264" ;
+        gaf:containsDenotation n2mu:cycling0.6598833213731631,
+            leolaniWorld:Jan ;
+        gaf:denotes leolaniWorld:cycling0.6598833213731631_agent_Jan ;
+        grasp:hasAttribution leolaniTalk:cycling0.6598833213731631_agent_Jan_0113-1 ;
+        grasp:wasAttributedTo leolaniFriends:agent ;
+        sem:hasBeginTimeStamp "2013-04-13 21:44:12.709687"^^xml1:string ;
+        rdf:value "Physical activity, like cycling, is crucial in managing your diabetes. It helps your body use insulin better and can lower your blood sugar levels. If weather conditions are interfering with your routine, perhaps you could look for indoor exercises to stay active."^^xml1:string ;
+        prov:wasDerivedFrom leolaniTalk:chat0_utterance3 .
+}
+

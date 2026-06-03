@@ -1,0 +1,131 @@
+@prefix gaf: <http://groundedannotationframework.org/gaf#> .
+@prefix grasp: <http://groundedannotationframework.org/grasp#> .
+@prefix graspe: <http://groundedannotationframework.org/grasp/emotion#> .
+@prefix graspf: <http://groundedannotationframework.org/grasp/factuality#> .
+@prefix graspl: <http://groundedannotationframework.org/grasp/level#> .
+@prefix grasps: <http://groundedannotationframework.org/grasp/sentiment#> .
+@prefix leolaniContext: <http://cltl.nl/leolani/context/> .
+@prefix leolaniFriends: <http://cltl.nl/leolani/friends/> .
+@prefix leolaniTalk: <http://cltl.nl/leolani/talk/> .
+@prefix leolaniWorld: <http://cltl.nl/leolani/world/> .
+@prefix n2mu: <http://cltl.nl/leolani/n2mu/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix xml1: <https://www.w3.org/TR/xmlschema-2/#> .
+
+leolaniWorld:Instances {
+    n2mu:regular_walking0.27740476088782606 a n2mu:activity,
+            n2mu:exercise,
+            gaf:Instance ;
+        rdfs:label "regular walking" ;
+        gaf:denotedIn leolaniTalk:chat1_utterance7_char0-193 .
+
+    leolaniWorld:Jan a n2mu:agent,
+            gaf:Instance ;
+        rdfs:label "Jan" ;
+        gaf:denotedIn leolaniTalk:chat1_utterance7_char0-193 .
+
+    leolaniWorld:adapt_intensity_and_duration a n2mu:property,
+            gaf:Instance ;
+        rdfs:label "adapt intensity and duration" ;
+        gaf:denotedIn leolaniTalk:chat1_utterance7_char0-193 .
+
+    leolaniWorld:daily a n2mu:time,
+            gaf:Instance ;
+        rdfs:label "daily" ;
+        gaf:denotedIn leolaniTalk:chat1_utterance7_char0-193 .
+
+    leolaniWorld:leolani a n2mu:robot ;
+        rdfs:label "leolani" .
+}
+
+leolaniWorld:leolani_know_agent {
+    leolaniWorld:leolani n2mu:know leolaniFriends:agent .
+}
+
+leolaniTalk:Interactions {
+    leolaniContext:context184 sem:hasEvent leolaniTalk:chat1 .
+
+    leolaniTalk:chat1 a grasp:Chat,
+            sem:Event ;
+        rdfs:label "chat1" ;
+        n2mu:id "1"^^xml1:string ;
+        sem:hasSubEvent leolaniTalk:chat1_utterance7 .
+
+    leolaniTalk:chat1_utterance7 a grasp:Utterance,
+            sem:Event ;
+        rdfs:label "chat1_utterance7" ;
+        n2mu:id "7"^^xml1:string ;
+        sem:hasActor leolaniFriends:agent .
+
+    leolaniFriends:agent a n2mu:agent,
+            gaf:Instance,
+            grasp:Source,
+            sem:Actor ;
+        rdfs:label "agent" .
+}
+
+leolaniWorld:Claims {
+    leolaniWorld:leolani_know_agent a gaf:Assertion,
+            sem:Event ;
+        rdfs:label "leolani_know_agent" .
+
+    leolaniWorld:regular_walking0.27740476088782606_agent_Jan a gaf:Assertion,
+            sem:Event ;
+        rdfs:label "regular_walking0.27740476088782606_agent_Jan" ;
+        gaf:denotedBy leolaniTalk:chat1_utterance7_char0-193 .
+}
+
+leolaniTalk:Perspectives {
+    leolaniTalk:regular_walking0.27740476088782606_agent_Jan_211212 a grasp:Attribution ;
+        rdfs:label "regular_walking0.27740476088782606_agent_Jan_211212" ;
+        grasp:isAttributionFor leolaniTalk:chat1_utterance7_char0-193 ;
+        rdf:value graspe:APPROVAL,
+            graspf:POSITIVE,
+            graspf:PROBABLE,
+            graspl:SOMEWHAT,
+            grasps:POSITIVE .
+
+    graspe:APPROVAL a grasp:AttributionValue,
+            graspe:EmotionValue ;
+        rdfs:label "APPROVAL" .
+
+    graspf:POSITIVE a grasp:AttributionValue,
+            graspf:PolarityValue ;
+        rdfs:label "POSITIVE" .
+
+    graspf:PROBABLE a grasp:AttributionValue,
+            graspf:CertaintyValue ;
+        rdfs:label "PROBABLE" .
+
+    graspl:SOMEWHAT a n2mu:LevelValue,
+            grasp:AttributionValue ;
+        rdfs:label "SOMEWHAT" .
+
+    grasps:POSITIVE a grasp:AttributionValue,
+            grasps:SentimentValue ;
+        rdfs:label "POSITIVE" .
+
+    leolaniTalk:chat1_utterance7_char0-193 a gaf:Mention,
+            grasp:Statement ;
+        rdfs:label "chat1_utterance7_char0-193" ;
+        gaf:containsDenotation n2mu:regular_walking0.27740476088782606,
+            leolaniWorld:Jan,
+            leolaniWorld:adapt_intensity_and_duration,
+            leolaniWorld:daily ;
+        gaf:denotes leolaniWorld:regular_walking0.27740476088782606_agent_Jan ;
+        grasp:hasAttribution leolaniTalk:regular_walking0.27740476088782606_agent_Jan_211212 ;
+        grasp:wasAttributedTo leolaniFriends:agent ;
+        sem:hasBeginTimeStamp "2013-05-11 17:24:19.8644"^^xml1:string ;
+        rdf:value "Yes, absolutely! Regular walking is an efficient and effective way to improve insulin sensitivity and manage your diabetes. Just make sure to adapt the intensity and duration to your abilities."^^xml1:string ;
+        prov:wasDerivedFrom leolaniTalk:chat1_utterance7 .
+}
+
+leolaniWorld:regular_walking0.27740476088782606_agent_Jan {
+    n2mu:regular_walking0.27740476088782606 n2mu:agent leolaniWorld:Jan ;
+        n2mu:manner leolaniWorld:adapt_intensity_and_duration ;
+        n2mu:time leolaniWorld:daily .
+}
+

@@ -1,0 +1,117 @@
+@prefix gaf: <http://groundedannotationframework.org/gaf#> .
+@prefix grasp: <http://groundedannotationframework.org/grasp#> .
+@prefix graspe: <http://groundedannotationframework.org/grasp/emotion#> .
+@prefix graspf: <http://groundedannotationframework.org/grasp/factuality#> .
+@prefix graspl: <http://groundedannotationframework.org/grasp/level#> .
+@prefix grasps: <http://groundedannotationframework.org/grasp/sentiment#> .
+@prefix leolaniContext: <http://cltl.nl/leolani/context/> .
+@prefix leolaniFriends: <http://cltl.nl/leolani/friends/> .
+@prefix leolaniTalk: <http://cltl.nl/leolani/talk/> .
+@prefix leolaniWorld: <http://cltl.nl/leolani/world/> .
+@prefix n2mu: <http://cltl.nl/leolani/n2mu/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix xml1: <https://www.w3.org/TR/xmlschema-2/#> .
+
+leolaniWorld:Instances {
+    n2mu:daily_walks0.5581357206184595 a n2mu:activity,
+            n2mu:exercise,
+            gaf:Instance ;
+        rdfs:label "daily walks" ;
+        gaf:denotedIn leolaniTalk:chat1_utterance9_char0-123 .
+
+    leolaniWorld:Jan a n2mu:agent,
+            gaf:Instance ;
+        rdfs:label "Jan" ;
+        gaf:denotedIn leolaniTalk:chat1_utterance9_char0-123 .
+
+    leolaniWorld:leolani a n2mu:robot ;
+        rdfs:label "leolani" .
+}
+
+leolaniWorld:leolani_know_agent {
+    leolaniWorld:leolani n2mu:know leolaniFriends:agent .
+}
+
+leolaniTalk:Interactions {
+    leolaniContext:context184 sem:hasEvent leolaniTalk:chat1 .
+
+    leolaniTalk:chat1 a grasp:Chat,
+            sem:Event ;
+        rdfs:label "chat1" ;
+        n2mu:id "1"^^xml1:string ;
+        sem:hasSubEvent leolaniTalk:chat1_utterance9 .
+
+    leolaniTalk:chat1_utterance9 a grasp:Utterance,
+            sem:Event ;
+        rdfs:label "chat1_utterance9" ;
+        n2mu:id "9"^^xml1:string ;
+        sem:hasActor leolaniFriends:agent .
+
+    leolaniFriends:agent a n2mu:agent,
+            gaf:Instance,
+            grasp:Source,
+            sem:Actor ;
+        rdfs:label "agent" .
+}
+
+leolaniWorld:Claims {
+    leolaniWorld:daily_walks0.5581357206184595_agent_Jan a gaf:Assertion,
+            sem:Event ;
+        rdfs:label "daily_walks0.5581357206184595_agent_Jan" ;
+        gaf:denotedBy leolaniTalk:chat1_utterance9_char0-123 .
+
+    leolaniWorld:leolani_know_agent a gaf:Assertion,
+            sem:Event ;
+        rdfs:label "leolani_know_agent" .
+}
+
+leolaniTalk:Perspectives {
+    leolaniTalk:daily_walks0.5581357206184595_agent_Jan_011210 a grasp:Attribution ;
+        rdfs:label "daily_walks0.5581357206184595_agent_Jan_011210" ;
+        grasp:isAttributionFor leolaniTalk:chat1_utterance9_char0-123 ;
+        rdf:value graspe:GRATITUDE,
+            graspf:POSITIVE,
+            graspf:UNDERSPECIFIED,
+            graspl:SOMEWHAT,
+            grasps:POSITIVE .
+
+    graspe:GRATITUDE a grasp:AttributionValue,
+            graspe:EmotionValue ;
+        rdfs:label "GRATITUDE" .
+
+    graspf:POSITIVE a grasp:AttributionValue,
+            graspf:PolarityValue ;
+        rdfs:label "POSITIVE" .
+
+    graspf:UNDERSPECIFIED a grasp:AttributionValue,
+            graspf:CertaintyValue ;
+        rdfs:label "UNDERSPECIFIED" .
+
+    graspl:SOMEWHAT a n2mu:LevelValue,
+            grasp:AttributionValue ;
+        rdfs:label "SOMEWHAT" .
+
+    grasps:POSITIVE a grasp:AttributionValue,
+            grasps:SentimentValue ;
+        rdfs:label "POSITIVE" .
+
+    leolaniTalk:chat1_utterance9_char0-123 a gaf:Mention,
+            grasp:Statement ;
+        rdfs:label "chat1_utterance9_char0-123" ;
+        gaf:containsDenotation n2mu:daily_walks0.5581357206184595,
+            leolaniWorld:Jan ;
+        gaf:denotes leolaniWorld:daily_walks0.5581357206184595_agent_Jan ;
+        grasp:hasAttribution leolaniTalk:daily_walks0.5581357206184595_agent_Jan_011210 ;
+        grasp:wasAttributedTo leolaniFriends:agent ;
+        sem:hasBeginTimeStamp "2013-05-11 17:44:15.380442"^^xml1:string ;
+        rdf:value "You're welcome, Jan! Remember, consistency is key in managing diabetes. Feel free to reach out if you need any more advice."^^xml1:string ;
+        prov:wasDerivedFrom leolaniTalk:chat1_utterance9 .
+}
+
+leolaniWorld:daily_walks0.5581357206184595_agent_Jan {
+    n2mu:daily_walks0.5581357206184595 n2mu:agent leolaniWorld:Jan .
+}
+

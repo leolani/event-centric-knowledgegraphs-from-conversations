@@ -1,0 +1,124 @@
+@prefix gaf: <http://groundedannotationframework.org/gaf#> .
+@prefix grasp: <http://groundedannotationframework.org/grasp#> .
+@prefix graspe: <http://groundedannotationframework.org/grasp/emotion#> .
+@prefix graspf: <http://groundedannotationframework.org/grasp/factuality#> .
+@prefix graspl: <http://groundedannotationframework.org/grasp/level#> .
+@prefix grasps: <http://groundedannotationframework.org/grasp/sentiment#> .
+@prefix leolaniContext: <http://cltl.nl/leolani/context/> .
+@prefix leolaniFriends: <http://cltl.nl/leolani/friends/> .
+@prefix leolaniTalk: <http://cltl.nl/leolani/talk/> .
+@prefix leolaniWorld: <http://cltl.nl/leolani/world/> .
+@prefix n2mu: <http://cltl.nl/leolani/n2mu/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix xml1: <https://www.w3.org/TR/xmlschema-2/#> .
+
+leolaniWorld:Instances {
+    n2mu:cycling0.6598833213731631 a n2mu:activity,
+            n2mu:exercise,
+            gaf:Instance ;
+        rdfs:label "cycling" ;
+        gaf:denotedIn leolaniTalk:chat0_utterance2_char0-128 .
+
+    leolaniWorld:Jan a n2mu:agent,
+            gaf:Instance ;
+        rdfs:label "Jan" ;
+        gaf:denotedIn leolaniTalk:chat0_utterance2_char0-128 .
+
+    leolaniWorld:lately a n2mu:time,
+            gaf:Instance ;
+        rdfs:label "lately" ;
+        gaf:denotedIn leolaniTalk:chat0_utterance2_char0-128 .
+
+    leolaniWorld:leolani a n2mu:robot ;
+        rdfs:label "leolani" .
+}
+
+leolaniWorld:cycling0.6598833213731631_agent_Jan {
+    n2mu:cycling0.6598833213731631 n2mu:agent leolaniWorld:Jan ;
+        n2mu:time leolaniWorld:lately .
+}
+
+leolaniTalk:Interactions {
+    leolaniContext:context64 sem:hasEvent leolaniTalk:chat0 .
+
+    leolaniFriends:Jan a n2mu:agent,
+            gaf:Instance,
+            grasp:Source,
+            sem:Actor ;
+        rdfs:label "jan" .
+
+    leolaniTalk:chat0 a grasp:Chat,
+            sem:Event ;
+        rdfs:label "chat0" ;
+        n2mu:id "0"^^xml1:string ;
+        sem:hasSubEvent leolaniTalk:chat0_utterance2 .
+
+    leolaniTalk:chat0_utterance2 a grasp:Utterance,
+            sem:Event ;
+        rdfs:label "chat0_utterance2" ;
+        n2mu:id "2"^^xml1:string ;
+        sem:hasActor leolaniFriends:Jan .
+}
+
+leolaniWorld:Claims {
+    leolaniWorld:cycling0.6598833213731631_agent_Jan a gaf:Assertion,
+            sem:Event ;
+        rdfs:label "cycling0.6598833213731631_agent_Jan" ;
+        gaf:denotedBy leolaniTalk:chat0_utterance2_char0-128 .
+
+    leolaniWorld:leolani_know_Jan a gaf:Assertion,
+            sem:Event ;
+        rdfs:label "leolani_know_Jan" .
+}
+
+leolaniTalk:Perspectives {
+    leolaniTalk:cycling0.6598833213731631_agent_Jan_01-1226 a grasp:Attribution ;
+        rdfs:label "cycling0.6598833213731631_agent_Jan_01-1226" ;
+        grasp:isAttributionFor leolaniTalk:chat0_utterance2_char0-128 ;
+        rdf:value graspe:CURIOSITY,
+            graspf:POSITIVE,
+            graspf:UNDERSPECIFIED,
+            graspl:SOMEWHAT,
+            grasps:NEGATIVE .
+
+    graspe:CURIOSITY a grasp:AttributionValue,
+            graspe:EmotionValue ;
+        rdfs:label "CURIOSITY" .
+
+    graspf:POSITIVE a grasp:AttributionValue,
+            graspf:PolarityValue ;
+        rdfs:label "POSITIVE" .
+
+    graspf:UNDERSPECIFIED a grasp:AttributionValue,
+            graspf:CertaintyValue ;
+        rdfs:label "UNDERSPECIFIED" .
+
+    graspl:SOMEWHAT a n2mu:LevelValue,
+            grasp:AttributionValue ;
+        rdfs:label "SOMEWHAT" .
+
+    grasps:NEGATIVE a grasp:AttributionValue,
+            grasps:SentimentValue ;
+        rdfs:label "NEGATIVE" .
+
+    leolaniTalk:chat0_utterance2_char0-128 a gaf:Mention,
+            grasp:Statement ;
+        rdfs:label "chat0_utterance2_char0-128" ;
+        gaf:containsDenotation n2mu:cycling0.6598833213731631,
+            leolaniWorld:Jan,
+            leolaniWorld:lately ;
+        gaf:denotes leolaniWorld:cycling0.6598833213731631_agent_Jan ;
+        grasp:hasAttribution leolaniTalk:cycling0.6598833213731631_agent_Jan_01-1226 ;
+        grasp:wasAttributedTo leolaniFriends:Jan ;
+        sem:hasBeginTimeStamp "2013-04-13 21:44:12.427143"^^xml1:string ;
+        rdf:value "It's been quite unpredictable recently, so I haven't been out as often as I'd like. How does this affect my diabetes management?"^^xml1:string ;
+        prov:wasDerivedFrom leolaniTalk:chat0_utterance2 .
+}
+
+leolaniWorld:leolani_know_Jan {
+    leolaniWorld:leolani n2mu:know leolaniFriends:Jan .
+}
+
