@@ -47,72 +47,8 @@ def get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector
             if capsules:
                 scenario = (scenario_context, capsules)
                 scenarios.append(scenario)
-        break
+        #break
     return scenarios
-
-# class CustomEncoder(json.JSONEncoder):
-#     def default(self, obj):
-#         if isinstance(obj, datetime):
-#             return obj.isoformat()
-#         elif hasattr(obj, '__dict__'):
-#             return obj.__dict__
-#         return super().default(obj)
-#
-#
-# class CustomEncoder(json.JSONEncoder):
-#     def default(self, obj):
-#         if isinstance(obj, datetime):
-#             return obj.isoformat()
-#         elif isinstance(obj, MappingProxyType):
-#             return dict(obj)
-#         elif hasattr(obj, '__dict__'):
-#             return obj.__dict__
-#         elif isinstance(obj, (list, tuple)):
-#             return list(obj)
-#         elif isinstance(obj, set):
-#             return list(obj)
-#         try:
-#             return json.JSONEncoder.default(self, obj)
-#         except TypeError:
-#             return str(obj)
-#
-# def deep_copy_without_circular(obj, memo=None):
-#     if memo is None:
-#         memo = set()
-#
-#     # Check for basic types that can be returned as-is
-#     if isinstance(obj, (str, int, float, bool, type(None))):
-#         return obj
-#
-#     # Handle datetime objects
-#     if isinstance(obj, datetime):
-#         return obj.isoformat()
-#
-#     # Get object's id to check for circular references
-#     obj_id = id(obj)
-#     if obj_id in memo:
-#         return "<circular reference>"
-#     memo.add(obj_id)
-#
-#     try:
-#         if isinstance(obj, dict):
-#             return {k: deep_copy_without_circular(v, memo.copy())
-#                    for k, v in obj.items()}
-#         elif isinstance(obj, (list, tuple)):
-#             return [deep_copy_without_circular(x, memo.copy())
-#                    for x in obj]
-#         elif isinstance(obj, MappingProxyType):
-#             return dict(obj)
-#         elif hasattr(obj, '__dict__'):
-#             # For objects, only copy their dictionary
-#             return {k: deep_copy_without_circular(v, memo.copy())
-#                    for k, v in obj.__dict__.items()
-#                    if not k.startswith('_')}  # Skip private attributes
-#         else:
-#             # If we can't handle it, convert to string
-#             return str(obj)
-#     except Exception:
-#         return str(obj)
 
 
 def _serialize_enum(val):
@@ -128,21 +64,26 @@ def _serialize_enum(val):
 
 class CapsuleEncoder(json.JSONEncoder):
     """Serializes capsule objects: Perspective/Triple/RDFBase → dict, Enum → name, datetime → ISO."""
-    def default(self, obj):
+
+    def _preprocess(self, obj):
+        """Walk the object graph and convert all non-standard types before encoding.
+
+        Enum subclasses that also inherit str/int are serialized by Python's JSON
+        encoder as their raw value, bypassing default(). Preprocessing fixes that.
+        """
         if isinstance(obj, Perspective):
             return {
                 "certainty": _serialize_enum(obj.certainty),
                 "polarity": _serialize_enum(obj.polarity),
                 "sentiment": _serialize_enum(obj.sentiment),
-                "time": _serialize_enum(obj.time),
                 "emotion": _serialize_enum(obj.emotion),
                 "level": _serialize_enum(obj.level),
             }
         if isinstance(obj, Triple):
             return {
-                "subject": obj.subject,
-                "predicate": obj.predicate,
-                "complement": obj.complement,
+                "subject": self._preprocess(obj.subject),
+                "predicate": self._preprocess(obj.predicate),
+                "complement": self._preprocess(obj.complement),
             }
         if isinstance(obj, Entity):
             return {"id": str(obj.id), "label": str(obj.label), "types": obj.types}
@@ -154,7 +95,17 @@ class CapsuleEncoder(json.JSONEncoder):
             return obj.name
         if isinstance(obj, datetime):
             return obj.isoformat()
-        return super().default(obj)
+        if isinstance(obj, dict):
+            return {k: self._preprocess(v) for k, v in obj.items()}
+        if isinstance(obj, (list, tuple)):
+            return [self._preprocess(item) for item in obj]
+        return obj
+
+    def encode(self, obj):
+        return super().encode(self._preprocess(obj))
+
+    def iterencode(self, obj, _one_shot=False):
+        return super().iterencode(self._preprocess(obj), _one_shot)
 
 def main():
 
@@ -165,7 +116,7 @@ def main():
     graph_filepath.mkdir(parents=True, exist_ok=True)
 
     # Create brain connection
-    brain = LongTermMemory(address="http://localhost:7200/repositories/diabetes_event_details_jan",  # Location to save accumulated graph
+    brain = LongTermMemory(address="http://localhost:7200/repositories/diabetes_event_details",  # Location to save accumulated graph
                            log_dir=graph_filepath,  # Location to save step-wise graphs
                            clear_all=True)  # To start from an empty brain
 
@@ -183,24 +134,18 @@ def main():
     # the capsules contain the information that needs to be added to the brain (e.g. triples, event details, etc.)
     scenarios = get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector)
     print('Total nr of scenarios', len(scenarios))
+    f = open(scenario_filepath / "capsules_with_event_details.json", "w")
+    json.dump(scenarios, f, indent=4, cls=CapsuleEncoder)
+
     # Loop through the scenarios
-    all_capsules = []
     for (context_capsule, conversation_capsules) in tqdm(scenarios):
         print('Conversation id', context_capsule['context_id'], 'Total number of capsules extracted for this conversation', len(conversation_capsules))        # Create context
         brain.capsule_context(context_capsule)
-        all_capsules.append(context_capsule)
         # Add information to the brain
         for capsule in conversation_capsules:
             print('chat', capsule['chat'], 'out of ', len(scenarios), 'turn', capsule['turn'], 'out of', len(conversation_capsules), 'turns')
            # brain.capsule_statement(capsule, reason_types=True, return_thoughts=False, create_label=True)
             brain.capsule_event(capsule, reason_types=True, return_thoughts=False, create_label=True)
-            all_capsules.append(capsule)
-        break
-
-
-    f = open(scenario_filepath / "capsules_with_event_details.json", "w")
-    json.dump(all_capsules, f, indent=4, cls=CapsuleEncoder)
-
 
 if __name__ == '__main__':
     main()
