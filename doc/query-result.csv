@@ -1,0 +1,31 @@
+﻿time,activity,source,perspective
+2013-04-13 21:44:12.163845,cycling,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-13 21:44:12.163845,cycling,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-04-13 21:44:12.163845,cycling,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-04-13 21:44:12.163845,cycling,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-13 21:44:12.163845,cycling,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-04-13 21:44:12.427143,cycling,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-13 21:44:12.427143,cycling,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#NEGATIVE
+2013-04-13 21:44:12.427143,cycling,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-04-13 21:44:12.427143,cycling,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-13 21:44:12.427143,cycling,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-04-13 21:44:12.709687,cycling,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2013-04-13 21:44:12.709687,cycling,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-13 21:44:12.709687,cycling,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-04-13 21:44:12.709687,cycling,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-13 21:44:12.709687,cycling,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-05-11 17:24:19.8644,regular walking,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-05-11 17:24:19.8644,regular walking,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-05-11 17:24:19.8644,regular walking,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-05-11 17:24:19.8644,regular walking,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2013-05-11 17:24:19.8644,regular walking,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#PROBABLE
+2013-05-11 17:44:14.480872,walking,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-05-11 17:44:14.480872,walking,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-05-11 17:44:14.480872,walking,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-05-11 17:44:14.480872,walking,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-05-11 17:44:14.480872,walking,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2013-05-11 17:44:15.380442,daily walks,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-05-11 17:44:15.380442,daily walks,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-05-11 17:44:15.380442,daily walks,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-05-11 17:44:15.380442,daily walks,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-05-11 17:44:15.380442,daily walks,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
