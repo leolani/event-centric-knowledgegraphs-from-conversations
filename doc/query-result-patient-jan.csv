@@ -1,0 +1,246 @@
+﻿time,activity,patient,source,perspective
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/heart_disease,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/kidney_failure,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/heart_disease,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/kidney_failure,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/heart_disease,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/kidney_failure,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/heart_disease,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/kidney_failure,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/heart_disease,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/kidney_failure,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/heart_disease,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#SADNESS
+2013-08-24 10:54:57.666681,complications that can arise from Type 2 Diabetes,http://cltl.nl/leolani/world/kidney_failure,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#SADNESS
+2011-03-13 10:54:59.915474,arrange,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-03-13 10:54:59.915474,arrange,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-03-13 10:54:59.915474,arrange,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-03-13 10:54:59.915474,arrange,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-03-13 10:54:59.915474,arrange,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2011-09-03 10:55:01.693518,drink,http://cltl.nl/leolani/world/water,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2011-09-03 10:55:01.693518,drink,http://cltl.nl/leolani/world/water,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-09-03 10:55:01.693518,drink,http://cltl.nl/leolani/world/water,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-09-03 10:55:01.693518,drink,http://cltl.nl/leolani/world/water,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-09-03 10:55:01.693518,drink,http://cltl.nl/leolani/world/water,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-09-03 10:55:02.085855,check,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-09-03 10:55:02.085855,check,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-09-03 10:55:02.085855,check,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-09-03 10:55:02.085855,check,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-09-03 10:55:02.085855,check,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2011-05-21 10:55:06.329676,take,http://cltl.nl/leolani/world/aspirin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-05-21 10:55:06.329676,take,http://cltl.nl/leolani/world/aspirin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-05-21 10:55:06.329676,take,http://cltl.nl/leolani/world/aspirin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-05-21 10:55:06.329676,take,http://cltl.nl/leolani/world/aspirin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-05-21 10:55:06.329676,take,http://cltl.nl/leolani/world/aspirin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#CARING
+2011-05-21 10:55:06.619483,stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-05-21 10:55:06.619483,stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-05-21 10:55:06.619483,stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-05-21 10:55:06.619483,stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-05-21 10:55:06.619483,stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2011-05-21 10:55:06.771977,stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-05-21 10:55:06.771977,stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-05-21 10:55:06.771977,stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-05-21 10:55:06.771977,stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-05-21 10:55:06.771977,stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2013-03-14 10:55:09.420556,consult an eye specialist if vision doesn't improve or worsens,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-03-14 10:55:09.420556,consult an eye specialist if vision doesn't improve or worsens,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-03-14 10:55:09.420556,consult an eye specialist if vision doesn't improve or worsens,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-03-14 10:55:09.420556,consult an eye specialist if vision doesn't improve or worsens,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-03-14 10:55:09.420556,consult an eye specialist if vision doesn't improve or worsens,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2013-08-30 10:55:10.263197,drink,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-08-30 10:55:10.263197,drink,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-30 10:55:10.263197,drink,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-08-30 10:55:10.263197,drink,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-08-30 10:55:10.263197,drink,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-08-30 10:55:10.585109,avoid,http://cltl.nl/leolani/world/caffeinated_beverages,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-30 10:55:10.585109,avoid,http://cltl.nl/leolani/world/caffeinated_beverages,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-08-30 10:55:10.585109,avoid,http://cltl.nl/leolani/world/caffeinated_beverages,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-08-30 10:55:10.585109,avoid,http://cltl.nl/leolani/world/caffeinated_beverages,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#PROBABLE
+2013-08-30 10:55:10.585109,avoid,http://cltl.nl/leolani/world/caffeinated_beverages,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2013-06-10 10:55:11.279787,worry,http://cltl.nl/leolani/world/family,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-06-10 10:55:11.279787,worry,http://cltl.nl/leolani/world/family,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-06-10 10:55:11.279787,worry,http://cltl.nl/leolani/world/family,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-06-10 10:55:11.279787,worry,http://cltl.nl/leolani/world/family,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-06-10 10:55:11.279787,worry,http://cltl.nl/leolani/world/family,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-06-10 10:55:11.411379,changes in my diet,http://cltl.nl/leolani/world/-,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-06-10 10:55:11.411379,changes in my diet,http://cltl.nl/leolani/world/-,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-06-10 10:55:11.411379,changes in my diet,http://cltl.nl/leolani/world/-,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-06-10 10:55:11.411379,changes in my diet,http://cltl.nl/leolani/world/-,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-06-10 10:55:11.411379,changes in my diet,http://cltl.nl/leolani/world/-,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-10-11 10:55:13.113031,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-10-11 10:55:13.113031,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-10-11 10:55:13.113031,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-10-11 10:55:13.113031,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-10-11 10:55:13.113031,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2013-10-11 10:55:13.164498,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-10-11 10:55:13.164498,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-10-11 10:55:13.164498,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-10-11 10:55:13.164498,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-10-11 10:55:13.164498,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-10-11 10:55:13.164498,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2014-09-08 10:55:13.514780,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-09-08 10:55:13.514780,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-09-08 10:55:13.514780,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-09-08 10:55:13.514780,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2014-09-08 10:55:13.514780,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2014-09-08 10:55:13.824814,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-09-08 10:55:13.824814,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-09-08 10:55:13.824814,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#NEGATIVE
+2014-09-08 10:55:13.824814,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#NEGATIVE
+2014-09-08 10:55:13.824814,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#DISAPPROVAL
+2013-09-23 10:55:14.986081,talk,http://cltl.nl/leolani/world/wife_and_children,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-23 10:55:14.986081,talk,http://cltl.nl/leolani/world/wife_and_children,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-23 10:55:14.986081,talk,http://cltl.nl/leolani/world/wife_and_children,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-09-23 10:55:14.986081,talk,http://cltl.nl/leolani/world/wife_and_children,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-23 10:55:14.986081,talk,http://cltl.nl/leolani/world/wife_and_children,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2013-09-23 10:55:14.986081,talk,http://cltl.nl/leolani/world/wife_and_children,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-09-23 10:55:15.608710,practicing mindfulness techniques,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-23 10:55:15.608710,practicing mindfulness techniques,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-23 10:55:15.608710,practicing mindfulness techniques,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-09-23 10:55:15.608710,practicing mindfulness techniques,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-23 10:55:15.608710,practicing mindfulness techniques,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/Jan,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2014-01-07 10:55:03.860212,consider,http://cltl.nl/leolani/world/indoor_exercises_such_as_stretching_or_light_resistance_training,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-01-07 10:55:03.860212,consider,http://cltl.nl/leolani/world/indoor_exercises_such_as_stretching_or_light_resistance_training,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-01-07 10:55:03.860212,consider,http://cltl.nl/leolani/world/indoor_exercises_such_as_stretching_or_light_resistance_training,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-01-07 10:55:03.860212,consider,http://cltl.nl/leolani/world/indoor_exercises_such_as_stretching_or_light_resistance_training,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-01-07 10:55:03.860212,consider,http://cltl.nl/leolani/world/indoor_exercises_such_as_stretching_or_light_resistance_training,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/_They,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/_They,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/_They,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/_They,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/_They,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#REMORSE
+2013-07-05 10:55:04.002839,manage my blood sugar levels,http://cltl.nl/leolani/world/_They,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#REMORSE
+2011-05-30 10:55:05.351702,relieve the symptoms of diabetic neuropathy,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-05-30 10:55:05.351702,relieve the symptoms of diabetic neuropathy,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-05-30 10:55:05.351702,relieve the symptoms of diabetic neuropathy,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-05-30 10:55:05.351702,relieve the symptoms of diabetic neuropathy,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2011-05-30 10:55:05.351702,relieve the symptoms of diabetic neuropathy,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2011-05-21 10:55:05.795661,tell,http://cltl.nl/leolani/world/me,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2011-05-21 10:55:05.795661,tell,http://cltl.nl/leolani/world/me,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-05-21 10:55:05.795661,tell,http://cltl.nl/leolani/world/me,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-05-21 10:55:05.795661,tell,http://cltl.nl/leolani/world/me,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-05-21 10:55:05.795661,tell,http://cltl.nl/leolani/world/me,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2011-05-21 10:55:06.542874,take,http://cltl.nl/leolani/world/aspirin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2011-05-21 10:55:06.542874,take,http://cltl.nl/leolani/world/aspirin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-05-21 10:55:06.542874,take,http://cltl.nl/leolani/world/aspirin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-05-21 10:55:06.542874,take,http://cltl.nl/leolani/world/aspirin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-05-21 10:55:06.542874,take,http://cltl.nl/leolani/world/aspirin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2011-05-21 10:55:06.702559,experience stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2011-05-21 10:55:06.702559,experience stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-05-21 10:55:06.702559,experience stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-05-21 10:55:06.702559,experience stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-05-21 10:55:06.702559,experience stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2011-05-21 10:55:06.702559,experience stomach discomfort,http://cltl.nl/leolani/world/metformin,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2011-05-21 10:55:07.204516,experience,http://cltl.nl/leolani/world/stomach_discomfort,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-05-21 10:55:07.204516,experience,http://cltl.nl/leolani/world/stomach_discomfort,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-05-21 10:55:07.204516,experience,http://cltl.nl/leolani/world/stomach_discomfort,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-05-21 10:55:07.204516,experience,http://cltl.nl/leolani/world/stomach_discomfort,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2011-05-21 10:55:07.204516,experience,http://cltl.nl/leolani/world/stomach_discomfort,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2013-03-14 10:55:09.774473,monitoring and management of blood sugar levels,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-03-14 10:55:09.774473,monitoring and management of blood sugar levels,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-03-14 10:55:09.774473,monitoring and management of blood sugar levels,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-03-14 10:55:09.774473,monitoring and management of blood sugar levels,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-03-14 10:55:09.774473,monitoring and management of blood sugar levels,http://cltl.nl/leolani/world/Jan,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2013-08-30 10:55:10.216209,urination,http://cltl.nl/leolani/world/more_water,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-30 10:55:10.216209,urination,http://cltl.nl/leolani/world/more_water,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-08-30 10:55:10.216209,urination,http://cltl.nl/leolani/world/more_water,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-08-30 10:55:10.216209,urination,http://cltl.nl/leolani/world/more_water,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-08-30 10:55:10.216209,urination,http://cltl.nl/leolani/world/more_water,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-08-30 10:55:10.445490,monitor blood glucose levels,http://cltl.nl/leolani/world/blood_glucose_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-30 10:55:10.445490,monitor blood glucose levels,http://cltl.nl/leolani/world/blood_glucose_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-08-30 10:55:10.445490,monitor blood glucose levels,http://cltl.nl/leolani/world/blood_glucose_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-08-30 10:55:10.445490,monitor blood glucose levels,http://cltl.nl/leolani/world/blood_glucose_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-08-30 10:55:10.445490,monitor blood glucose levels,http://cltl.nl/leolani/world/blood_glucose_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-06-10 10:55:11.322357,talk,http://cltl.nl/leolani/world/family,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-06-10 10:55:11.322357,talk,http://cltl.nl/leolani/world/family,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-06-10 10:55:11.322357,talk,http://cltl.nl/leolani/world/family,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-06-10 10:55:11.322357,talk,http://cltl.nl/leolani/world/family,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-06-10 10:55:11.322357,talk,http://cltl.nl/leolani/world/family,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-06-10 10:55:11.588781,talking about concerns,http://cltl.nl/leolani/world/someone_you_trust,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-06-10 10:55:11.588781,talking about concerns,http://cltl.nl/leolani/world/someone_you_trust,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-06-10 10:55:11.588781,talking about concerns,http://cltl.nl/leolani/world/someone_you_trust,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-06-10 10:55:11.588781,talking about concerns,http://cltl.nl/leolani/world/someone_you_trust,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-06-10 10:55:11.588781,talking about concerns,http://cltl.nl/leolani/world/someone_you_trust,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2011-05-20 10:55:12.427971,monitor,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-05-20 10:55:12.427971,monitor,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-05-20 10:55:12.427971,monitor,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-05-20 10:55:12.427971,monitor,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-05-20 10:55:12.427971,monitor,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2011-05-20 10:55:12.427971,monitor,http://cltl.nl/leolani/world/blood_sugar_levels,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2011-05-20 10:55:12.735705,eating,http://cltl.nl/leolani/world/snack,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-05-20 10:55:12.735705,eating,http://cltl.nl/leolani/world/snack,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-05-20 10:55:12.735705,eating,http://cltl.nl/leolani/world/snack,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-05-20 10:55:12.735705,eating,http://cltl.nl/leolani/world/snack,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2011-05-20 10:55:12.735705,eating,http://cltl.nl/leolani/world/snack,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2013-10-11 10:55:13.062220,try,http://cltl.nl/leolani/world/light_indoor_exercises,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-10-11 10:55:13.062220,try,http://cltl.nl/leolani/world/light_indoor_exercises,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-10-11 10:55:13.062220,try,http://cltl.nl/leolani/world/light_indoor_exercises,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-10-11 10:55:13.062220,try,http://cltl.nl/leolani/world/light_indoor_exercises,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#NEGATIVE
+2013-10-11 10:55:13.062220,try,http://cltl.nl/leolani/world/light_indoor_exercises,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2013-10-11 10:55:13.317534,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-10-11 10:55:13.317534,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-10-11 10:55:13.317534,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-10-11 10:55:13.317534,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2013-10-11 10:55:13.317534,yoga,http://cltl.nl/leolani/world/body,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#NEGATIVE
+2014-09-08 10:55:13.581647,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2014-09-08 10:55:13.581647,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-09-08 10:55:13.581647,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-09-08 10:55:13.581647,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-09-08 10:55:13.581647,checking my blood sugar,http://cltl.nl/leolani/world/blood_sugar,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-09-08 10:55:13.965280,include,http://cltl.nl/leolani/world/fiber-rich_foods,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-09-08 10:55:13.965280,include,http://cltl.nl/leolani/world/fiber-rich_foods,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-09-08 10:55:13.965280,include,http://cltl.nl/leolani/world/fiber-rich_foods,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-09-08 10:55:13.965280,include,http://cltl.nl/leolani/world/fiber-rich_foods,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2014-09-08 10:55:13.965280,include,http://cltl.nl/leolani/world/fiber-rich_foods,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/meditation,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/deep_breathing_exercises,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/mindfulness_techniques,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/meditation,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/deep_breathing_exercises,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/mindfulness_techniques,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/meditation,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/deep_breathing_exercises,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/mindfulness_techniques,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/meditation,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/deep_breathing_exercises,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/mindfulness_techniques,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/meditation,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/deep_breathing_exercises,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-09-23 10:55:15.253582,practice,http://cltl.nl/leolani/world/mindfulness_techniques,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2012-08-23 10:55:18.820350,discussing with healthcare provider,http://cltl.nl/leolani/world/Aicha,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-08-23 10:55:18.820350,discussing with healthcare provider,http://cltl.nl/leolani/world/Aicha,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-08-23 10:55:18.820350,discussing with healthcare provider,http://cltl.nl/leolani/world/Aicha,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-08-23 10:55:18.820350,discussing with healthcare provider,http://cltl.nl/leolani/world/Aicha,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2012-08-23 10:55:18.820350,discussing with healthcare provider,http://cltl.nl/leolani/world/Aicha,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2014-09-19 10:56:13.876582,Adjusting medication timings and dosages,http://cltl.nl/leolani/world/medication,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-09-19 10:56:13.876582,Adjusting medication timings and dosages,http://cltl.nl/leolani/world/medication,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-09-19 10:56:13.876582,Adjusting medication timings and dosages,http://cltl.nl/leolani/world/medication,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-09-19 10:56:13.876582,Adjusting medication timings and dosages,http://cltl.nl/leolani/world/medication,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-09-19 10:56:13.876582,Adjusting medication timings and dosages,http://cltl.nl/leolani/world/medication,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2010-12-04 10:57:06.944418,adapt,http://cltl.nl/leolani/world/Surinamese_recipes,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2010-12-04 10:57:06.944418,adapt,http://cltl.nl/leolani/world/Surinamese_recipes,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-12-04 10:57:06.944418,adapt,http://cltl.nl/leolani/world/Surinamese_recipes,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-12-04 10:57:06.944418,adapt,http://cltl.nl/leolani/world/Surinamese_recipes,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-12-04 10:57:06.944418,adapt,http://cltl.nl/leolani/world/Surinamese_recipes,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-12-04 10:57:06.944418,adapt,http://cltl.nl/leolani/world/Surinamese_recipes,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2010-08-10 10:57:18.879681,maintaining,http://cltl.nl/leolani/world/regular_meal_schedule,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2010-08-10 10:57:18.879681,maintaining,http://cltl.nl/leolani/world/regular_meal_schedule,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-08-10 10:57:18.879681,maintaining,http://cltl.nl/leolani/world/regular_meal_schedule,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-08-10 10:57:18.879681,maintaining,http://cltl.nl/leolani/world/regular_meal_schedule,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-08-10 10:57:18.879681,maintaining,http://cltl.nl/leolani/world/regular_meal_schedule,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2010-08-10 10:57:18.879681,maintaining,http://cltl.nl/leolani/world/regular_meal_schedule,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-01-21 10:57:50.687472,limit,http://cltl.nl/leolani/world/use,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-01-21 10:57:50.687472,limit,http://cltl.nl/leolani/world/use,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-01-21 10:57:50.687472,limit,http://cltl.nl/leolani/world/use,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-01-21 10:57:50.687472,limit,http://cltl.nl/leolani/world/use,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-01-21 10:57:50.687472,limit,http://cltl.nl/leolani/world/use,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2013-04-24 10:58:04.834428,indulge,http://cltl.nl/leolani/world/fruits,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-24 10:58:04.834428,indulge,http://cltl.nl/leolani/world/fruits,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-24 10:58:04.834428,indulge,http://cltl.nl/leolani/world/fruits,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-04-24 10:58:04.834428,indulge,http://cltl.nl/leolani/world/fruits,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#FULLY
+2013-04-24 10:58:04.834428,indulge,http://cltl.nl/leolani/world/fruits,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
