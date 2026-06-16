@@ -1,0 +1,524 @@
+﻿time,activity,patient,source,perspective
+2011-11-15 10:58:27.903312,cook,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2011-11-15 10:58:27.903312,cook,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-11-15 10:58:27.903312,cook,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-11-15 10:58:27.903312,cook,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-11-15 10:58:27.903312,cook,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2012-07-04 10:58:28.390881,walking,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2012-07-04 10:58:28.390881,walking,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-07-04 10:58:28.390881,walking,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-07-04 10:58:28.390881,walking,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2012-07-04 10:58:28.390881,walking,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-07-04 10:58:28.517425,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-07-04 10:58:28.517425,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-07-04 10:58:28.517425,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-07-04 10:58:28.517425,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2012-07-04 10:58:28.517425,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2012-07-04 10:58:28.517425,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2012-07-04 10:58:28.709660,feel exhausted,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-07-04 10:58:28.709660,feel exhausted,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2012-07-04 10:58:28.709660,feel exhausted,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-07-04 10:58:28.709660,feel exhausted,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CARING
+2012-07-04 10:58:28.709660,feel exhausted,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#PROBABLE
+2014-02-06 10:58:28.888913,feel low energy,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-02-06 10:58:28.888913,feel low energy,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-02-06 10:58:28.888913,feel low energy,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2014-02-06 10:58:28.888913,feel low energy,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#NEGATIVE
+2014-02-06 10:58:28.888913,feel low energy,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2014-02-06 10:58:29.031179,check blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2014-02-06 10:58:29.031179,check blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-02-06 10:58:29.031179,check blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-02-06 10:58:29.031179,check blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-02-06 10:58:29.031179,check blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-02-06 10:58:29.142365,incorporating a balanced snack between meals,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-02-06 10:58:29.142365,incorporating a balanced snack between meals,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-02-06 10:58:29.142365,incorporating a balanced snack between meals,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-02-06 10:58:29.142365,incorporating a balanced snack between meals,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-02-06 10:58:29.142365,incorporating a balanced snack between meals,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2013-07-18 10:58:29.446041,feel dizzy,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-07-18 10:58:29.446041,feel dizzy,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-07-18 10:58:29.446041,feel dizzy,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-07-18 10:58:29.446041,feel dizzy,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#NEGATIVE
+2013-07-18 10:58:29.446041,feel dizzy,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2013-07-18 10:58:29.566873,light breakfast,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-07-18 10:58:29.566873,light breakfast,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-07-18 10:58:29.566873,light breakfast,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-07-18 10:58:29.566873,light breakfast,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-07-18 10:58:29.566873,light breakfast,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#JOY
+2013-04-22 10:58:30.212821,eating,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-22 10:58:30.212821,eating,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-22 10:58:30.212821,eating,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-04-22 10:58:30.212821,eating,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-04-22 10:58:30.212821,eating,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2013-04-22 10:58:30.403597,cut out baklava and Turkish delight,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-04-22 10:58:30.403597,cut out baklava and Turkish delight,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-22 10:58:30.403597,cut out baklava and Turkish delight,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-22 10:58:30.403597,cut out baklava and Turkish delight,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-04-22 10:58:30.403597,cut out baklava and Turkish delight,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-04-22 10:58:30.403597,cut out baklava and Turkish delight,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#LOVE
+2013-04-22 10:58:30.733897,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-22 10:58:30.733897,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-22 10:58:30.733897,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-04-22 10:58:30.733897,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#NEGATIVE
+2013-04-22 10:58:30.733897,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-04-22 10:58:30.990920,using a stationary bike,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-22 10:58:30.990920,using a stationary bike,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-22 10:58:30.990920,using a stationary bike,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-04-22 10:58:30.990920,using a stationary bike,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-04-22 10:58:30.990920,using a stationary bike,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2013-09-13 10:58:31.119307,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-09-13 10:58:31.119307,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-13 10:58:31.119307,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-13 10:58:31.119307,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-09-13 10:58:31.119307,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-13 10:58:31.119307,walk,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2013-09-13 10:58:31.315093,regular physical activity,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-13 10:58:31.315093,regular physical activity,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-13 10:58:31.315093,regular physical activity,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-09-13 10:58:31.315093,regular physical activity,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-13 10:58:31.315093,regular physical activity,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2013-09-13 10:58:31.583493,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-13 10:58:31.583493,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-13 10:58:31.583493,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-09-13 10:58:31.583493,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-13 10:58:31.583493,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2013-09-13 10:58:31.583493,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#OPTIMISM
+2013-09-13 10:58:31.787369,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-13 10:58:31.787369,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-13 10:58:31.787369,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-09-13 10:58:31.787369,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-13 10:58:31.787369,resistance training,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2013-11-29 10:58:32.249740,worry,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-11-29 10:58:32.249740,worry,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-11-29 10:58:32.249740,worry,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-11-29 10:58:32.249740,worry,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-11-29 10:58:32.249740,worry,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#LOVE
+2013-11-29 10:58:32.580122,log food intake,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-11-29 10:58:32.580122,log food intake,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-11-29 10:58:32.580122,log food intake,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-11-29 10:58:32.580122,log food intake,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-11-29 10:58:32.580122,log food intake,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-11-29 10:58:32.832346,eat,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-11-29 10:58:32.832346,eat,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-11-29 10:58:32.832346,eat,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-11-29 10:58:32.832346,eat,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-11-29 10:58:32.832346,eat,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2010-07-20 10:58:32.932864,dizziness,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:32.932864,dizziness,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-07-20 10:58:32.932864,dizziness,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-07-20 10:58:32.932864,dizziness,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#NEGATIVE
+2010-07-20 10:58:32.932864,dizziness,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#SADNESS
+2010-07-20 10:58:33.078634,check,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:33.078634,check,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-07-20 10:58:33.078634,check,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-07-20 10:58:33.078634,check,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#NEGATIVE
+2010-07-20 10:58:33.078634,check,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#DISAPPROVAL
+2010-07-20 10:58:33.264218,check,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2010-07-20 10:58:33.264218,check,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:33.264218,check,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-07-20 10:58:33.264218,check,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-07-20 10:58:33.264218,check,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#PROBABLE
+2010-07-20 10:58:33.456361,checking blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:33.456361,checking blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-07-20 10:58:33.456361,checking blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-07-20 10:58:33.456361,checking blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-07-20 10:58:33.456361,checking blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2010-07-20 10:58:33.564020,keep,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:33.564020,keep,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-07-20 10:58:33.564020,keep,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-07-20 10:58:33.564020,keep,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-07-20 10:58:33.564020,keep,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2010-06-04 10:58:33.786260,monitoring blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2010-06-04 10:58:33.786260,monitoring blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-06-04 10:58:33.786260,monitoring blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-06-04 10:58:33.786260,monitoring blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-06-04 10:58:33.786260,monitoring blood sugar,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#NEGATIVE
+2010-06-04 10:58:33.920132,thirst,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2010-06-04 10:58:33.920132,thirst,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-06-04 10:58:33.920132,thirst,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-06-04 10:58:33.920132,thirst,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-06-04 10:58:33.920132,thirst,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-06-04 10:58:34.305837,avoiding sugary drinks,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-06-04 10:58:34.305837,avoiding sugary drinks,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-06-04 10:58:34.305837,avoiding sugary drinks,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-06-04 10:58:34.305837,avoiding sugary drinks,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-06-04 10:58:34.305837,avoiding sugary drinks,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2012-05-23 10:58:34.822630,better options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2012-05-23 10:58:34.822630,better options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-05-23 10:58:34.822630,better options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-05-23 10:58:34.822630,better options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2012-05-23 10:58:34.822630,better options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-05-23 10:58:35.096518,avoiding any dishes,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2012-05-23 10:58:35.096518,avoiding any dishes,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-05-23 10:58:35.096518,avoiding any dishes,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-05-23 10:58:35.096518,avoiding any dishes,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-05-23 10:58:35.096518,avoiding any dishes,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2012-05-23 10:58:35.217832,avoid,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-05-23 10:58:35.217832,avoid,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-05-23 10:58:35.217832,avoid,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2012-05-23 10:58:35.217832,avoid,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-05-23 10:58:35.217832,avoid,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CARING
+2012-05-23 10:58:35.416434,sticking to the healthier options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-05-23 10:58:35.416434,sticking to the healthier options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-05-23 10:58:35.416434,sticking to the healthier options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2012-05-23 10:58:35.416434,sticking to the healthier options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-05-23 10:58:35.416434,sticking to the healthier options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2012-05-23 10:58:35.416434,sticking to the healthier options,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2010-06-09 10:58:36.220726,follow up,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-06-09 10:58:36.220726,follow up,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-06-09 10:58:36.220726,follow up,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-06-09 10:58:36.220726,follow up,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-06-09 10:58:36.220726,follow up,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2014-10-21 10:58:36.330482,take a walk around my neighborhood in the mornings,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-10-21 10:58:36.330482,take a walk around my neighborhood in the mornings,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-10-21 10:58:36.330482,take a walk around my neighborhood in the mornings,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-10-21 10:58:36.330482,take a walk around my neighborhood in the mornings,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2014-10-21 10:58:36.330482,take a walk around my neighborhood in the mornings,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2014-10-21 10:58:36.977978,deadlifts,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-10-21 10:58:36.977978,deadlifts,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-10-21 10:58:36.977978,deadlifts,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-10-21 10:58:36.977978,deadlifts,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-10-21 10:58:36.977978,deadlifts,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2014-10-21 10:58:37.312340,building muscle mass,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-10-21 10:58:37.312340,building muscle mass,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-10-21 10:58:37.312340,building muscle mass,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-10-21 10:58:37.312340,building muscle mass,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-10-21 10:58:37.312340,building muscle mass,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2013-03-11 10:58:37.661865,wake up feeling tired,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-03-11 10:58:37.661865,wake up feeling tired,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-03-11 10:58:37.661865,wake up feeling tired,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-03-11 10:58:37.661865,wake up feeling tired,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-03-11 10:58:37.661865,wake up feeling tired,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-03-11 10:58:37.840495,feeling groggy and irritable on bad sleep nights,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-03-11 10:58:37.840495,feeling groggy and irritable on bad sleep nights,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-03-11 10:58:37.840495,feeling groggy and irritable on bad sleep nights,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-03-11 10:58:37.840495,feeling groggy and irritable on bad sleep nights,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CONFUSION
+2013-03-11 10:58:37.840495,feeling groggy and irritable on bad sleep nights,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#NEGATIVE
+2013-03-11 10:58:37.840495,feeling groggy and irritable on bad sleep nights,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#ALMOST_NOT
+2013-08-13 10:58:38.921603,avoid,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-08-13 10:58:38.921603,avoid,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-13 10:58:38.921603,avoid,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-08-13 10:58:38.921603,avoid,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-08-13 10:58:38.921603,avoid,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-08-13 10:58:39.053338,start monitoring my sugar specifically post-meals,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-08-13 10:58:39.053338,start monitoring my sugar specifically post-meals,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-13 10:58:39.053338,start monitoring my sugar specifically post-meals,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-08-13 10:58:39.053338,start monitoring my sugar specifically post-meals,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-08-13 10:58:39.053338,start monitoring my sugar specifically post-meals,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-02-25 10:58:39.245736,resist,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-02-25 10:58:39.245736,resist,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-02-25 10:58:39.245736,resist,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-02-25 10:58:39.245736,resist,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-02-25 10:58:39.245736,resist,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2010-02-25 10:58:39.401805,eat,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-02-25 10:58:39.401805,eat,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-02-25 10:58:39.401805,eat,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-02-25 10:58:39.401805,eat,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#NEGATIVE
+2010-02-25 10:58:39.401805,eat,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#DISAPPROVAL
+2010-02-25 10:58:40.217651,incorporate some of your woodworking activities,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-02-25 10:58:40.217651,incorporate some of your woodworking activities,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-02-25 10:58:40.217651,incorporate some of your woodworking activities,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2010-02-25 10:58:40.217651,incorporate some of your woodworking activities,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2010-02-25 10:58:40.217651,incorporate some of your woodworking activities,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#PROBABLE
+2011-04-25 10:58:40.788253,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2011-04-25 10:58:40.788253,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-04-25 10:58:40.788253,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-04-25 10:58:40.788253,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#NEGATIVE
+2011-04-25 10:58:40.788253,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2011-04-25 10:58:40.788253,try,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#CONFUSION
+2011-04-25 10:58:41.204266,feeling worried,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-04-25 10:58:41.204266,feeling worried,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-04-25 10:58:41.204266,feeling worried,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-04-25 10:58:41.204266,feeling worried,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-04-25 10:58:41.204266,feeling worried,,http://cltl.nl/leolani/friends/Ali,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2011-11-15 10:58:28.261915,play with my grandchild,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-11-15 10:58:28.261915,play with my grandchild,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-11-15 10:58:28.261915,play with my grandchild,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-11-15 10:58:28.261915,play with my grandchild,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-11-15 10:58:28.261915,play with my grandchild,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2012-07-04 10:58:28.325446,walking every day,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2012-07-04 10:58:28.325446,walking every day,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-07-04 10:58:28.325446,walking every day,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-07-04 10:58:28.325446,walking every day,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2012-07-04 10:58:28.325446,walking every day,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-07-04 10:58:28.453891,woodworking,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-07-04 10:58:28.453891,woodworking,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-07-04 10:58:28.453891,woodworking,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-07-04 10:58:28.453891,woodworking,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2012-07-04 10:58:28.453891,woodworking,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2012-07-04 10:58:28.646067,improve your mood,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-07-04 10:58:28.646067,improve your mood,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-07-04 10:58:28.646067,improve your mood,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-07-04 10:58:28.646067,improve your mood,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2012-07-04 10:58:28.646067,improve your mood,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2014-02-06 10:58:28.838324,feel low energy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2014-02-06 10:58:28.838324,feel low energy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-02-06 10:58:28.838324,feel low energy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-02-06 10:58:28.838324,feel low energy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-02-06 10:58:28.838324,feel low energy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2014-02-06 10:58:28.838324,feel low energy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2014-02-06 10:58:28.937135,check blood sugar levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-02-06 10:58:28.937135,check blood sugar levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-02-06 10:58:28.937135,check blood sugar levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-02-06 10:58:28.937135,check blood sugar levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2014-02-06 10:58:28.937135,check blood sugar levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2014-02-06 10:58:29.083841,incorporating a balanced snack,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-02-06 10:58:29.083841,incorporating a balanced snack,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-02-06 10:58:29.083841,incorporating a balanced snack,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-02-06 10:58:29.083841,incorporating a balanced snack,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2014-02-06 10:58:29.083841,incorporating a balanced snack,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2014-02-06 10:58:29.261172,improve energy levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-02-06 10:58:29.261172,improve energy levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-02-06 10:58:29.261172,improve energy levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-02-06 10:58:29.261172,improve energy levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-02-06 10:58:29.261172,improve energy levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2013-07-18 10:58:29.324008,walks,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-07-18 10:58:29.324008,walks,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-07-18 10:58:29.324008,walks,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-07-18 10:58:29.324008,walks,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-07-18 10:58:29.324008,walks,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-07-18 10:58:29.505876,feel dizzy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-07-18 10:58:29.505876,feel dizzy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-07-18 10:58:29.505876,feel dizzy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-07-18 10:58:29.505876,feel dizzy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-07-18 10:58:29.505876,feel dizzy,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#NEGATIVE
+2013-07-18 10:58:29.627392,light breakfast,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-07-18 10:58:29.627392,light breakfast,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-07-18 10:58:29.627392,light breakfast,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-07-18 10:58:29.627392,light breakfast,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-07-18 10:58:29.627392,light breakfast,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2013-07-18 10:58:29.627392,light breakfast,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#OPTIMISM
+2013-04-22 10:58:30.147474,handling diet,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-04-22 10:58:30.147474,handling diet,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-22 10:58:30.147474,handling diet,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-22 10:58:30.147474,handling diet,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-04-22 10:58:30.147474,handling diet,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-04-22 10:58:30.340656,cut down on,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-22 10:58:30.340656,cut down on,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-04-22 10:58:30.340656,cut down on,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-04-22 10:58:30.340656,cut down on,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#PROBABLE
+2013-04-22 10:58:30.340656,cut down on,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2013-04-22 10:58:30.669115,make smoothie sweetened with honey,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-22 10:58:30.669115,make smoothie sweetened with honey,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-22 10:58:30.669115,make smoothie sweetened with honey,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-04-22 10:58:30.669115,make smoothie sweetened with honey,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2013-04-22 10:58:30.669115,make smoothie sweetened with honey,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-04-22 10:58:30.797271,stay active,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-04-22 10:58:30.797271,stay active,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-04-22 10:58:30.797271,stay active,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2013-04-22 10:58:30.797271,stay active,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#FULLY
+2013-04-22 10:58:30.797271,stay active,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2013-09-13 10:58:31.054114,daily walking routine,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-09-13 10:58:31.054114,daily walking routine,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-13 10:58:31.054114,daily walking routine,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-13 10:58:31.054114,daily walking routine,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-09-13 10:58:31.054114,daily walking routine,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-13 10:58:31.184105,walk almost every morning for about 30 minutes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-13 10:58:31.184105,walk almost every morning for about 30 minutes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-13 10:58:31.184105,walk almost every morning for about 30 minutes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-09-13 10:58:31.184105,walk almost every morning for about 30 minutes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-13 10:58:31.184105,walk almost every morning for about 30 minutes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2013-09-13 10:58:31.184105,walk almost every morning for about 30 minutes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-09-13 10:58:31.518286,bodyweight exercises,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-13 10:58:31.518286,bodyweight exercises,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-13 10:58:31.518286,bodyweight exercises,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-13 10:58:31.518286,bodyweight exercises,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2013-09-13 10:58:31.518286,bodyweight exercises,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-09-13 10:58:31.653747,using resistance bands or doing bodyweight exercises such as squats and lunges,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-13 10:58:31.653747,using resistance bands or doing bodyweight exercises such as squats and lunges,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-13 10:58:31.653747,using resistance bands or doing bodyweight exercises such as squats and lunges,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-09-13 10:58:31.653747,using resistance bands or doing bodyweight exercises such as squats and lunges,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-13 10:58:31.653747,using resistance bands or doing bodyweight exercises such as squats and lunges,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2013-09-13 10:58:31.918013,incorporating some resistance training,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-09-13 10:58:31.918013,incorporating some resistance training,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-09-13 10:58:31.918013,incorporating some resistance training,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-09-13 10:58:31.918013,incorporating some resistance training,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-09-13 10:58:31.918013,incorporating some resistance training,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2013-11-29 10:58:32.122207,tracking food intake,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-11-29 10:58:32.122207,tracking food intake,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-11-29 10:58:32.122207,tracking food intake,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-11-29 10:58:32.122207,tracking food intake,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2013-11-29 10:58:32.122207,tracking food intake,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-11-29 10:58:32.771103,balancing meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-11-29 10:58:32.771103,balancing meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-11-29 10:58:32.771103,balancing meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-11-29 10:58:32.771103,balancing meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2013-11-29 10:58:32.771103,balancing meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2010-07-20 10:58:32.884574,symptoms,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2010-07-20 10:58:32.884574,symptoms,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:32.884574,symptoms,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-07-20 10:58:32.884574,symptoms,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-07-20 10:58:32.884574,symptoms,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-07-20 10:58:32.981357,experienced some dizziness,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2010-07-20 10:58:32.981357,experienced some dizziness,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:32.981357,experienced some dizziness,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-07-20 10:58:32.981357,experienced some dizziness,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-07-20 10:58:32.981357,experienced some dizziness,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2010-07-20 10:58:33.138808,carry,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:33.138808,carry,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-07-20 10:58:33.138808,carry,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-07-20 10:58:33.138808,carry,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2010-07-20 10:58:33.138808,carry,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2010-07-20 10:58:33.389711,check,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:33.389711,check,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-07-20 10:58:33.389711,check,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2010-07-20 10:58:33.389711,check,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#FULLY
+2010-07-20 10:58:33.389711,check,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2010-07-20 10:58:33.513926,start doing after meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:33.513926,start doing after meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-07-20 10:58:33.513926,start doing after meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-07-20 10:58:33.513926,start doing after meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2010-07-20 10:58:33.513926,start doing after meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2010-07-20 10:58:33.611378,carry,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-07-20 10:58:33.611378,carry,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-07-20 10:58:33.611378,carry,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-07-20 10:58:33.611378,carry,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2010-07-20 10:58:33.611378,carry,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2010-06-04 10:58:33.721094,waking up extremely thirsty,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2010-06-04 10:58:33.721094,waking up extremely thirsty,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-06-04 10:58:33.721094,waking up extremely thirsty,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-06-04 10:58:33.721094,waking up extremely thirsty,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-06-04 10:58:33.721094,waking up extremely thirsty,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-06-04 10:58:33.721094,waking up extremely thirsty,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2010-06-04 10:58:33.852002,monitor blood sugar levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-06-04 10:58:33.852002,monitor blood sugar levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-06-04 10:58:33.852002,monitor blood sugar levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-06-04 10:58:33.852002,monitor blood sugar levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-06-04 10:58:33.852002,monitor blood sugar levels,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2010-06-04 10:58:34.026734,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-06-04 10:58:34.026734,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-06-04 10:58:34.026734,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-06-04 10:58:34.026734,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2010-06-04 10:58:34.026734,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#PROBABLE
+2010-06-04 10:58:34.489977,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-06-04 10:58:34.489977,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-06-04 10:58:34.489977,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-06-04 10:58:34.489977,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-06-04 10:58:34.489977,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2010-06-04 10:58:34.489977,staying hydrated,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2012-05-23 10:58:34.715082,fill most of your plate with vegetables and lean proteins,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-05-23 10:58:34.715082,fill most of your plate with vegetables and lean proteins,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-05-23 10:58:34.715082,fill most of your plate with vegetables and lean proteins,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-05-23 10:58:34.715082,fill most of your plate with vegetables and lean proteins,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2012-05-23 10:58:34.715082,fill most of your plate with vegetables and lean proteins,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2012-05-23 10:58:35.042688,making dishes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-05-23 10:58:35.042688,making dishes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-05-23 10:58:35.042688,making dishes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2012-05-23 10:58:35.042688,making dishes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2012-05-23 10:58:35.042688,making dishes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2012-05-23 10:58:35.158106,limit,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-05-23 10:58:35.158106,limit,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-05-23 10:58:35.158106,limit,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-05-23 10:58:35.158106,limit,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2012-05-23 10:58:35.158106,limit,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2012-05-23 10:58:35.369889,stick to,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-05-23 10:58:35.369889,stick to,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-05-23 10:58:35.369889,stick to,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2012-05-23 10:58:35.369889,stick to,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-05-23 10:58:35.369889,stick to,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2012-05-23 10:58:35.464169,stick to the healthier options,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2012-05-23 10:58:35.464169,stick to the healthier options,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2012-05-23 10:58:35.464169,stick to the healthier options,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2012-05-23 10:58:35.464169,stick to the healthier options,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2012-05-23 10:58:35.464169,stick to the healthier options,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2010-06-09 10:58:35.978945,maintain,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-06-09 10:58:35.978945,maintain,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-06-09 10:58:35.978945,maintain,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-06-09 10:58:35.978945,maintain,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2010-06-09 10:58:35.978945,maintain,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#PROBABLE
+2014-10-21 10:58:36.282324,exercise routine,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2014-10-21 10:58:36.282324,exercise routine,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-10-21 10:58:36.282324,exercise routine,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-10-21 10:58:36.282324,exercise routine,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-10-21 10:58:36.282324,exercise routine,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-10-21 10:58:36.423420,strength training exercises,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-10-21 10:58:36.423420,strength training exercises,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-10-21 10:58:36.423420,strength training exercises,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-10-21 10:58:36.423420,strength training exercises,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2014-10-21 10:58:36.423420,strength training exercises,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2014-10-21 10:58:36.694352,use,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-10-21 10:58:36.694352,use,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-10-21 10:58:36.694352,use,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-10-21 10:58:36.694352,use,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-10-21 10:58:36.694352,use,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2014-10-21 10:58:37.209945,deadlifts,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-10-21 10:58:37.209945,deadlifts,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-10-21 10:58:37.209945,deadlifts,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2014-10-21 10:58:37.209945,deadlifts,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#PROBABLE
+2014-10-21 10:58:37.209945,deadlifts,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2014-10-21 10:58:37.501115,use,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2014-10-21 10:58:37.501115,use,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2014-10-21 10:58:37.501115,use,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2014-10-21 10:58:37.501115,use,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2014-10-21 10:58:37.501115,use,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
+2013-03-11 10:58:37.552535,sleeping,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-03-11 10:58:37.552535,sleeping,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-03-11 10:58:37.552535,sleeping,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-03-11 10:58:37.552535,sleeping,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-03-11 10:58:37.552535,sleeping,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-03-11 10:58:37.778799,wake up feeling tired,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2013-03-11 10:58:37.778799,wake up feeling tired,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-03-11 10:58:37.778799,wake up feeling tired,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-03-11 10:58:37.778799,wake up feeling tired,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-03-11 10:58:37.778799,wake up feeling tired,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-03-11 10:58:38.302881,discuss adjusting evening medication or diet with healthcare provider,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-03-11 10:58:38.302881,discuss adjusting evening medication or diet with healthcare provider,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-03-11 10:58:38.302881,discuss adjusting evening medication or diet with healthcare provider,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-03-11 10:58:38.302881,discuss adjusting evening medication or diet with healthcare provider,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-03-11 10:58:38.302881,discuss adjusting evening medication or diet with healthcare provider,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2013-08-13 10:58:38.490595,eat,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-13 10:58:38.490595,eat,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-08-13 10:58:38.490595,eat,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-08-13 10:58:38.490595,eat,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-08-13 10:58:38.490595,eat,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#APPROVAL
+2013-08-13 10:58:38.789486,considering cooking methods like baking or grilling without oil,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-13 10:58:38.789486,considering cooking methods like baking or grilling without oil,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2013-08-13 10:58:38.789486,considering cooking methods like baking or grilling without oil,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-08-13 10:58:38.789486,considering cooking methods like baking or grilling without oil,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#PROBABLE
+2013-08-13 10:58:38.789486,considering cooking methods like baking or grilling without oil,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2013-08-13 10:58:39.119077,monitoring my sugar specifically post-meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2013-08-13 10:58:39.119077,monitoring my sugar specifically post-meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2013-08-13 10:58:39.119077,monitoring my sugar specifically post-meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2013-08-13 10:58:39.119077,monitoring my sugar specifically post-meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2013-08-13 10:58:39.119077,monitoring my sugar specifically post-meals,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2010-02-25 10:58:39.184287,managing to keep them within the target range,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2010-02-25 10:58:39.184287,managing to keep them within the target range,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-02-25 10:58:39.184287,managing to keep them within the target range,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-02-25 10:58:39.184287,managing to keep them within the target range,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-02-25 10:58:39.184287,managing to keep them within the target range,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-02-25 10:58:39.302318,finding it hard to resist,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CURIOSITY
+2010-02-25 10:58:39.302318,finding it hard to resist,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-02-25 10:58:39.302318,finding it hard to resist,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-02-25 10:58:39.302318,finding it hard to resist,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-02-25 10:58:39.302318,finding it hard to resist,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2010-02-25 10:58:39.302318,finding it hard to resist,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#LOVE
+2010-02-25 10:58:40.158005,incorporate some woodworking activities,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-02-25 10:58:40.158005,incorporate some woodworking activities,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-02-25 10:58:40.158005,incorporate some woodworking activities,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-02-25 10:58:40.158005,incorporate some woodworking activities,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2010-02-25 10:58:40.158005,incorporate some woodworking activities,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2010-02-25 10:58:40.276758,incorporate,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2010-02-25 10:58:40.276758,incorporate,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2010-02-25 10:58:40.276758,incorporate,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2010-02-25 10:58:40.276758,incorporate,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2010-02-25 10:58:40.276758,incorporate,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2011-04-25 10:58:40.369632,feeling anxious and worried about my diabetes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-04-25 10:58:40.369632,feeling anxious and worried about my diabetes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-04-25 10:58:40.369632,feeling anxious and worried about my diabetes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#NEGATIVE
+2011-04-25 10:58:40.369632,feeling anxious and worried about my diabetes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2011-04-25 10:58:40.369632,feeling anxious and worried about my diabetes,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#CARING
+2011-04-25 10:58:40.678348,including,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-04-25 10:58:40.678348,including,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-04-25 10:58:40.678348,including,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-04-25 10:58:40.678348,including,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-04-25 10:58:40.678348,including,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#ADMIRATION
+2011-04-25 10:58:40.966059,include,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-04-25 10:58:40.966059,include,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-04-25 10:58:40.966059,include,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#UNDERSPECIFIED
+2011-04-25 10:58:40.966059,include,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#ALMOST_FULLY
+2011-04-25 10:58:40.966059,include,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#UNDERSPECIFIED
+2011-04-25 10:58:41.503897,cooking helps you relax,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#POSITIVE
+2011-04-25 10:58:41.503897,cooking helps you relax,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/factuality#UNDERSPECIFIED
+2011-04-25 10:58:41.503897,cooking helps you relax,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/level#SOMEWHAT
+2011-04-25 10:58:41.503897,cooking helps you relax,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/sentiment#POSITIVE
+2011-04-25 10:58:41.503897,cooking helps you relax,,http://cltl.nl/leolani/friends/agent,http://groundedannotationframework.org/grasp/emotion#GRATITUDE
