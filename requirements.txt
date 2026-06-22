@@ -8,5 +8,5 @@ sentence_transformers
 numpy
 scipy
 matplotlib
-pygraphviz
+#pygraphviz
 nltk==3.9.2

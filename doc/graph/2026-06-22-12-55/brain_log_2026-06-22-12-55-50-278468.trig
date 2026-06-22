@@ -1,0 +1,1965 @@
+@prefix dcmitype: <http://purl.org/dc/dcmitype/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix eps: <http://cltl.nl/episodicawareness/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix gaf: <http://groundedannotationframework.org/gaf#> .
+@prefix grasp: <http://groundedannotationframework.org/grasp#> .
+@prefix graspe: <http://groundedannotationframework.org/grasp/emotion#> .
+@prefix graspf: <http://groundedannotationframework.org/grasp/factuality#> .
+@prefix grasps: <http://groundedannotationframework.org/grasp/sentiment#> .
+@prefix leolaniWorld: <http://cltl.nl/leolani/world/> .
+@prefix n2mu: <http://cltl.nl/leolani/n2mu/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+leolaniWorld:Ontology {
+    eps:hasContext a owl:ObjectProperty ;
+        rdfs:domain gaf:Instance,
+            sem:Event ;
+        rdfs:range eps:Context ;
+        rdfs:subPropertyOf eps:contextProperty .
+
+    eps:hasDetection a owl:ObjectProperty ;
+        rdfs:domain eps:Context ;
+        rdfs:range grasp:Detection ;
+        rdfs:subPropertyOf eps:contextProperty .
+
+    n2mu: a owl:Ontology .
+
+    n2mu:accountant a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:actor a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:actress a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:age a owl:DatatypeProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range xsd:int .
+
+    n2mu:analyst a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:architect a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:artist a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:astronomer a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:baker a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:band a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:bartender a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:be-before a owl:ObjectProperty ;
+        rdfs:range n2mu:location ;
+        rdfs:subPropertyOf n2mu:be-at .
+
+    n2mu:be-behind a owl:ObjectProperty ;
+        rdfs:range n2mu:location ;
+        rdfs:subPropertyOf n2mu:be-at .
+
+    n2mu:be-brother-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-sibling-of .
+
+    n2mu:be-colleague-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:agent ;
+        rdfs:subPropertyOf n2mu:know .
+
+    n2mu:be-daughter-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-child-of ;
+        owl:propertyDisjointWith n2mu:be-son-of .
+
+    n2mu:be-father-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-parent-of ;
+        owl:propertyDisjointWith n2mu:be-mother-of .
+
+    n2mu:be-friends-with a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:agent ;
+        rdfs:subPropertyOf n2mu:know .
+
+    n2mu:be-grandfather-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-grandparent-of ;
+        owl:propertyDisjointWith n2mu:be-grandmother-of .
+
+    n2mu:be-husband-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-spouse-of ;
+        owl:propertyDisjointWith n2mu:be-wife-of .
+
+    n2mu:be-inside a owl:ObjectProperty ;
+        rdfs:domain n2mu:object ;
+        rdfs:range n2mu:container ;
+        rdfs:subPropertyOf n2mu:locate-in .
+
+    n2mu:be-next-to a owl:ObjectProperty ;
+        rdfs:range n2mu:location ;
+        rdfs:subPropertyOf n2mu:be-at .
+
+    n2mu:be-on a owl:ObjectProperty ;
+        rdfs:range n2mu:location ;
+        rdfs:subPropertyOf n2mu:be-at .
+
+    n2mu:be-partner-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-spouse-of .
+
+    n2mu:be-sister-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-sibling-of .
+
+    n2mu:be-under a owl:ObjectProperty ;
+        rdfs:range n2mu:location ;
+        rdfs:subPropertyOf n2mu:be-at .
+
+    n2mu:beer-glass a owl:Class ;
+        rdfs:subClassOf n2mu:glass ;
+        owl:disjointWith n2mu:wine-glass .
+
+    n2mu:birthday a owl:DatatypeProperty ;
+        rdfs:domain n2mu:agent .
+
+    n2mu:book-author a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:born-in a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:location ;
+        rdfs:subPropertyOf n2mu:be-from .
+
+    n2mu:boy a owl:Class ;
+        rdfs:subClassOf n2mu:child ;
+        owl:disjointWith n2mu:girl .
+
+    n2mu:bricklayer a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:butcher a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:captain a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:carpenter a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:chauffeur a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:chef a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:clean a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:cleaner a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:coach a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:color a owl:DatatypeProperty ;
+        rdfs:domain n2mu:object ;
+        rdfs:subPropertyOf n2mu:physical-feature .
+
+    n2mu:comedian a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:company a owl:Class ;
+        rdfs:subClassOf n2mu:institution .
+
+    n2mu:concert a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:construction-worker a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:cook a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:food ;
+        rdfs:subPropertyOf n2mu:create .
+
+    n2mu:cuisine a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:data-analyst a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:dentist a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:designer a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:desk-officer a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:dish a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:dislike a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range owl:Thing .
+
+    n2mu:doctor a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:drawer a owl:Class ;
+        rdfs:subClassOf n2mu:container .
+
+    n2mu:driver a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:eat a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:food ;
+        rdfs:subPropertyOf n2mu:have-meal .
+
+    n2mu:electrician a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:engineer a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:exhibition a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:faceID a owl:DatatypeProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range rdfs:Literal .
+
+    n2mu:farmer a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:feel a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent .
+
+    n2mu:film-genre a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:fisherman a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:florist a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:game a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:subPropertyOf n2mu:play .
+
+    n2mu:gardener a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:general a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:hairdresser a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:have-breakfast a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:food ;
+        rdfs:subPropertyOf n2mu:have-meal .
+
+    n2mu:have-dinner a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:food ;
+        rdfs:subPropertyOf n2mu:have-meal .
+
+    n2mu:have-lunch a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:food ;
+        rdfs:subPropertyOf n2mu:have-meal .
+
+    n2mu:health-professional a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:hight a owl:DatatypeProperty ;
+        rdfs:domain n2mu:object ;
+        rdfs:subPropertyOf n2mu:physical-feature .
+
+    n2mu:home a owl:Class ;
+        rdfs:subClassOf n2mu:house .
+
+    n2mu:instructor a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:journalist a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:judge a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:lecturer a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:lieutenant a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:lifeguard a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:linguist a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:listen-to a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:musical-work ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:literature-genre a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:live-in a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:location .
+
+    n2mu:love a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:agent ;
+        rdfs:subPropertyOf n2mu:like .
+
+    n2mu:manager a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:manufacture-in a owl:ObjectProperty ;
+        rdfs:domain n2mu:robot ;
+        rdfs:range n2mu:location ;
+        rdfs:subPropertyOf n2mu:be-from .
+
+    n2mu:mechanic a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:model a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:monk a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:music a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:musical-work ;
+        rdfs:subPropertyOf n2mu:play .
+
+    n2mu:music-genre a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:name a owl:DatatypeProperty ;
+        rdfs:domain n2mu:agent .
+
+    n2mu:newsreader a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:nurse a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:optician a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:own a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:object .
+
+    n2mu:painter a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:party a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:perform a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:subPropertyOf n2mu:create .
+
+    n2mu:pharmacist a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:pilot a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:plumber a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:poet a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:police-officer a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:policeman a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:policewoman a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:politician a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:pot a owl:Class ;
+        rdfs:subClassOf n2mu:container .
+
+    n2mu:prepare-drink a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:drink ;
+        rdfs:subPropertyOf n2mu:create .
+
+    n2mu:priest a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:professor a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:program a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:subPropertyOf n2mu:create .
+
+    n2mu:programmer a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:psychiatrist a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:psychologist a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:read a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:book ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:receptionist a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:sailor a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:scientist a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:secret-agent a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:secretary a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:sergeant a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:shape a owl:DatatypeProperty ;
+        rdfs:domain n2mu:object ;
+        rdfs:subPropertyOf n2mu:physical-feature .
+
+    n2mu:size a owl:DatatypeProperty ;
+        rdfs:domain n2mu:object ;
+        rdfs:subPropertyOf n2mu:physical-feature .
+
+    n2mu:soldier a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:song a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:sports-team a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:stay-at-home-father a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:stay-at-home-mother a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:stop-sign a owl:Class ;
+        rdfs:subClassOf n2mu:sign ;
+        owl:disjointWith n2mu:traffic-light .
+
+    n2mu:student a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:study-at a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:institution ;
+        rdfs:subPropertyOf n2mu:be-member-of .
+
+    n2mu:surgeon a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:teacher a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:theater a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:travel-to a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:location ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:university a owl:Class ;
+        rdfs:subClassOf n2mu:institution .
+
+    n2mu:vase a owl:Class ;
+        rdfs:subClassOf n2mu:container .
+
+    n2mu:visit a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:agent ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:waiter a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:waitress a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    n2mu:watch a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:movie ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:weight a owl:DatatypeProperty ;
+        rdfs:domain n2mu:object ;
+        rdfs:subPropertyOf n2mu:physical-feature .
+
+    n2mu:work-as a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:profession ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:work-at a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:institution ;
+        rdfs:subPropertyOf n2mu:be-member-of .
+
+    n2mu:write a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:book ;
+        rdfs:subPropertyOf n2mu:create .
+
+    n2mu:writer a owl:Class ;
+        rdfs:subClassOf n2mu:profession .
+
+    gaf:Assertion a owl:Class ;
+        rdfs:subClassOf gaf:Instance .
+
+    grasp:Chat a owl:Class ;
+        rdfs:subClassOf sem:Event .
+
+    grasp:Experience a owl:Class ;
+        rdfs:subClassOf gaf:Mention,
+            sem:Event .
+
+    grasp:Statement a owl:Class ;
+        rdfs:subClassOf gaf:Mention,
+            sem:Event .
+
+    grasp:Visual a owl:Class ;
+        rdfs:subClassOf sem:Event .
+
+    grasp:hasAttribution a owl:ObjectProperty ;
+        rdfs:domain gaf:Mention ;
+        rdfs:range grasp:Attribution ;
+        owl:inverseOf grasp:isAttributionFor .
+
+    grasp:wasAttributedTo a owl:ObjectProperty ;
+        rdfs:label "was attributed to" ;
+        rdfs:comment "States that a gaf:Mention was attributed to a gaf:Instance. This is a sub property of the prov:wasAttributedTo relation that can be used to relate any prov:Entity to any prov:Agent."^^xsd:string ;
+        rdfs:domain gaf:Mention ;
+        rdfs:range grasp:Source ;
+        rdfs:subPropertyOf prov:wasAttributedTo .
+
+    sem:hasActor a owl:ObjectProperty ;
+        rdfs:label "has Actor" ;
+        rdfs:comment "Has actor is used to state which Actors or Objects participate in an Event." ;
+        rdfs:range sem:Actor ;
+        rdfs:subPropertyOf sem:eventProperty .
+
+    sem:hasBeginTimeStamp a owl:DatatypeProperty ;
+        rdfs:label "has begin timestamp" ;
+        rdfs:comment "Has begin timestamp is used to indicate the beginning of a time interval. Omitting the hasBeginTimeStamp while stating a hasEndTimeStamp is interpreted as an open ended interval." ;
+        rdfs:subPropertyOf sem:hasTimeStamp .
+
+    sem:hasPlace a owl:ObjectProperty ;
+        rdfs:label "has Place" ;
+        rdfs:comment "Has place is used to state in which Place(s) an Event happened. Coordinates can be attached to the Place with the W3C Geospatial Vocabulary (http://www.w3.org/2005/Incubator/geo/XGR-geo-20071023/)." ;
+        rdfs:range sem:Place ;
+        rdfs:subPropertyOf sem:eventProperty .
+
+    sem:hasSubEvent a owl:ObjectProperty ;
+        rdfs:label "has subevent" ;
+        rdfs:comment "Has subevent connects an Event to other Events that belong to it. This is a very generic property that does not mean the subevents fully define the superconcept or that there is any causal relationship." ;
+        rdfs:domain sem:Event ;
+        rdfs:range sem:Event ;
+        rdfs:subPropertyOf sem:eventProperty ;
+        owl:inverseOf sem:subEventOf .
+
+    sem:hasTime a owl:ObjectProperty ;
+        rdfs:label "has Time" ;
+        rdfs:comment "Has time is used to indicate at which time an Event took place or when a property under the Temporary Constraint is valid. Has time points to a symbolic representation of time, which allows semantic relations between time resources. (see http://www.w3.org/TR/owl-time/)" ;
+        rdfs:range sem:Time ;
+        rdfs:subPropertyOf sem:eventProperty .
+
+    skos:broadMatch a owl:AnnotationProperty .
+
+    skos:closeMatch a owl:AnnotationProperty .
+
+    skos:narrowMatch a owl:AnnotationProperty .
+
+    prov:category a owl:AnnotationProperty .
+
+    prov:component a owl:AnnotationProperty .
+
+    prov:definition a owl:AnnotationProperty .
+
+    prov:hadDerivation a owl:ObjectProperty ;
+        owl:inverseOf prov:wasDerivedFrom .
+
+    prov:inverse a owl:AnnotationProperty .
+
+    prov:qualifiedForm a owl:AnnotationProperty .
+
+    n2mu:airplane a owl:Class ;
+        rdfs:subClassOf n2mu:vehicle .
+
+    n2mu:apple a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:avocado a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:backpack a owl:Class ;
+        rdfs:subClassOf n2mu:bag .
+
+    n2mu:banana a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:bar a owl:Class ;
+        rdfs:subClassOf n2mu:building .
+
+    n2mu:baseball a owl:Class ;
+        rdfs:subClassOf n2mu:sports-instrument .
+
+    n2mu:baseball-glove a owl:Class ;
+        rdfs:subClassOf n2mu:sports-instrument .
+
+    n2mu:be-descendant-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-family-of .
+
+    n2mu:be-grandmother-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-grandparent-of .
+
+    n2mu:be-mother-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-parent-of .
+
+    n2mu:be-son-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-child-of .
+
+    n2mu:be-wife-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-spouse-of .
+
+    n2mu:bear a owl:Class ;
+        rdfs:subClassOf n2mu:mammal .
+
+    n2mu:bed a owl:Class ;
+        rdfs:subClassOf n2mu:furniture .
+
+    n2mu:beer a owl:Class ;
+        rdfs:subClassOf n2mu:drink .
+
+    n2mu:bench a owl:Class ;
+        rdfs:subClassOf n2mu:furniture .
+
+    n2mu:bicycle a owl:Class ;
+        rdfs:subClassOf n2mu:vehicle .
+
+    n2mu:bird a owl:Class ;
+        rdfs:subClassOf n2mu:animal .
+
+    n2mu:bottle a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:kitchen-utensils .
+
+    n2mu:bowl a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:kitchen-utensils .
+
+    n2mu:broccoli a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:bus a owl:Class ;
+        rdfs:subClassOf n2mu:vehicle .
+
+    n2mu:bush a owl:Class ;
+        rdfs:subClassOf n2mu:plant .
+
+    n2mu:cabbage a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:cafe a owl:Class ;
+        rdfs:subClassOf n2mu:building .
+
+    n2mu:cake a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:car a owl:Class ;
+        rdfs:subClassOf n2mu:vehicle .
+
+    n2mu:carrot a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:cat a owl:Class ;
+        rdfs:subClassOf n2mu:mammal .
+
+    n2mu:chair a owl:Class ;
+        rdfs:subClassOf n2mu:furniture .
+
+    n2mu:church a owl:Class ;
+        rdfs:subClassOf n2mu:building .
+
+    n2mu:city a owl:Class ;
+        rdfs:subClassOf n2mu:location .
+
+    n2mu:closet a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:furniture .
+
+    n2mu:club a owl:Class ;
+        rdfs:subClassOf n2mu:building .
+
+    n2mu:coffee a owl:Class ;
+        rdfs:subClassOf n2mu:drink .
+
+    n2mu:coke a owl:Class ;
+        rdfs:subClassOf n2mu:drink .
+
+    n2mu:computer a owl:Class ;
+        rdfs:subClassOf n2mu:device .
+
+    n2mu:computer-mouse a owl:Class ;
+        rdfs:subClassOf n2mu:device .
+
+    n2mu:corn a owl:Class ;
+        rdfs:subClassOf n2mu:plant .
+
+    n2mu:couch a owl:Class ;
+        rdfs:subClassOf n2mu:furniture .
+
+    n2mu:country a owl:Class ;
+        rdfs:subClassOf n2mu:location .
+
+    n2mu:cow a owl:Class ;
+        rdfs:subClassOf n2mu:mammal .
+
+    n2mu:cup a owl:Class ;
+        rdfs:subClassOf n2mu:kitchen-utensils .
+
+    n2mu:dinky-toy a owl:Class ;
+        rdfs:subClassOf n2mu:toy .
+
+    n2mu:dog a owl:Class ;
+        rdfs:subClassOf n2mu:mammal .
+
+    n2mu:donut a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:elephant a owl:Class ;
+        rdfs:subClassOf n2mu:mammal .
+
+    n2mu:fire-hydrant a owl:Class ;
+        rdfs:subClassOf n2mu:instrument .
+
+    n2mu:fish a owl:Class ;
+        rdfs:subClassOf n2mu:animal .
+
+    n2mu:flower a owl:Class ;
+        rdfs:subClassOf n2mu:plant .
+
+    n2mu:fork a owl:Class ;
+        rdfs:subClassOf n2mu:cutlery .
+
+    n2mu:frisbee a owl:Class ;
+        rdfs:subClassOf n2mu:sports-instrument .
+
+    n2mu:giraffe a owl:Class ;
+        rdfs:subClassOf n2mu:mammal .
+
+    n2mu:girl a owl:Class ;
+        rdfs:subClassOf n2mu:child .
+
+    n2mu:glasses a owl:Class ;
+        rdfs:subClassOf n2mu:wearables .
+
+    n2mu:grass a owl:Class ;
+        rdfs:subClassOf n2mu:plant .
+
+    n2mu:handbag a owl:Class ;
+        rdfs:subClassOf n2mu:bag .
+
+    n2mu:horse a owl:Class ;
+        rdfs:subClassOf n2mu:mammal .
+
+    n2mu:hot-dog a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:insect a owl:Class ;
+        rdfs:subClassOf n2mu:animal .
+
+    n2mu:juice a owl:Class ;
+        rdfs:subClassOf n2mu:drink .
+
+    n2mu:kettle a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:kitchen-utensils .
+
+    n2mu:keyboard a owl:Class ;
+        rdfs:subClassOf n2mu:device .
+
+    n2mu:kite a owl:Class ;
+        rdfs:subClassOf n2mu:sports-instrument .
+
+    n2mu:knife a owl:Class ;
+        rdfs:subClassOf n2mu:cutlery .
+
+    n2mu:laptop a owl:Class ;
+        rdfs:subClassOf n2mu:device .
+
+    n2mu:lemonade a owl:Class ;
+        rdfs:subClassOf n2mu:drink .
+
+    n2mu:library a owl:Class ;
+        rdfs:subClassOf n2mu:building .
+
+    n2mu:like a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:agent .
+
+    n2mu:man a owl:Class ;
+        rdfs:subClassOf n2mu:person .
+
+    n2mu:motorcycle a owl:Class ;
+        rdfs:subClassOf n2mu:vehicle .
+
+    n2mu:movie a owl:Class ;
+        rdfs:subClassOf n2mu:interest .
+
+    n2mu:museum a owl:Class ;
+        rdfs:subClassOf n2mu:building,
+            n2mu:interest .
+
+    n2mu:office a owl:Class ;
+        rdfs:subClassOf n2mu:building .
+
+    n2mu:orange a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:oven a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:device .
+
+    n2mu:parking-meter a owl:Class ;
+        rdfs:subClassOf n2mu:instrument .
+
+    n2mu:phone a owl:Class ;
+        rdfs:subClassOf n2mu:device .
+
+    n2mu:pizza a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:plate a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:kitchen-utensils .
+
+    n2mu:potato a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:potted-plant a owl:Class ;
+        rdfs:subClassOf n2mu:furniture .
+
+    n2mu:pub a owl:Class ;
+        rdfs:subClassOf n2mu:building .
+
+    n2mu:puppet a owl:Class ;
+        rdfs:subClassOf n2mu:toy .
+
+    n2mu:refrigerator a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:device .
+
+    n2mu:remote a owl:Class ;
+        rdfs:subClassOf n2mu:device .
+
+    n2mu:reptile a owl:Class ;
+        rdfs:subClassOf n2mu:animal .
+
+    n2mu:restaurant a owl:Class ;
+        rdfs:subClassOf n2mu:building .
+
+    n2mu:sandwich a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:sheep a owl:Class ;
+        rdfs:subClassOf n2mu:mammal .
+
+    n2mu:ship a owl:Class ;
+        rdfs:subClassOf n2mu:vehicle .
+
+    n2mu:shirt a owl:Class ;
+        rdfs:subClassOf n2mu:wearables .
+
+    n2mu:sink a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:device .
+
+    n2mu:skateboard a owl:Class ;
+        rdfs:subClassOf n2mu:sports-instrument .
+
+    n2mu:skis a owl:Class ;
+        rdfs:subClassOf n2mu:sports-instrument .
+
+    n2mu:snowboard a owl:Class ;
+        rdfs:subClassOf n2mu:sports-instrument .
+
+    n2mu:soda a owl:Class ;
+        rdfs:subClassOf n2mu:drink .
+
+    n2mu:sofa a owl:Class ;
+        rdfs:subClassOf n2mu:furniture .
+
+    n2mu:spoon a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:cutlery .
+
+    n2mu:sport a owl:Class,
+            owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:sport ;
+        rdfs:subClassOf n2mu:interest ;
+        rdfs:subPropertyOf n2mu:play .
+
+    n2mu:sports-ball a owl:Class ;
+        rdfs:subClassOf n2mu:sports-instrument .
+
+    n2mu:suitcase a owl:Class ;
+        rdfs:subClassOf n2mu:bag .
+
+    n2mu:surfboard a owl:Class ;
+        rdfs:subClassOf n2mu:sports-instrument .
+
+    n2mu:table a owl:Class ;
+        rdfs:subClassOf n2mu:furniture .
+
+    n2mu:taco a owl:Class ;
+        rdfs:subClassOf n2mu:food .
+
+    n2mu:tea a owl:Class ;
+        rdfs:subClassOf n2mu:drink .
+
+    n2mu:teddy-bear a owl:Class ;
+        rdfs:subClassOf n2mu:toy .
+
+    n2mu:tennis-racket a owl:Class ;
+        rdfs:subClassOf n2mu:sports-instrument .
+
+    n2mu:tie a owl:Class ;
+        rdfs:subClassOf n2mu:wearables .
+
+    n2mu:toaster a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:device .
+
+    n2mu:toilet a owl:Class ;
+        rdfs:subClassOf n2mu:furniture .
+
+    n2mu:traffic-light a owl:Class ;
+        rdfs:subClassOf n2mu:sign .
+
+    n2mu:train a owl:Class ;
+        rdfs:subClassOf n2mu:vehicle .
+
+    n2mu:tree a owl:Class ;
+        rdfs:subClassOf n2mu:plant .
+
+    n2mu:truck a owl:Class ;
+        rdfs:subClassOf n2mu:vehicle .
+
+    n2mu:tv a owl:Class ;
+        rdfs:subClassOf n2mu:device .
+
+    n2mu:umbrella a owl:Class ;
+        rdfs:subClassOf n2mu:wearables .
+
+    n2mu:water a owl:Class ;
+        rdfs:subClassOf n2mu:drink .
+
+    n2mu:wheat a owl:Class ;
+        rdfs:subClassOf n2mu:plant .
+
+    n2mu:wine a owl:Class ;
+        rdfs:subClassOf n2mu:drink .
+
+    n2mu:wine-glass a owl:Class ;
+        rdfs:subClassOf n2mu:glass .
+
+    n2mu:woman a owl:Class ;
+        rdfs:subClassOf n2mu:person .
+
+    n2mu:zebra a owl:Class ;
+        rdfs:subClassOf n2mu:mammal .
+
+    gaf:containsDenotation a owl:ObjectProperty ;
+        rdfs:domain gaf:Mention ;
+        rdfs:range gaf:Instance ;
+        owl:inverseOf gaf:denotedIn .
+
+    gaf:denotedBy a owl:ObjectProperty ;
+        rdfs:domain gaf:Instance ;
+        rdfs:range gaf:Mention ;
+        rdfs:subPropertyOf gaf:denotedIn ;
+        owl:inverseOf gaf:denotes .
+
+    grasp:Source a owl:Class ;
+        rdfs:label "Source" ;
+        rdfs:comment "" ;
+        rdfs:subClassOf owl:Thing .
+
+    grasp:Utterance a owl:Class ;
+        rdfs:subClassOf sem:Event .
+
+    graspe:anger a grasp:EmotionValue,
+            owl:NamedIndividual .
+
+    graspe:disgust a grasp:EmotionValue,
+            owl:NamedIndividual .
+
+    graspe:fear a grasp:EmotionValue,
+            owl:NamedIndividual .
+
+    graspe:happiness a grasp:EmotionValue,
+            owl:NamedIndividual .
+
+    graspe:sadness a grasp:EmotionValue,
+            owl:NamedIndividual .
+
+    graspe:surprise a grasp:EmotionValue,
+            owl:NamedIndividual .
+
+    graspf:certain a grasp:CertaintyValue,
+            owl:NamedIndividual .
+
+    graspf:future a grasp:TemporalValue,
+            owl:NamedIndividual .
+
+    graspf:negative a grasp:PolarityValue,
+            owl:NamedIndividual .
+
+    graspf:non-future a grasp:TemporalValue,
+            owl:NamedIndividual .
+
+    graspf:positive a grasp:PolarityValue,
+            owl:NamedIndividual .
+
+    graspf:possible a grasp:CertaintyValue,
+            owl:NamedIndividual .
+
+    graspf:probable a grasp:CertaintyValue,
+            owl:NamedIndividual .
+
+    graspf:underspecified a grasp:CertaintyValue,
+            owl:NamedIndividual .
+
+    grasps:negative a grasp:SentimentValue,
+            owl:NamedIndividual .
+
+    grasps:positive a grasp:SentimentValue,
+            owl:NamedIndividual .
+
+    <http://schema.org/Place> a owl:Class .
+
+    sem:Actor a owl:Class ;
+        rdfs:label "Actor" ;
+        rdfs:comment """Actors are entities that take part in an Event, either actively or passively. Actors do not necessarily have to be sentient. They can also be objects. Actors are a thing, animate or inanimate, physical or non-physical.
+""" ;
+        skos:broadMatch <http://sw.opencyc.org/2009/04/07/concept/en/SomethingExisting>,
+            <http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#endurant> ;
+        skos:closeMatch dcterms:Agent,
+            dcterms:AgentClass,
+            <http://sw.opencyc.org/2009/04/07/concept/en/Agent-Generic>,
+            <http://www.ontologyportal.org/translations/SUMO.owl.txt#Agent>,
+            <http://www8.informatik.uni-erlangen.de/IMMD8/Services/cidoc-crm/erlangen-crm_090330_5_0_1.owl#E39.Actor>,
+            foaf:Agent .
+
+    sem:Place a owl:Class ;
+        rdfs:label "Place" ;
+        rdfs:comment "Places are locations where an Event happens. They do not need to be physical places and hence do not necessarily need coordinates. Neither do they need to have any significance apart from them being the location of an Event." ;
+        skos:closeMatch dcterms:Location,
+            <http://sw.opencyc.org/2009/04/07/concept/en/EnduringThing-Localized>,
+            <http://www.ontologyportal.org/translations/SUMO.owl.txt#GeographicArea>,
+            <http://www8.informatik.uni-erlangen.de/IMMD8/Services/cidoc-crm/erlangen-crm_090330_5_0_1.owl#E53.Place> ;
+        skos:narrowMatch <http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#PhysicalRegion>,
+            <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> .
+
+    sem:Time a owl:Class ;
+        rdfs:label "Time" ;
+        rdfs:comment "Time contains symbolic representations of when an Event took place. Time instances do not necessarily need to have a timestamp associated with them. The Time class exists to represent semantics of time, e.g. that one thing happens before another, even though the exact timestamps are unknown." ;
+        skos:broadMatch <http://www.w3.org/2006/timeTemporalEntity> .
+
+    sem:subEventOf a owl:ObjectProperty ;
+        rdfs:label "subevent of" ;
+        rdfs:comment "Inverse property of hasSubEvent" .
+
+    rdf:value a owl:ObjectProperty .
+
+    prov:wasAttributedTo a owl:ObjectProperty .
+
+    prov:wasDerivedFrom a owl:ObjectProperty ;
+        rdfs:label "wasDerivedFrom" ;
+        rdfs:comment "The more specific subproperties of prov:wasDerivedFrom (i.e., prov:wasQuotedFrom, prov:wasRevisionOf, prov:hadPrimarySource) should be used when applicable."@en ;
+        rdfs:domain gaf:Mention ;
+        rdfs:range grasp:Detection,
+            grasp:Utterance ;
+        rdfs:subPropertyOf owl:topObjectProperty ;
+        prov:category "starting-point" ;
+        prov:component "derivations" ;
+        prov:definition "A derivation is a transformation of an entity into another, an update of an entity resulting in a new one, or the construction of a new entity based on a pre-existing entity."@en ;
+        prov:inverse "hadDerivation" ;
+        prov:qualifiedForm prov:Derivation .
+
+    eps:Context a owl:Class .
+
+    eps:contextProperty a owl:ObjectProperty ;
+        rdfs:label "context property" ;
+        rdfs:comment "Context properties connect Context to other SEM Core entities." ;
+        owl:equivalentProperty sem:eventProperty .
+
+    n2mu:be-ancestor-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-family-of .
+
+    n2mu:be-child-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-descendant-of ;
+        owl:propertyDisjointWith n2mu:be-parent-of .
+
+    n2mu:be-from a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:location .
+
+    n2mu:be-grandparent-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-ancestor-of .
+
+    n2mu:be-member-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:institution .
+
+    n2mu:be-sibling-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-family-of .
+
+    n2mu:book a owl:Class ;
+        rdfs:subClassOf n2mu:artifact,
+            n2mu:interest .
+
+    n2mu:house a owl:Class ;
+        rdfs:subClassOf n2mu:building .
+
+    n2mu:locate-in a owl:ObjectProperty ;
+        rdfs:range n2mu:location .
+
+    n2mu:musical-work a owl:Class ;
+        rdfs:subClassOf n2mu:artifact,
+            n2mu:interest .
+
+    n2mu:robot a owl:Class ;
+        rdfs:subClassOf n2mu:agent,
+            n2mu:device .
+
+    n2mu:sign a owl:Class ;
+        rdfs:subClassOf n2mu:artifact .
+
+    gaf:denotedIn a owl:ObjectProperty ;
+        rdfs:domain gaf:Instance ;
+        rdfs:range gaf:Mention .
+
+    gaf:denotes a owl:ObjectProperty ;
+        rdfs:domain gaf:Mention ;
+        rdfs:range gaf:Instance ;
+        rdfs:subPropertyOf gaf:containsDenotation .
+
+    grasp:Attribution a owl:Class ;
+        rdfs:label "Attribution" ;
+        rdfs:comment "A grasp:Attribution reflects the attribution of some interpretation, some perspective to a gaf:Mention. An attribution expresses such things as certainty, emotion, polarity, sentiment, temporality."^^xsd:string ;
+        owl:disjointWith grasp:AttributionValue ;
+        owl:equivalentClass _:naca705aa1a12499fa9e853427b39f180b3 .
+
+    grasp:Detection a owl:Class ;
+        rdfs:subClassOf sem:Event .
+
+    grasp:isAttributionFor a owl:ObjectProperty ;
+        rdfs:domain grasp:Attribution ;
+        rdfs:range gaf:Mention .
+
+    foaf:Agent a owl:Class .
+
+    n2mu:be-parent-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-ancestor-of .
+
+    n2mu:be-spouse-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:be-family-of .
+
+    n2mu:child a owl:Class ;
+        rdfs:subClassOf n2mu:person .
+
+    n2mu:glass a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:kitchen-utensils .
+
+    n2mu:know a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:range n2mu:agent .
+
+    n2mu:play a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:toy a owl:Class ;
+        rdfs:subClassOf n2mu:artifact .
+
+    grasp:PolarityValue a owl:Class ;
+        rdfs:label "Polarity Value" ;
+        rdfs:comment "The polarity of a gaf:Mention (e.g. if something is or isn't the case)"^^xsd:string ;
+        rdfs:subClassOf grasp:FactualityValue ;
+        owl:disjointWith grasp:TemporalValue ;
+        owl:equivalentClass _:naca705aa1a12499fa9e853427b39f180b20 .
+
+    n2mu:bag a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:wearables .
+
+    n2mu:be-family-of a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:person ;
+        rdfs:subPropertyOf n2mu:know .
+
+    n2mu:cutlery a owl:Class ;
+        rdfs:subClassOf n2mu:kitchen-utensils .
+
+    grasp:CertaintyValue a owl:Class ;
+        rdfs:label "Certainty Value" ;
+        rdfs:comment "The level of certainty of a gaf:Mention"^^xsd:string ;
+        rdfs:subClassOf grasp:FactualityValue ;
+        owl:disjointWith grasp:PolarityValue,
+            grasp:TemporalValue ;
+        owl:equivalentClass _:naca705aa1a12499fa9e853427b39f180b8 .
+
+    grasp:FactualityValue a owl:Class ;
+        rdfs:label "Factuality value"^^xsd:string ;
+        rdfs:subClassOf grasp:AttributionValue ;
+        owl:disjointWith grasp:SentimentValue .
+
+    grasp:SentimentValue a owl:Class ;
+        rdfs:label "Sentiment Value" ;
+        rdfs:comment "The sentiment expressed by a gaf:Mention"^^xsd:string ;
+        rdfs:subClassOf grasp:AttributionValue ;
+        owl:equivalentClass _:naca705aa1a12499fa9e853427b39f180b23 .
+
+    grasp:TemporalValue a owl:Class ;
+        rdfs:label "Temporal Value" ;
+        rdfs:comment "The temporal property of a gaf:Mention"^^xsd:string ;
+        rdfs:subClassOf grasp:FactualityValue ;
+        owl:equivalentClass _:naca705aa1a12499fa9e853427b39f180b26 .
+
+    n2mu:animal a owl:Class ;
+        rdfs:subClassOf n2mu:object .
+
+    n2mu:be-at a owl:ObjectProperty ;
+        rdfs:range n2mu:location ;
+        rdfs:subPropertyOf n2mu:locate-in .
+
+    n2mu:create a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:artifact ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:have-meal a owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:subPropertyOf n2mu:do-activity .
+
+    n2mu:institution a owl:Class .
+
+    n2mu:physical-feature a owl:DatatypeProperty ;
+        rdfs:domain n2mu:object .
+
+    n2mu:wearables a owl:Class ;
+        rdfs:subClassOf n2mu:artifact .
+
+    sem:eventProperty a owl:ObjectProperty ;
+        rdfs:label "event property" ;
+        rdfs:comment "Event properties connect Events to other SEM Core entities." .
+
+    n2mu:instrument a owl:Class ;
+        rdfs:subClassOf n2mu:artifact .
+
+    n2mu:plant a owl:Class ;
+        rdfs:subClassOf n2mu:object .
+
+    grasp:EmotionValue a owl:Class ;
+        rdfs:label "Emotion Value" ;
+        rdfs:comment "The emotion expressed in a gaf:Mention"^^xsd:string ;
+        rdfs:subClassOf grasp:AttributionValue ;
+        owl:disjointWith grasp:FactualityValue,
+            grasp:SentimentValue ;
+        owl:equivalentClass _:naca705aa1a12499fa9e853427b39f180b13 .
+
+    gaf:Instance a owl:Class ;
+        rdfs:label "Instance" ;
+        rdfs:comment "Instances are statements about real world entities, including actions, processes and abstract notions. They are the primary subject of individuals of type gaf:Mention that can denote them."^^xsd:string ;
+        rdfs:subClassOf owl:Thing ;
+        owl:disjointWith grasp:AttributionValue ;
+        owl:equivalentClass _:naca705aa1a12499fa9e853427b39f180b1 .
+
+    grasp:AttributionValue a owl:Class ;
+        rdfs:label "Attribution value"^^xsd:string ;
+        rdfs:comment "The value of a grasp:Attribution"^^xsd:string ;
+        rdfs:subClassOf owl:Thing .
+
+    n2mu:kitchen-utensils a owl:Class ;
+        rdfs:subClassOf n2mu:instrument .
+
+    n2mu:artifact a owl:Class ;
+        rdfs:subClassOf n2mu:object .
+
+    n2mu:furniture a owl:Class ;
+        rdfs:subClassOf n2mu:artifact .
+
+    n2mu:vehicle a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:instrument .
+
+    sem:Event a owl:Class ;
+        rdfs:label "Event" ;
+        rdfs:comment "Events are things that happen. This comprises everything from historical events to web site sessions and mythical journeys. Event is the central class of SEM." ;
+        skos:broadMatch <http://linkedevents.org/ontology/Event>,
+            <http://purl.org/NET/c4dm/event.owl#Event> ;
+        skos:closeMatch dcmitype:Event,
+            <http://sw.opencyc.org/2009/04/07/concept/en/Situation>,
+            <http://www.loa-cnr.it/ontologies/DOLCE-Lite.owl#perdurant>,
+            <http://www.ontologyportal.org/translations/SUMO.owl.txt#Process>,
+            <http://www8.informatik.uni-erlangen.de/IMMD8/Services/cidoc-crm/erlangen-crm_090330_5_0_1.owl#E5.Event> .
+
+    n2mu:mammal a owl:Class ;
+        rdfs:subClassOf n2mu:animal .
+
+    n2mu:building a owl:Class ;
+        rdfs:subClassOf n2mu:container,
+            n2mu:location .
+
+    n2mu:do-activity a owl:ObjectProperty ;
+        rdfs:domain n2mu:agent .
+
+    n2mu:drink a owl:Class,
+            owl:ObjectProperty ;
+        rdfs:domain n2mu:person ;
+        rdfs:range n2mu:drink ;
+        rdfs:subClassOf n2mu:object ;
+        rdfs:subPropertyOf n2mu:have-meal .
+
+    n2mu:sports-instrument a owl:Class ;
+        rdfs:subClassOf n2mu:instrument .
+
+    gaf:Mention a owl:Class ;
+        rdfs:label "Mention" ;
+        rdfs:comment """Mentions are references to members of the gaf:Instance class as they occur in (web) media such as texts, video, audio, images, etc. Mentions denote gaf:Instances.
+
+A Mention uniquely identifies the (part of a) web source that denotes the mention. We refer to the standard use of fragment identifiers for different media types. """^^xsd:string ;
+        rdfs:subClassOf owl:Thing ;
+        owl:disjointWith grasp:AttributionValue ;
+        owl:equivalentClass _:naca705aa1a12499fa9e853427b39f180b2 .
+
+    n2mu:device a owl:Class ;
+        rdfs:subClassOf n2mu:instrument .
+
+    n2mu:object a owl:Class .
+
+    n2mu:location a owl:Class ;
+        owl:equivalentClass <http://schema.org/Place> .
+
+    n2mu:interest a owl:Class .
+
+    n2mu:container a owl:Class ;
+        rdfs:subClassOf n2mu:artifact .
+
+    n2mu:food a owl:Class ;
+        rdfs:subClassOf n2mu:object .
+
+    n2mu:agent a owl:Class ;
+        owl:equivalentClass foaf:Agent .
+
+    n2mu:person a owl:Class ;
+        rdfs:subClassOf n2mu:agent .
+
+    n2mu:profession a owl:Class .
+
+    _:naca705aa1a12499fa9e853427b39f180b105 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b106 .
+
+    _:naca705aa1a12499fa9e853427b39f180b115 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b116 .
+
+    _:naca705aa1a12499fa9e853427b39f180b121 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b122 .
+
+    _:naca705aa1a12499fa9e853427b39f180b129 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b130 .
+
+    _:naca705aa1a12499fa9e853427b39f180b133 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b134 .
+
+    _:naca705aa1a12499fa9e853427b39f180b140 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b141 .
+
+    _:naca705aa1a12499fa9e853427b39f180b144 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b145 .
+
+    _:naca705aa1a12499fa9e853427b39f180b157 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b158 .
+
+    _:naca705aa1a12499fa9e853427b39f180b164 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b165 .
+
+    _:naca705aa1a12499fa9e853427b39f180b168 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b169 .
+
+    _:naca705aa1a12499fa9e853427b39f180b29 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b30 .
+
+    _:naca705aa1a12499fa9e853427b39f180b38 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b39 .
+
+    _:naca705aa1a12499fa9e853427b39f180b53 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b54 .
+
+    _:naca705aa1a12499fa9e853427b39f180b57 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b58 .
+
+    _:naca705aa1a12499fa9e853427b39f180b63 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b64 .
+
+    _:naca705aa1a12499fa9e853427b39f180b74 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b75 .
+
+    _:naca705aa1a12499fa9e853427b39f180b85 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b86 .
+
+    _:naca705aa1a12499fa9e853427b39f180b95 a owl:AllDisjointClasses ;
+        owl:members _:naca705aa1a12499fa9e853427b39f180b96 .
+
+    _:naca705aa1a12499fa9e853427b39f180b1 a owl:Restriction ;
+        owl:onProperty gaf:denotedBy ;
+        owl:someValuesFrom gaf:Mention .
+
+    _:naca705aa1a12499fa9e853427b39f180b10 rdf:first graspf:possible ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b11 .
+
+    _:naca705aa1a12499fa9e853427b39f180b100 rdf:first n2mu:couch ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b101 .
+
+    _:naca705aa1a12499fa9e853427b39f180b101 rdf:first n2mu:potted-plant ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b102 .
+
+    _:naca705aa1a12499fa9e853427b39f180b102 rdf:first n2mu:sofa ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b103 .
+
+    _:naca705aa1a12499fa9e853427b39f180b103 rdf:first n2mu:table ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b104 .
+
+    _:naca705aa1a12499fa9e853427b39f180b104 rdf:first n2mu:toilet ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b106 rdf:first n2mu:beer ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b107 .
+
+    _:naca705aa1a12499fa9e853427b39f180b107 rdf:first n2mu:coffee ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b108 .
+
+    _:naca705aa1a12499fa9e853427b39f180b108 rdf:first n2mu:coke ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b109 .
+
+    _:naca705aa1a12499fa9e853427b39f180b109 rdf:first n2mu:juice ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b110 .
+
+    _:naca705aa1a12499fa9e853427b39f180b11 rdf:first graspf:probable ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b12 .
+
+    _:naca705aa1a12499fa9e853427b39f180b110 rdf:first n2mu:lemonade ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b111 .
+
+    _:naca705aa1a12499fa9e853427b39f180b111 rdf:first n2mu:soda ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b112 .
+
+    _:naca705aa1a12499fa9e853427b39f180b112 rdf:first n2mu:tea ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b113 .
+
+    _:naca705aa1a12499fa9e853427b39f180b113 rdf:first n2mu:water ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b114 .
+
+    _:naca705aa1a12499fa9e853427b39f180b114 rdf:first n2mu:wine ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b116 rdf:first n2mu:bird ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b117 .
+
+    _:naca705aa1a12499fa9e853427b39f180b117 rdf:first n2mu:fish ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b118 .
+
+    _:naca705aa1a12499fa9e853427b39f180b118 rdf:first n2mu:insect ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b119 .
+
+    _:naca705aa1a12499fa9e853427b39f180b119 rdf:first n2mu:mammal ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b120 .
+
+    _:naca705aa1a12499fa9e853427b39f180b12 rdf:first graspf:underspecified ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b120 rdf:first n2mu:reptile ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b122 rdf:first n2mu:bottle ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b123 .
+
+    _:naca705aa1a12499fa9e853427b39f180b123 rdf:first n2mu:bowl ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b124 .
+
+    _:naca705aa1a12499fa9e853427b39f180b124 rdf:first n2mu:cup ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b125 .
+
+    _:naca705aa1a12499fa9e853427b39f180b125 rdf:first n2mu:cutlery ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b126 .
+
+    _:naca705aa1a12499fa9e853427b39f180b126 rdf:first n2mu:glass ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b127 .
+
+    _:naca705aa1a12499fa9e853427b39f180b127 rdf:first n2mu:kettle ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b128 .
+
+    _:naca705aa1a12499fa9e853427b39f180b128 rdf:first n2mu:plate ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b13 a owl:Class ;
+        owl:oneOf _:naca705aa1a12499fa9e853427b39f180b14 .
+
+    _:naca705aa1a12499fa9e853427b39f180b130 rdf:first n2mu:building ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b131 .
+
+    _:naca705aa1a12499fa9e853427b39f180b131 rdf:first n2mu:city ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b132 .
+
+    _:naca705aa1a12499fa9e853427b39f180b132 rdf:first n2mu:country ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b134 rdf:first n2mu:bush ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b135 .
+
+    _:naca705aa1a12499fa9e853427b39f180b135 rdf:first n2mu:corn ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b136 .
+
+    _:naca705aa1a12499fa9e853427b39f180b136 rdf:first n2mu:flower ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b137 .
+
+    _:naca705aa1a12499fa9e853427b39f180b137 rdf:first n2mu:grass ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b138 .
+
+    _:naca705aa1a12499fa9e853427b39f180b138 rdf:first n2mu:tree ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b139 .
+
+    _:naca705aa1a12499fa9e853427b39f180b139 rdf:first n2mu:wheat ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b14 rdf:first graspe:anger ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b15 .
+
+    _:naca705aa1a12499fa9e853427b39f180b141 rdf:first n2mu:child ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b142 .
+
+    _:naca705aa1a12499fa9e853427b39f180b142 rdf:first n2mu:man ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b143 .
+
+    _:naca705aa1a12499fa9e853427b39f180b143 rdf:first n2mu:woman ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b145 rdf:first n2mu:computer ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b146 .
+
+    _:naca705aa1a12499fa9e853427b39f180b146 rdf:first n2mu:computer-mouse ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b147 .
+
+    _:naca705aa1a12499fa9e853427b39f180b147 rdf:first n2mu:keyboard ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b148 .
+
+    _:naca705aa1a12499fa9e853427b39f180b148 rdf:first n2mu:laptop ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b149 .
+
+    _:naca705aa1a12499fa9e853427b39f180b149 rdf:first n2mu:oven ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b150 .
+
+    _:naca705aa1a12499fa9e853427b39f180b15 rdf:first graspe:disgust ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b16 .
+
+    _:naca705aa1a12499fa9e853427b39f180b150 rdf:first n2mu:phone ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b151 .
+
+    _:naca705aa1a12499fa9e853427b39f180b151 rdf:first n2mu:refrigerator ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b152 .
+
+    _:naca705aa1a12499fa9e853427b39f180b152 rdf:first n2mu:remote ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b153 .
+
+    _:naca705aa1a12499fa9e853427b39f180b153 rdf:first n2mu:robot ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b154 .
+
+    _:naca705aa1a12499fa9e853427b39f180b154 rdf:first n2mu:sink ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b155 .
+
+    _:naca705aa1a12499fa9e853427b39f180b155 rdf:first n2mu:toaster ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b156 .
+
+    _:naca705aa1a12499fa9e853427b39f180b156 rdf:first n2mu:tv ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b158 rdf:first n2mu:device ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b159 .
+
+    _:naca705aa1a12499fa9e853427b39f180b159 rdf:first n2mu:fire-hydrant ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b160 .
+
+    _:naca705aa1a12499fa9e853427b39f180b16 rdf:first graspe:fear ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b17 .
+
+    _:naca705aa1a12499fa9e853427b39f180b160 rdf:first n2mu:kitchen-utensils ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b161 .
+
+    _:naca705aa1a12499fa9e853427b39f180b161 rdf:first n2mu:parking-meter ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b162 .
+
+    _:naca705aa1a12499fa9e853427b39f180b162 rdf:first n2mu:sports-instrument ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b163 .
+
+    _:naca705aa1a12499fa9e853427b39f180b163 rdf:first n2mu:vehicle ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b165 rdf:first n2mu:dinky-toy ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b166 .
+
+    _:naca705aa1a12499fa9e853427b39f180b166 rdf:first n2mu:puppet ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b167 .
+
+    _:naca705aa1a12499fa9e853427b39f180b167 rdf:first n2mu:teddy-bear ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b169 rdf:first n2mu:fork ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b170 .
+
+    _:naca705aa1a12499fa9e853427b39f180b17 rdf:first graspe:happiness ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b18 .
+
+    _:naca705aa1a12499fa9e853427b39f180b170 rdf:first n2mu:knife ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b171 .
+
+    _:naca705aa1a12499fa9e853427b39f180b171 rdf:first n2mu:spoon ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b18 rdf:first graspe:sadness ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b19 .
+
+    _:naca705aa1a12499fa9e853427b39f180b19 rdf:first graspe:surprise ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b2 a owl:Restriction ;
+        owl:onProperty gaf:denotes ;
+        owl:someValuesFrom gaf:Instance .
+
+    _:naca705aa1a12499fa9e853427b39f180b20 a owl:Class ;
+        owl:oneOf _:naca705aa1a12499fa9e853427b39f180b21 .
+
+    _:naca705aa1a12499fa9e853427b39f180b21 rdf:first graspf:negative ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b22 .
+
+    _:naca705aa1a12499fa9e853427b39f180b22 rdf:first graspf:positive ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b23 a owl:Class ;
+        owl:oneOf _:naca705aa1a12499fa9e853427b39f180b24 .
+
+    _:naca705aa1a12499fa9e853427b39f180b24 rdf:first grasps:negative ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b25 .
+
+    _:naca705aa1a12499fa9e853427b39f180b25 rdf:first grasps:positive ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b26 a owl:Class ;
+        owl:oneOf _:naca705aa1a12499fa9e853427b39f180b27 .
+
+    _:naca705aa1a12499fa9e853427b39f180b27 rdf:first graspf:future ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b28 .
+
+    _:naca705aa1a12499fa9e853427b39f180b28 rdf:first graspf:non-future ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b3 a owl:Class ;
+        owl:intersectionOf _:naca705aa1a12499fa9e853427b39f180b6 .
+
+    _:naca705aa1a12499fa9e853427b39f180b30 rdf:first n2mu:airplane ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b31 .
+
+    _:naca705aa1a12499fa9e853427b39f180b31 rdf:first n2mu:bicycle ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b32 .
+
+    _:naca705aa1a12499fa9e853427b39f180b32 rdf:first n2mu:bus ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b33 .
+
+    _:naca705aa1a12499fa9e853427b39f180b33 rdf:first n2mu:car ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b34 .
+
+    _:naca705aa1a12499fa9e853427b39f180b34 rdf:first n2mu:motorcycle ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b35 .
+
+    _:naca705aa1a12499fa9e853427b39f180b35 rdf:first n2mu:ship ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b36 .
+
+    _:naca705aa1a12499fa9e853427b39f180b36 rdf:first n2mu:train ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b37 .
+
+    _:naca705aa1a12499fa9e853427b39f180b37 rdf:first n2mu:truck ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b39 rdf:first n2mu:apple ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b40 .
+
+    _:naca705aa1a12499fa9e853427b39f180b4 a owl:Restriction ;
+        owl:onProperty grasp:isAttributionFor ;
+        owl:someValuesFrom gaf:Mention .
+
+    _:naca705aa1a12499fa9e853427b39f180b40 rdf:first n2mu:avocado ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b41 .
+
+    _:naca705aa1a12499fa9e853427b39f180b41 rdf:first n2mu:banana ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b42 .
+
+    _:naca705aa1a12499fa9e853427b39f180b42 rdf:first n2mu:broccoli ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b43 .
+
+    _:naca705aa1a12499fa9e853427b39f180b43 rdf:first n2mu:cabbage ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b44 .
+
+    _:naca705aa1a12499fa9e853427b39f180b44 rdf:first n2mu:cake ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b45 .
+
+    _:naca705aa1a12499fa9e853427b39f180b45 rdf:first n2mu:carrot ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b46 .
+
+    _:naca705aa1a12499fa9e853427b39f180b46 rdf:first n2mu:donut ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b47 .
+
+    _:naca705aa1a12499fa9e853427b39f180b47 rdf:first n2mu:hot-dog ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b48 .
+
+    _:naca705aa1a12499fa9e853427b39f180b48 rdf:first n2mu:orange ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b49 .
+
+    _:naca705aa1a12499fa9e853427b39f180b49 rdf:first n2mu:pizza ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b50 .
+
+    _:naca705aa1a12499fa9e853427b39f180b5 a owl:Restriction ;
+        owl:onProperty rdf:value ;
+        owl:someValuesFrom grasp:AttributionValue .
+
+    _:naca705aa1a12499fa9e853427b39f180b50 rdf:first n2mu:potato ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b51 .
+
+    _:naca705aa1a12499fa9e853427b39f180b51 rdf:first n2mu:sandwich ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b52 .
+
+    _:naca705aa1a12499fa9e853427b39f180b52 rdf:first n2mu:taco ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b54 rdf:first n2mu:backpack ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b55 .
+
+    _:naca705aa1a12499fa9e853427b39f180b55 rdf:first n2mu:handbag ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b56 .
+
+    _:naca705aa1a12499fa9e853427b39f180b56 rdf:first n2mu:suitcase ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b58 rdf:first n2mu:bag ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b59 .
+
+    _:naca705aa1a12499fa9e853427b39f180b59 rdf:first n2mu:glasses ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b60 .
+
+    _:naca705aa1a12499fa9e853427b39f180b6 rdf:first _:naca705aa1a12499fa9e853427b39f180b4 ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b7 .
+
+    _:naca705aa1a12499fa9e853427b39f180b60 rdf:first n2mu:shirt ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b61 .
+
+    _:naca705aa1a12499fa9e853427b39f180b61 rdf:first n2mu:tie ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b62 .
+
+    _:naca705aa1a12499fa9e853427b39f180b62 rdf:first n2mu:umbrella ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b64 rdf:first n2mu:bar ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b65 .
+
+    _:naca705aa1a12499fa9e853427b39f180b65 rdf:first n2mu:cafe ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b66 .
+
+    _:naca705aa1a12499fa9e853427b39f180b66 rdf:first n2mu:church ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b67 .
+
+    _:naca705aa1a12499fa9e853427b39f180b67 rdf:first n2mu:club ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b68 .
+
+    _:naca705aa1a12499fa9e853427b39f180b68 rdf:first n2mu:house ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b69 .
+
+    _:naca705aa1a12499fa9e853427b39f180b69 rdf:first n2mu:library ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b70 .
+
+    _:naca705aa1a12499fa9e853427b39f180b7 rdf:first _:naca705aa1a12499fa9e853427b39f180b5 ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b70 rdf:first n2mu:museum ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b71 .
+
+    _:naca705aa1a12499fa9e853427b39f180b71 rdf:first n2mu:office ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b72 .
+
+    _:naca705aa1a12499fa9e853427b39f180b72 rdf:first n2mu:pub ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b73 .
+
+    _:naca705aa1a12499fa9e853427b39f180b73 rdf:first n2mu:restaurant ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b75 rdf:first n2mu:baseball ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b76 .
+
+    _:naca705aa1a12499fa9e853427b39f180b76 rdf:first n2mu:baseball-glove ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b77 .
+
+    _:naca705aa1a12499fa9e853427b39f180b77 rdf:first n2mu:frisbee ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b78 .
+
+    _:naca705aa1a12499fa9e853427b39f180b78 rdf:first n2mu:kite ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b79 .
+
+    _:naca705aa1a12499fa9e853427b39f180b79 rdf:first n2mu:skateboard ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b80 .
+
+    _:naca705aa1a12499fa9e853427b39f180b8 a owl:Class ;
+        owl:oneOf _:naca705aa1a12499fa9e853427b39f180b9 .
+
+    _:naca705aa1a12499fa9e853427b39f180b80 rdf:first n2mu:skis ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b81 .
+
+    _:naca705aa1a12499fa9e853427b39f180b81 rdf:first n2mu:snowboard ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b82 .
+
+    _:naca705aa1a12499fa9e853427b39f180b82 rdf:first n2mu:sports-ball ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b83 .
+
+    _:naca705aa1a12499fa9e853427b39f180b83 rdf:first n2mu:surfboard ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b84 .
+
+    _:naca705aa1a12499fa9e853427b39f180b84 rdf:first n2mu:tennis-racket ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b86 rdf:first n2mu:bear ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b87 .
+
+    _:naca705aa1a12499fa9e853427b39f180b87 rdf:first n2mu:cat ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b88 .
+
+    _:naca705aa1a12499fa9e853427b39f180b88 rdf:first n2mu:cow ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b89 .
+
+    _:naca705aa1a12499fa9e853427b39f180b89 rdf:first n2mu:dog ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b90 .
+
+    _:naca705aa1a12499fa9e853427b39f180b9 rdf:first graspf:certain ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b10 .
+
+    _:naca705aa1a12499fa9e853427b39f180b90 rdf:first n2mu:elephant ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b91 .
+
+    _:naca705aa1a12499fa9e853427b39f180b91 rdf:first n2mu:giraffe ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b92 .
+
+    _:naca705aa1a12499fa9e853427b39f180b92 rdf:first n2mu:horse ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b93 .
+
+    _:naca705aa1a12499fa9e853427b39f180b93 rdf:first n2mu:sheep ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b94 .
+
+    _:naca705aa1a12499fa9e853427b39f180b94 rdf:first n2mu:zebra ;
+        rdf:rest () .
+
+    _:naca705aa1a12499fa9e853427b39f180b96 rdf:first n2mu:bed ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b97 .
+
+    _:naca705aa1a12499fa9e853427b39f180b97 rdf:first n2mu:bench ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b98 .
+
+    _:naca705aa1a12499fa9e853427b39f180b98 rdf:first n2mu:chair ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b99 .
+
+    _:naca705aa1a12499fa9e853427b39f180b99 rdf:first n2mu:closet ;
+        rdf:rest _:naca705aa1a12499fa9e853427b39f180b100 .
+}
+

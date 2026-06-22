@@ -69,7 +69,7 @@ class ActivityType(str, Enum):
 prompt_conversational_srl_activity_type = '''You will receive a conversation in JSON format between two speakers: a diabetes patient and a lifestyle coach. 
     The conversation contains the name of the diabetes patient and the date on which the conversation took place.
     You need to extract activities and conditions of the diabetes patient from the last turn in the conversation. You can use the preceding turns as the context.
-    Only extract Activities of Daily Life in which the diabetes patient participates or physical, social or mentional conditions of the patient in relation to the patient's lifestyle.
+    Only extract Activities of Daily Life in which the diabetes patient participates or physical, social or mental conditions of the patient in relation to the patient's lifestyle.
     Try to represent as much details about the Activity or the Condition from the conversation.
     For each activity or condition, extract the WHAT as activity, the TYPE of activity or condition as activity_type, the  WHO as agent, the WHOM as patient, the HOW as manner, the WITH as instrument, WHERE as location and WHEN as time. 
     Always include the activity_type in the output, which can be either "exercise", "take_food", "take_drink", "advise", "social", "treatment", "physical condition", "social condition" or "mental condition".
