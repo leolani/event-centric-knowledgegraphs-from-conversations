@@ -1,0 +1,293 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix eckg: <https://cltl.nl/eckg/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix sem:  <http://semanticweb.cs.vu.nl/2009/11/sem/> .
+@prefix n2mu: <http://cltl.nl/leolani/n2mu/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+# ── Ontology declaration ──────────────────────────────────────────────────────
+<https://cltl.nl/eckg/> a owl:Ontology ;
+    rdfs:label "Event-Centric Knowledge Graph Taxonomy" ;
+    rdfs:comment "Hierarchy of activity types, entity role types, and temporal types extracted from diabetes dialogue annotations. Aligned with the Leolani n2mu ontology (http://cltl.nl/leolani/n2mu/)." .
+
+# ── Root ──────────────────────────────────────────────────────────────────────
+# owl:Thing is the built-in OWL root — no declaration needed, used implicitly.
+
+# ── Level 1: top branches ─────────────────────────────────────────────────────
+eckg:ActivityType a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:subClassOf sem:Event ;
+    rdfs:label "Activity Type" ;
+    skos:closeMatch n2mu:do-activity ;
+    rdfs:comment "Any activity, action, or event reported in a dialogue turn." .
+
+eckg:EntityType a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    rdfs:label "Entity Type" ;
+    rdfs:comment "Semantic type of a named entity filling a semantic role." .
+
+eckg:TemporalType a owl:Class ;
+    rdfs:subClassOf owl:Thing ;
+    skos:closeMatch sem:Time ;
+    rdfs:label "Temporal Type" ;
+    rdfs:comment "Category of temporal expression used to locate an event in time." .
+
+# ── Activity types — level 2 (direct children of ActivityType) ───────────────
+
+eckg:ActivityType_Medical a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType ;
+    rdfs:label "Medical" ;
+    skos:notation 458 ;
+    skos:example "measurement", "symptom", "disease", "treatment" ;
+    rdfs:comment "Frequency count: 458 (treatment + measurement + symptom + medicine + disease combined)" .
+
+eckg:ActivityType_Exercise a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType ;
+    rdfs:label "Exercise" ;
+    skos:notation 1050 ;
+    skos:closeMatch n2mu:sport ;
+    skos:example "gardening", "walking", "cycling" ;
+    rdfs:comment "Frequency count: 1050" .
+
+eckg:ActivityType_Condition a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType ;
+    rdfs:label "Condition" ;
+    skos:notation 945 ;
+    skos:closeMatch n2mu:feel ;
+    rdfs:comment "Frequency count: 945 (physical + mental + social condition combined)" .
+
+eckg:ActivityType_Advise a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType ;
+    rdfs:label "Advise" ;
+    skos:notation 629 ;
+    skos:example "discuss", "try", "consider" ;
+    rdfs:comment "Frequency count: 629" .
+
+eckg:ActivityType_Diet a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType ;
+    rdfs:label "Diet" ;
+    skos:notation 882 ;
+    skos:closeMatch n2mu:have-meal ;
+    rdfs:comment "Frequency count: 882 (diet + take_food + take_drink combined)" .
+
+eckg:ActivityType_Treatment a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Medical ;
+    rdfs:label "Treatment" ;
+    skos:notation 196 ;
+    skos:example "take", "quit smoking", "use" ;
+    rdfs:comment "Frequency count: 196" .
+
+eckg:ActivityType_Measurement a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Medical ;
+    rdfs:label "Measurement" ;
+    skos:notation 168 ;
+    skos:example "check", "check blood sugar levels", "monitor" ;
+    rdfs:comment "Frequency count: 168" .
+
+eckg:ActivityType_Symptom a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Medical ;
+    rdfs:label "Symptom" ;
+    skos:notation 88 ;
+    skos:example "excessive thirst", "fatigue", "increased thirst" ;
+    rdfs:comment "Frequency count: 88" .
+
+eckg:ActivityType_Social a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType ;
+    rdfs:label "Social" ;
+    skos:notation 84 ;
+    skos:closeMatch n2mu:party ;
+    skos:closeMatch n2mu:visit ;
+    skos:example "talk", "fasting during Ramadan", "discuss" ;
+    rdfs:comment "Frequency count: 84" .
+
+eckg:ActivityType_Medicine a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Medical ;
+    rdfs:label "Medicine" ;
+    skos:notation 4 ;
+    skos:example "continue taking medication as prescribed", "medications" ;
+    rdfs:comment "Frequency count: 4" .
+
+eckg:ActivityType_Disease a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Medical ;
+    rdfs:label "Disease" ;
+    skos:notation 2 ;
+    skos:example "nerve damage", "notice" ;
+    rdfs:comment "Frequency count: 2" .
+
+# ── Activity types — level 3 under Condition ─────────────────────────────────
+
+eckg:ActivityType_PhysicalCondition a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Condition ;
+    rdfs:label "Physical Condition" ;
+    skos:notation 676 ;
+    skos:closeMatch n2mu:feel ;
+    skos:example "experience", "feel", "feeling" ;
+    rdfs:comment "Frequency count: 676" .
+
+eckg:ActivityType_MentalCondition a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Condition ;
+    rdfs:label "Mental Condition" ;
+    skos:notation 259 ;
+    skos:closeMatch n2mu:feel ;
+    skos:example "feel", "worry", "mindfulness meditation" ;
+    rdfs:comment "Frequency count: 259" .
+
+eckg:ActivityType_SocialCondition a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Condition ;
+    rdfs:label "Social Condition" ;
+    skos:notation 10 ;
+    skos:example "affect", "smoking", "managing cravings" ;
+    rdfs:comment "Frequency count: 10" .
+
+# ── Activity types — level 3 under Diet ──────────────────────────────────────
+
+eckg:ActivityType_DietGeneral a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Diet ;
+    rdfs:label "Diet (general)" ;
+    skos:notation 426 ;
+    skos:example "include", "balanced diet", "eat" ;
+    rdfs:comment "Frequency count: 426" .
+
+eckg:ActivityType_TakeFood a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Diet ;
+    rdfs:label "Take Food" ;
+    skos:notation 421 ;
+    skos:exactMatch n2mu:eat ;
+    skos:example "eat", "have", "consume" ;
+    rdfs:comment "Frequency count: 421" .
+
+eckg:ActivityType_TakeDrink a owl:Class ;
+    rdfs:subClassOf eckg:ActivityType_Diet ;
+    rdfs:label "Take Drink" ;
+    skos:notation 35 ;
+    skos:exactMatch n2mu:drink ;
+    skos:example "drink", "drink water", "cup of tea" ;
+    rdfs:comment "Frequency count: 35" .
+
+# ── Entity role types ─────────────────────────────────────────────────────────
+
+eckg:EntityType_Person a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Person" ;
+    skos:notation 3908 ;
+    owl:equivalentClass n2mu:person ;
+    skos:broadMatch n2mu:agent ;
+    skos:example "Jan", "Abdullah", "Aicha" ;
+    rdfs:comment "Frequency count: 3908" .
+
+eckg:EntityType_Food a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Food" ;
+    skos:notation 880 ;
+    skos:closeMatch n2mu:food ;
+    skos:example "baklava", "berries", "dark chocolate" ;
+    rdfs:comment "Frequency count: 880" .
+
+eckg:EntityType_Other a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Other" ;
+    skos:notation 592 ;
+    rdfs:comment "Frequency count: 592" .
+
+eckg:EntityType_BodyPart a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Body Part" ;
+    skos:notation 537 ;
+    skos:example "blood sugar levels", "HbA1c", "blood pressure" ;
+    rdfs:comment "Frequency count: 537" .
+
+eckg:EntityType_Concept a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Concept" ;
+    skos:notation 387 ;
+    skos:example "consistent monitoring", "portion sizes", "diabetes management" ;
+    rdfs:comment "Frequency count: 387" .
+
+eckg:EntityType_Location a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Location" ;
+    skos:notation 333 ;
+    owl:equivalentClass n2mu:location ;
+    skos:example "indoor", "Dutch", "Amsterdam" ;
+    rdfs:comment "Frequency count: 333" .
+
+eckg:EntityType_Activity a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Activity" ;
+    skos:notation 244 ;
+    skos:closeMatch n2mu:do-activity ;
+    skos:example "30 minutes of brisk walking", "being mindful of portion sizes" ;
+    rdfs:comment "Frequency count: 244" .
+
+eckg:EntityType_Device a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Device" ;
+    skos:notation 115 ;
+    owl:equivalentClass n2mu:device ;
+    skos:broadMatch n2mu:instrument ;
+    skos:example "light weights", "resistance bands", "glucometer" ;
+    rdfs:comment "Frequency count: 115" .
+
+eckg:EntityType_Medication a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Medication" ;
+    skos:notation 72 ;
+    skos:example "insulin", "metformin" ;
+    rdfs:comment "Frequency count: 72" .
+
+eckg:EntityType_Quantity a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Quantity" ;
+    skos:notation 59 ;
+    skos:example "15 grams of carbohydrates", "30 minutes" ;
+    rdfs:comment "Frequency count: 59" .
+
+eckg:EntityType_Time a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Time" ;
+    skos:notation 8 ;
+    skos:closeMatch sem:Time ;
+    skos:example "morning", "at night" ;
+    rdfs:comment "Frequency count: 8" .
+
+eckg:EntityType_Meal a owl:Class ;
+    rdfs:subClassOf eckg:EntityType ;
+    rdfs:label "Meal" ;
+    skos:notation 2 ;
+    skos:closeMatch n2mu:dish ;
+    skos:broadMatch n2mu:food ;
+    skos:example "dinner", "lunch" ;
+    rdfs:comment "Frequency count: 2" .
+
+# ── Temporal types ────────────────────────────────────────────────────────────
+
+eckg:TemporalType_Vague a owl:Class ;
+    rdfs:subClassOf eckg:TemporalType ;
+    rdfs:label "Vague" ;
+    skos:notation 1019 ;
+    skos:example "recently", "lately", "often" ;
+    rdfs:comment "Frequency count: 1019" .
+
+eckg:TemporalType_Recurring a owl:Class ;
+    rdfs:subClassOf eckg:TemporalType ;
+    rdfs:label "Recurring" ;
+    skos:notation 716 ;
+    skos:example "daily", "every morning", "three times a week" ;
+    rdfs:comment "Frequency count: 716" .
+
+eckg:TemporalType_Range a owl:Class ;
+    rdfs:subClassOf eckg:TemporalType ;
+    rdfs:label "Range" ;
+    skos:notation 622 ;
+    skos:example "past few days", "this week", "colder months" ;
+    rdfs:comment "Frequency count: 622" .
+
+eckg:TemporalType_Point a owl:Class ;
+    rdfs:subClassOf eckg:TemporalType ;
+    rdfs:label "Point" ;
+    skos:notation 19 ;
+    skos:example "today", "now", "immediately" ;
+    rdfs:comment "Frequency count: 19" .

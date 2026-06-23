@@ -1,0 +1,13 @@
+type,agent,patient,instrument,location
+activity,9,97,97,41
+body_part,25,304,24,184
+concept,26,246,65,50
+device,0,19,77,19
+food,14,628,177,61
+location,1,5,7,320
+meal,0,2,0,0
+medication,2,44,26,0
+other,372,78,87,55
+person,3624,266,11,7
+quantity,0,41,9,9
+time,0,2,0,6
