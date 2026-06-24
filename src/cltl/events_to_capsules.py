@@ -197,7 +197,78 @@ def get_triples(event, event_id):
                   "object": {"label": time, "type": ["time"], "uri": ""}}
                 triples.append(triple) 
     return triples
-    
+
+def get_triples_with_types(event, event_id):
+    triples = []
+    if 'activity' in event and not event['activity'] is None:
+        subject = event['activity']
+        subject_uri = "http://cltl.nl/leolani/n2mu/"+subject.replace(" ", "_")+str(event_id)
+        activity_type = ["activity"]
+        if 'activity_type' in event and not event['activity_type']==None:
+            activity_type.append(event['activity_type'])
+        if 'agent' in event and not event['agent'] is None:
+            if type(event['agent'])==str:
+                event['agent'] = [event['agent']]
+            for agent in event['agent']:
+                a_label = agent["value"]
+                a_type = agent["type"]
+                triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
+                  "predicate": {"label": "agent", "uri": "http://cltl.nl/leolani/n2mu/agent"},
+                  "object": {"label":a_label, "type": [a_type], "uri": ""}}
+                triples.append(triple)
+        if 'patient' in event and not event['patient'] is None:
+            if type(event['patient'])==str:
+                event['patient'] = [event['patient']]
+            for patient in event['patient']:
+                a_label = patient["value"]
+                a_type = patient["type"]
+                triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
+                  "predicate": {"label": "patient", "uri": "http://cltl.nl/leolani/n2mu/patient"},
+                  "object": {"label":a_label, "type": [a_type], "uri": ""}}
+                triples.append(triple)
+        if 'manner' in event and not event['manner'] is None:
+            if type(event['manner'])==str:
+                event['manner'] = [event['manner']]
+            for manner in event['manner']:
+                triple = {"subject": {"label": subject, "type":activity_type, "uri": subject_uri},
+                  "predicate": {"label": "manner", "uri": "http://cltl.nl/leolani/n2mu/manner"},
+                  "object": {"label": manner, "type": ["property"], "uri": ""}}
+                triples.append(triple)
+        if 'instrument' in event and not event['instrument'] is None:
+            if type(event['instrument'])==str:
+                event['instrument'] = [event['instrument']]
+            for instrument in event['instrument']:
+                a_label = instrument["value"]
+                a_type = instrument["type"]
+                triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
+                  "predicate": {"label": "instrument", "uri": "http://cltl.nl/leolani/n2mu/instrument"},
+                  "object": {"label":a_label, "type": [a_type], "uri": ""}}
+                triples.append(triple)
+        if 'location' in event and not event['location'] is None:
+            if type(event['location'])==str:
+                event['location'] = [event['location']]
+            for location in event['location']:
+                a_label = location["value"]
+                a_type = location["type"]
+                triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
+                  "predicate": {"label": "location", "uri": "http://cltl.nl/leolani/n2mu/location"},
+                  "object": {"label":a_label, "type": [a_type], "uri": ""}}
+                triples.append(triple)
+        if 'time_resolved' in event and not event['time_resolved'] is None:
+            for time in event['time_resolved']:
+                a_label = time["time_expression"]
+                a_type = time["temporal_type"]
+                uri = ""
+                if "date_range_start" in time and time["date_range_start"] is not None:
+                    uri = "http://cltl.nl/leolani/n2mu/time/" + parser.parse(time["date_range_start"]).date().isoformat()
+                elif "absolute_date" in time and time["absolute_date"] is not None:
+                    uri = "http://cltl.nl/leolani/n2mu/time/" + parser.parse(time["absolute_date"]).date().isoformat()
+                triple = {"subject": {"label": subject, "type":activity_type, "uri": subject_uri},
+                  "predicate": {"label": "time", "uri": "http://cltl.nl/leolani/n2mu/time"},
+                  "object": {"label": a_label, "type": [a_type], "uri": uri}}
+                triples.append(triple)
+    return triples
+
 def get_capsules_from_turn (turn_data):
     capsules = []
     turn = turn_data['Input']
@@ -280,6 +351,53 @@ def get_capsule_with_event_details_from_turn_with_conversationa_context (convers
         else:
             conversational_context[subject_phrase] = event_id
         triples = get_triples(event_data, event_id)
+        offset = "0-"+str(len(turn["utterance"]))
+        perspective_value =get_utterance_perspective(turn["utterance"], emotion_detector)
+        capsule = { "chat": chat_id,
+            "turn": turn_id,
+            "author": {"label":turn['speaker'], "type": ["agent"], "uri":"http://cltl.nl/leolani/friends/"+turn['speaker']},
+            "utterance": turn["utterance"],
+            "utterance_type": UtteranceType.STATEMENT,
+            "position": offset,
+            "perspective":  perspective_value,
+             "timestamp": datetime.combine(chat_date, datetime.now().time()),
+             "context_id": event_id
+        }
+        event_details_list = []
+        for triple in triples:
+            event_details_list.append({
+                "subject" : triple["subject"],
+                "predicate" : triple["predicate"],
+                "object" : triple["object"]})
+        capsule["event_details"] = event_details_list
+    return capsule
+
+
+## One event identified by phrase and time per conversation approach
+# ## This variant taks as paramter a dict with phrases and event identifiers.
+# If the activity phrase is similar to an event in dict in the dict,
+# and there is not time clash
+# the identifier is re-used
+def get_capsule_with_event_details_from_turn_with_conversationa_context_similarity_match_and_time (conversational_context: {}, turn_data, emotion_detector):
+    turn = turn_data['Input']
+    event_data_list = turn_data['Output']
+    chat_id = turn_data['chat']
+    chat_date = parser.parse(turn_data['date'])
+    turn_id = turn['turn']
+    for event_data in event_data_list:
+        ### We use a random digit to make the event reference unique
+        ### This random digit is combined with the activity expression to identify the event (activity or condition)
+        ### We first check the conversational context if such a phrase was already mentioned.
+        ### If so, we re-use the ID.
+        ### @TODO add variants to the conversational context and a similarity function.
+        event_id = random.random()
+        print('event_data', event_data, type(event_data))
+        subject_phrase = event_data['activity']
+        if subject_phrase in conversational_context:
+            event_id = conversational_context[subject_phrase]
+        else:
+            conversational_context[subject_phrase] = event_id
+        triples = get_triples_with_types(event_data, event_id)
         offset = "0-"+str(len(turn["utterance"]))
         perspective_value =get_utterance_perspective(turn["utterance"], emotion_detector)
         capsule = { "chat": chat_id,

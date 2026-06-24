@@ -1,22 +1,21 @@
 """
-plot_butterfly_timeline.py — Alternative activity timeline visualisation.
+plot_butterfly_timeline.py — Vertical butterfly activity timeline.
 
 Layout
 ------
-• X-axis  : time
-• Y = 0   : centre line where activities are plotted as ◆ diamonds,
-             coloured by *activity type* (food/diet, exercise, …)
-• Y > 0   : positive emotions of each source about that activity
-• Y < 0   : negative emotions of each source about that activity
+• Y-axis  : time (earlier at top, later at bottom — scrollable vertically)
+• X = 0   : centre line where activities are plotted as ◆ diamonds
+• X > 0   : positive emotions (right half)
+• X < 0   : negative emotions (left half)
+• Activity labels are horizontal, alternating right / left of the centre line
 • Marker shapes / colours distinguish the two speakers (Rudolf / agent)
-• Activity labels alternate above / below the centre line so both halves
-  of the whitespace carry text, halving label density in each direction.
 
 Usage
 -----
     python plot_butterfly_timeline.py [query-result-rudolf.csv]
 """
 
+import argparse
 import sys
 import textwrap
 
@@ -34,17 +33,19 @@ EMOTION_SCALE = [
     "OPTIMISM", "DESIRE", "LOVE", "JOY", "EXCITEMENT", "AMUSEMENT",
 ]
 _NEUTRAL_IDX = EMOTION_SCALE.index("UNDERSPECIFIED")
-_EMOTION_Y_RAW = {e: i - _NEUTRAL_IDX for i, e in enumerate(EMOTION_SCALE)}
+_EMOTION_X_RAW = {e: i - _NEUTRAL_IDX for i, e in enumerate(EMOTION_SCALE)}
 
-# Compress the emotion clusters toward the centre line.
-# A smaller scale means each y-unit represents more physical height in the
-# figure, so fixed-size activity labels cover fewer y-units before reaching
-# the first emotion marker.
-EMOTION_Y_SCALE = 0.5
-EMOTION_Y = {e: v * EMOTION_Y_SCALE for e, v in _EMOTION_Y_RAW.items()}
+EMOTION_X_SCALE = 0.30   # tighter spacing so all emotions fit in A4 width
+EMOTION_X = {e: v * EMOTION_X_SCALE for e, v in _EMOTION_X_RAW.items()}
 
-# Always hidden: anchor point and its nearest neighbour (both uninformative)
 EXCLUDE_EMOTIONS = {"UNDERSPECIFIED", "NEUTRAL"}
+
+# ── Paper format: width (portrait, inches) and font/marker scale vs A4 ────────
+DIM_CONFIG = {
+    "a4": {"width":  8.27, "scale": 1.00},   # 210 mm
+    "a3": {"width": 11.69, "scale": 1.41},   # 297 mm  (√2 × A4)
+    "a1": {"width": 23.39, "scale": 2.83},   # 594 mm  (2√2 × A4)
+}
 
 # ── Activity-type colours ─────────────────────────────────────────────────────
 ACTIVITY_TYPE_COLORS = {
@@ -58,23 +59,22 @@ ACTIVITY_TYPE_COLORS = {
 # ── Speaker colours and marker shapes ────────────────────────────────────────
 SPEAKER_COLORS  = {"Rudolf": "#D50000", "agent": "#0097A7"}
 SPEAKER_MARKERS = {"Rudolf": "o", "agent": "^"}
-SOURCE_X_OFFSET_DAYS = {"Rudolf": -20, "agent": +20}
+# Offset speakers' emotion markers in the time (Y) direction to avoid overlap
+SOURCE_Y_OFFSET_DAYS = {"Rudolf": -20, "agent": +20}
 
-SPREAD_DAYS = 24   # days between diamonds that share the same calendar date
+SPREAD_DAYS = 24   # days between diamonds sharing the same calendar date
 
-# ── Font sizes ────────────────────────────────────────────────────────────────
-ACTIVITY_LABEL_FS = 9
-EMOTION_LABEL_FS  = 9
+# ── Base font sizes (A4 reference — scaled up for larger formats) ─────────────
+ACTIVITY_LABEL_FS = 16
+EMOTION_LABEL_FS  = 10
 YTICK_FS          = 10
+XTICK_FS          = 9
 LEGEND_FS         = 10
 LEGEND_TITLE_FS   = 11
 AXIS_LABEL_FS     = 12
-TITLE_FS          = 14
-ZONE_LABEL_FS     = 11
+TITLE_FS          = 13
+ZONE_LABEL_FS     = 10
 
-# Wrap only when the label would be long enough to risk collision.
-# At 82° rotation a 22-char line fits in the gap between y=0 and the first
-# emotion; longer phrases wrap to keep each line within that budget.
 WRAP_WIDTH = 22
 
 
@@ -118,7 +118,7 @@ def load_data(path):
 
 
 def _spread_events(events, spread_days=SPREAD_DAYS):
-    """Spread diamonds that share the same calendar date horizontally."""
+    """Spread diamonds sharing the same calendar date vertically (in time)."""
     events = events.copy().reset_index(drop=True)
     events["plot_time"] = events["evt_time"]
     for _, grp in events.groupby("date_floor"):
@@ -134,9 +134,8 @@ def _spread_events(events, spread_days=SPREAD_DAYS):
 
 def _assign_label_dirs(events):
     """
-    Within each date cluster, alternate label direction: even-indexed → UP (+1),
-    odd-indexed → DOWN (−1).  Sort within each cluster by type then name first
-    so the alternation is visually predictable.
+    Alternate label direction within each date cluster.
+    +1 → RIGHT (positive-emotion side), -1 → LEFT (negative-emotion side).
     """
     events = (events
               .sort_values(["date_floor", "atype", "activity"])
@@ -149,14 +148,13 @@ def _assign_label_dirs(events):
 
 
 # ── Main plot ─────────────────────────────────────────────────────────────────
-def plot_butterfly(df, output_file):
+def plot_butterfly(df, output_file, dim="a4"):
     # --- Emotion rows ---------------------------------------------------------
     emo = df[df["grasp_type"] == "emotion"].copy()
     emo = emo[~emo["grasp_value"].isin(EXCLUDE_EMOTIONS)]
-    emo["ey"] = emo["grasp_value"].map(EMOTION_Y)
-    emo = emo.dropna(subset=["ey"])
+    emo["ex"] = emo["grasp_value"].map(EMOTION_X)   # X position on emotion axis
+    emo = emo.dropna(subset=["ex"])
 
-    # Y-axis shows only emotions that actually appear in this dataset
     data_emotions = set(emo["grasp_value"].unique())
     display_emotions = [e for e in EMOTION_SCALE
                         if e not in EXCLUDE_EMOTIONS and e in data_emotions]
@@ -181,115 +179,130 @@ def plot_butterfly(df, output_file):
         axis=1,
     )
 
-    # --- Figure extents -------------------------------------------------------
-    pos_ys = [EMOTION_Y[e] for e in display_emotions if EMOTION_Y[e] > 0]
-    neg_ys = [EMOTION_Y[e] for e in display_emotions if EMOTION_Y[e] < 0]
-    ymax = max(pos_ys) + 1.2
-    ymin = min(neg_ys) - 1.2
+    # --- X-axis extents: tight around actual emotions, use full A4 width ------
+    pos_xs = [EMOTION_X[e] for e in display_emotions if EMOTION_X[e] > 0]
+    neg_xs = [EMOTION_X[e] for e in display_emotions if EMOTION_X[e] < 0]
+    xmax = (max(pos_xs) + 0.35) if pos_xs else 1.0
+    xmin = (min(neg_xs) - 0.35) if neg_xs else -1.0
+    first_pos_x = min(pos_xs) if pos_xs else 0.3
+    first_neg_x = max(neg_xs) if neg_xs else -0.3
 
-    # --- Figure ---------------------------------------------------------------
-    fig, ax = plt.subplots(figsize=(44, 16))
-    plt.rcParams.update({"font.size": 10})
+    # --- Figure: format-dependent width, tall for vertical scrolling ----------
+    cfg  = DIM_CONFIG[dim]
+    fw   = cfg["width"]    # figure width in inches
+    sc   = cfg["scale"]    # linear scale factor relative to A4
 
-    # Zone shading — start from the first actual emotion, not y=±0.5
-    first_pos = min(pos_ys)
-    first_neg = max(neg_ys)
-    ax.axhspan(first_pos, ymax, alpha=0.05, color="#66BB6A", zorder=0)
-    ax.axhspan(ymin, first_neg, alpha=0.05, color="#EF5350", zorder=0)
-    ax.axhline(0, color="#888", linewidth=1.2, alpha=0.55, zorder=1)
+    date_range_days = (events["plot_time"].max() - events["plot_time"].min()).days
+    fig_height = max(24 * sc, int(date_range_days / 30) * 3 * sc)
+    fig, ax = plt.subplots(figsize=(fw, fig_height))
+    plt.rcParams.update({"font.size": 10 * sc})
 
-    # --- Activity diamonds + alternating up/down labels ----------------------
-    LABEL_Y_OFFSET = 0.25 * EMOTION_Y_SCALE   # how far above/below centre the anchor sits
+    # Zone shading — right = positive, left = negative
+    ax.axvspan(first_pos_x, xmax, alpha=0.05, color="#66BB6A", zorder=0)
+    ax.axvspan(xmin, first_neg_x, alpha=0.05, color="#EF5350", zorder=0)
+    ax.axvline(0, color="#888", linewidth=1.2, alpha=0.55, zorder=1)
+
+    # --- Activity diamonds + horizontal left/right labels --------------------
+    LABEL_X_OFFSET = 0.25 * EMOTION_X_SCALE
 
     for _, row in events.iterrows():
         t         = row["plot_time"]
         color     = ACTIVITY_TYPE_COLORS[row["atype"]]
-        label_dir = int(row["label_dir"])   # +1 = up, -1 = down
+        label_dir = int(row["label_dir"])   # +1 = right, -1 = left
 
-        ax.scatter(t, 0, color=color, s=230, zorder=5, marker="D",
-                   edgecolors="white", linewidth=0.9)
+        # Diamond on the centre line at Y = time
+        ax.scatter(0, t, color=color, s=230*sc**2, zorder=5, marker="D",
+                   edgecolors="white", linewidth=0.9*sc)
 
+        label_text = _wrap(row["activity"])
         if label_dir > 0:
-            # Label goes nearly vertically UPWARD (82° CCW) above the diamond
             ax.annotate(
-                _wrap(row["activity"]),
-                xy=(t, LABEL_Y_OFFSET),
-                xytext=(4, 5),
+                label_text,
+                xy=(LABEL_X_OFFSET, t),
+                xytext=(5*sc, 0),
                 textcoords="offset points",
-                ha="left", va="bottom",
-                fontsize=ACTIVITY_LABEL_FS,
+                ha="left", va="center",
+                fontsize=ACTIVITY_LABEL_FS*sc,
                 color=color, fontstyle="italic",
-                rotation=82, rotation_mode="anchor",
+                rotation=0,
             )
         else:
-            # Label goes nearly vertically DOWNWARD (82° CW) below the diamond
             ax.annotate(
-                _wrap(row["activity"]),
-                xy=(t, -LABEL_Y_OFFSET),
-                xytext=(4, -5),
+                label_text,
+                xy=(-LABEL_X_OFFSET, t),
+                xytext=(-5*sc, 0),
                 textcoords="offset points",
-                ha="left", va="top",
-                fontsize=ACTIVITY_LABEL_FS,
+                ha="right", va="center",
+                fontsize=ACTIVITY_LABEL_FS*sc,
                 color=color, fontstyle="italic",
-                rotation=-82, rotation_mode="anchor",
+                rotation=0,
             )
 
-    # --- Emotion markers -----------------------------------------------------
+    # --- Emotion markers -------------------------------------------------------
     all_sources = sorted(emo["source_label"].unique())
 
     for _, row in emo.iterrows():
         source = row["source_label"]
-        ey     = float(row["ey"])
+        ex     = float(row["ex"])
         base_t = row["base_plot_time"]
 
         sp_color = SPEAKER_COLORS.get(source, "#555")
         marker   = SPEAKER_MARKERS.get(source, "o")
-        t_plot   = base_t + pd.Timedelta(days=SOURCE_X_OFFSET_DAYS.get(source, 0))
+        # Offset speakers vertically (in time) to separate overlapping markers
+        t_plot   = base_t + pd.Timedelta(days=SOURCE_Y_OFFSET_DAYS.get(source, 0))
 
-        ax.plot([t_plot, t_plot], [0, ey],
-                color=sp_color, alpha=0.20, linewidth=0.9, zorder=2)
-        ax.scatter(t_plot, ey, color=sp_color, marker=marker, s=85,
-                   alpha=0.88, zorder=4, edgecolors="white", linewidth=0.4)
+        # Horizontal line from centre to marker
+        ax.plot([0, ex], [t_plot, t_plot],
+                color=sp_color, alpha=0.20, linewidth=0.9*sc, zorder=2)
+        ax.scatter(ex, t_plot, color=sp_color, marker=marker, s=85*sc**2,
+                   alpha=0.88, zorder=4, edgecolors="white", linewidth=0.4*sc)
 
-        # Emotion text to the LEFT so it diverges from activity labels (upward-right)
-        va    = "bottom" if ey >= 0 else "top"
-        y_off = 4 if ey >= 0 else -4
+        # Emotion name radiates outward from centre (right for positive, left for negative)
+        ha    = "left"  if ex >= 0 else "right"
+        x_off = 4*sc    if ex >= 0 else -4*sc
         ax.annotate(
             row["grasp_value"],
-            xy=(t_plot, ey),
-            xytext=(-4, y_off),
+            xy=(ex, t_plot),
+            xytext=(x_off, 0),
             textcoords="offset points",
-            fontsize=EMOTION_LABEL_FS,
-            color=sp_color, ha="right", va=va,
+            fontsize=EMOTION_LABEL_FS*sc,
+            color=sp_color, ha=ha, va="center",
         )
 
-    # --- Y axis: only emotions present in the data ---------------------------
-    ax.set_yticks([EMOTION_Y[e] for e in display_emotions])
-    ax.set_yticklabels(display_emotions, fontsize=YTICK_FS)
-    ax.set_ylim(ymin, ymax)
-
-    xlim  = ax.get_xlim()
-    x_min = pd.Timestamp(mdates.num2date(xlim[0]))
-    ax.text(x_min, ymax - 0.1, "positive emotions ↑",
-            color="#2E7D32", fontsize=ZONE_LABEL_FS, alpha=0.75, va="top")
-    ax.text(x_min, ymin + 0.1, "negative emotions ↓",
-            color="#B71C1C", fontsize=ZONE_LABEL_FS, alpha=0.75, va="bottom")
-
-    # --- X axis ---------------------------------------------------------------
-    ax.set_xlabel("Time", fontsize=AXIS_LABEL_FS)
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
-    ax.xaxis.set_major_locator(mdates.YearLocator())
-    ax.tick_params(axis="x", labelsize=10)
-    fig.autofmt_xdate()
+    # --- X axis: emotion scale at the top of the graph -----------------------
+    ax.set_xticks([EMOTION_X[e] for e in display_emotions])
+    ax.set_xticklabels(display_emotions, fontsize=XTICK_FS*sc, rotation=45, ha="left")
+    ax.xaxis.tick_top()
+    ax.xaxis.set_label_position("top")
+    ax.set_xlim(xmin, xmax)
+    ax.set_xlabel("Emotion", fontsize=AXIS_LABEL_FS*sc)
     ax.grid(True, axis="x", linestyle=":", alpha=0.3)
+
+    # --- Y axis: time (earlier at top, no empty lead-in) ---------------------
+    ax.yaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+    ax.yaxis.set_major_locator(mdates.MonthLocator())
+    ax.tick_params(axis="y", labelsize=YTICK_FS*sc)
+    ax.set_ylabel("Time", fontsize=AXIS_LABEL_FS*sc)
+    pad = pd.Timedelta(days=15)
+    ax.set_ylim(events["plot_time"].min() - pad, events["plot_time"].max() + pad)
+    ax.invert_yaxis()   # earliest date at top → natural reading order
+    ax.grid(True, axis="y", linestyle=":", alpha=0.3)
+
+    # Zone labels in axes coordinates so they stay fixed regardless of data range
+    ax.text(0.97, 0.005, "positive emotions →",
+            color="#2E7D32", fontsize=ZONE_LABEL_FS*sc, alpha=0.75,
+            ha="right", va="bottom", transform=ax.transAxes)
+    ax.text(0.03, 0.005, "← negative emotions",
+            color="#B71C1C", fontsize=ZONE_LABEL_FS*sc, alpha=0.75,
+            ha="left", va="bottom", transform=ax.transAxes)
 
     ax.set_title(
         "Activity Timeline — Emotion Perspectives by Speaker\n"
         "◆ activity (coloured by type)   ○ = Rudolf   △ = agent",
-        fontsize=TITLE_FS,
+        fontsize=TITLE_FS*sc,
     )
 
-    # --- Legends --------------------------------------------------------------
+    # --- Legends ---------------------------------------------------------------
     type_handles = [
         mpatches.Patch(color=c, label=lbl)
         for lbl, c in ACTIVITY_TYPE_COLORS.items()
@@ -297,16 +310,16 @@ def plot_butterfly(df, output_file):
     speaker_handles = [
         plt.Line2D([0], [0], marker=SPEAKER_MARKERS.get(s, "o"), color="w",
                    markerfacecolor=SPEAKER_COLORS.get(s, "#555"),
-                   markersize=11, label=s)
+                   markersize=11*sc, label=s)
         for s in (all_sources or list(SPEAKER_COLORS))
     ]
     leg1 = ax.legend(handles=type_handles, title="Activity type",
-                     loc="upper left",  fontsize=LEGEND_FS,
-                     title_fontsize=LEGEND_TITLE_FS, framealpha=0.9)
+                     loc="upper left", fontsize=LEGEND_FS*sc,
+                     title_fontsize=LEGEND_TITLE_FS*sc, framealpha=0.9)
     ax.add_artist(leg1)
     ax.legend(handles=speaker_handles, title="Speaker",
-              loc="upper right", fontsize=LEGEND_FS,
-              title_fontsize=LEGEND_TITLE_FS, framealpha=0.9)
+              loc="upper right", fontsize=LEGEND_FS*sc,
+              title_fontsize=LEGEND_TITLE_FS*sc, framealpha=0.9)
 
     plt.tight_layout()
     plt.savefig(output_file, dpi=150, bbox_inches="tight")
@@ -315,10 +328,19 @@ def plot_butterfly(df, output_file):
 
 
 def main():
-    input_file = sys.argv[1] if len(sys.argv) > 1 else "query-result-rudolf.csv"
-    df = load_data(input_file)
-    stem = input_file[:-4] if input_file.lower().endswith(".csv") else input_file
-    plot_butterfly(df, f"{stem}_butterfly_timeline.png")
+    p = argparse.ArgumentParser(
+        description="Vertical butterfly activity timeline.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    p.add_argument("--input_file", nargs="?", default="query-result-rudolf.csv",
+                   help="CSV file produced by the SPARQL query")
+    p.add_argument("--dim", choices=list(DIM_CONFIG), default="a4",
+                   help="Output paper format (a4 / a3 / a1)")
+    args = p.parse_args()
+
+    df   = load_data(args.input_file)
+    stem = args.input_file[:-4] if args.input_file.lower().endswith(".csv") else args.input_file
+    plot_butterfly(df, f"{stem}_butterfly_timeline.png", dim=args.dim)
 
 
 if __name__ == "__main__":
