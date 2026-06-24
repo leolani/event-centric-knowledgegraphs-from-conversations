@@ -414,7 +414,7 @@ def get_capsule_with_event_details_from_turn_with_conversationa_context_similari
             event_id = conversational_context[subject_phrase]
         else:
             conversational_context[subject_phrase] = event_id
-        triples = get_triples_with_types(event_data, event_id, utterance_timestamp)
+        triples = get_triples_with_types(event_data, event_id, chat_date)
         offset = "0-"+str(len(turn["utterance"]))
         perspective_value =get_utterance_perspective(turn["utterance"], emotion_detector)
         capsule = { "chat": chat_id,
