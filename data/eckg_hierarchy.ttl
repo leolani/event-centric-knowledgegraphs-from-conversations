@@ -24,6 +24,12 @@ eckg:ActivityType a owl:Class ;
     skos:closeMatch n2mu:do-activity ;
     rdfs:comment "Any activity, action, or event reported in a dialogue turn." .
 
+eckg:EventSeries a owl:Class ;
+    rdfs:subClassOf owl:ActivityType ;
+    rdfs:subClassOf sem:Event ;
+    rdfs:label "Event Series" ;
+    rdfs:comment "A series of events whose identity is not precisely known and that are referred to as a group." .
+
 eckg:EntityType a owl:Class ;
     rdfs:subClassOf owl:Thing ;
     rdfs:label "Entity Type" ;

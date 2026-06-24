@@ -3,6 +3,7 @@ import random
 from cltl.commons.discrete import UtteranceType
 from datetime import date, datetime
 from dateutil import parser
+from dateutil.relativedelta import relativedelta
 from emotion_classes import EmotionType
 from emotion_extraction import GoEmotionDetector
 
@@ -198,7 +199,7 @@ def get_triples(event, event_id):
                 triples.append(triple) 
     return triples
 
-def get_triples_with_types(event, event_id):
+def get_triples_with_types(event, event_id, now:date):
     triples = []
     if 'activity' in event and not event['activity'] is None:
         subject = event['activity']
@@ -206,6 +207,12 @@ def get_triples_with_types(event, event_id):
         activity_type = ["activity"]
         if 'activity_type' in event and not event['activity_type']==None:
             activity_type.append(event['activity_type'])
+        if 'time_resolved' in event and not event['time_resolved'] is None:
+            for time in event['time_resolved']:
+                a_type = time["temporal_type"]
+                if a_type == "recurring" or a_type=="vague":
+                    activity_type.append("<https://cltl.nl/eckg/EventSeries")
+                    break
         if 'agent' in event and not event['agent'] is None:
             if type(event['agent'])==str:
                 event['agent'] = [event['agent']]
@@ -259,12 +266,21 @@ def get_triples_with_types(event, event_id):
                 a_label = time["time_expression"]
                 a_type = time["temporal_type"]
                 uri = ""
+                time_type = "dateTime"
                 if "date_range_start" in time and time["date_range_start"] is not None:
                     uri = "http://cltl.nl/leolani/n2mu/time/" + parser.parse(time["date_range_start"]).date().isoformat()
                 elif "absolute_date" in time and time["absolute_date"] is not None:
                     uri = "http://cltl.nl/leolani/n2mu/time/" + parser.parse(time["absolute_date"]).date().isoformat()
+                elif a_type=="recurring":
+                    ## We define a date 2 months ago as a baseline proxy for a series of recurring events
+                    time_type = "recurringTime"
+                    uri = "http://cltl.nl/leolani/n2mu/time/" + (date.today() - relativedelta(months=2)).isoformat()
+                elif a_type=="vague":
+                    ## We define a date 1 month ago as a proxy for a vagualy defines series of events
+                    time_type = "vagueTime"
+                    uri = "http://cltl.nl/leolani/n2mu/time/" + (date.today() - relativedelta(months=1)).isoformat()
                 triple = {"subject": {"label": subject, "type":activity_type, "uri": subject_uri},
-                  "predicate": {"label": "time", "uri": "http://cltl.nl/leolani/n2mu/time"},
+                  "predicate": {"label": "time", "uri": "http://cltl.nl/leolani/n2mu/time/"+time_type},
                   "object": {"label": a_label, "type": [a_type], "uri": uri}}
                 triples.append(triple)
     return triples
@@ -392,12 +408,13 @@ def get_capsule_with_event_details_from_turn_with_conversationa_context_similari
         ### @TODO add variants to the conversational context and a similarity function.
         event_id = random.random()
         print('event_data', event_data, type(event_data))
+        utterance_timestamp = datetime.combine(chat_date, datetime.now().time())
         subject_phrase = event_data['activity']
         if subject_phrase in conversational_context:
             event_id = conversational_context[subject_phrase]
         else:
             conversational_context[subject_phrase] = event_id
-        triples = get_triples_with_types(event_data, event_id)
+        triples = get_triples_with_types(event_data, event_id, utterance_timestamp)
         offset = "0-"+str(len(turn["utterance"]))
         perspective_value =get_utterance_perspective(turn["utterance"], emotion_detector)
         capsule = { "chat": chat_id,
@@ -407,7 +424,7 @@ def get_capsule_with_event_details_from_turn_with_conversationa_context_similari
             "utterance_type": UtteranceType.STATEMENT,
             "position": offset,
             "perspective":  perspective_value,
-             "timestamp": datetime.combine(chat_date, datetime.now().time()),
+             "timestamp": utterance_timestamp,
              "context_id": event_id
         }
         event_details_list = []

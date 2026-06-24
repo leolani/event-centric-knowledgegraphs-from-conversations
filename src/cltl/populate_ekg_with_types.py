@@ -48,7 +48,7 @@ def get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector
             if capsules:
                 scenario = (scenario_context, capsules)
                 scenarios.append(scenario)
-        break
+        ###break
     return scenarios
 
 
