@@ -274,11 +274,11 @@ def get_triples_with_types(event, event_id, now:date):
                 elif a_type=="recurring":
                     ## We define a date 2 months ago as a baseline proxy for a series of recurring events
                     time_type = "recurringTime"
-                    uri = "http://cltl.nl/leolani/n2mu/time/" + (date.today() - relativedelta(months=2)).isoformat()
+                    uri = "http://cltl.nl/leolani/n2mu/time/" + (now.today() - relativedelta(months=2)).isoformat()
                 elif a_type=="vague":
                     ## We define a date 1 month ago as a proxy for a vagualy defines series of events
                     time_type = "vagueTime"
-                    uri = "http://cltl.nl/leolani/n2mu/time/" + (date.today() - relativedelta(months=1)).isoformat()
+                    uri = "http://cltl.nl/leolani/n2mu/time/" + (now.today() - relativedelta(months=1)).isoformat()
                 triple = {"subject": {"label": subject, "type":activity_type, "uri": subject_uri},
                   "predicate": {"label": "time", "uri": "http://cltl.nl/leolani/n2mu/time/"+time_type},
                   "object": {"label": a_label, "type": [a_type], "uri": uri}}
