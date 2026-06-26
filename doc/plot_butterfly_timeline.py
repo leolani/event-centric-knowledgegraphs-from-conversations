@@ -9,20 +9,27 @@ Layout
 • X < 0   : negative emotions (left half)
 • Activity labels are horizontal, alternating right / left of the centre line
 • Marker shapes / colours distinguish the two speakers (Rudolf / agent)
+• Oval around a diamond indicates a grounded time (ns1Time column).
+  Shape encodes precision of the time grounding (p column):
+    dateTime      → tight circle (solid, dark)
+    rangeTime     → wider oval (solid, lighter)
+    recurringTime → wider oval (solid, lighter still)
+    vagueTime     → widest oval (dotted, lightest)
 
 Usage
 -----
-    python plot_butterfly_timeline.py [query-result-rudolf.csv]
+    python plot_butterfly_timeline.py [query-result-jan.csv]
 """
 
 import argparse
-import sys
 import textwrap
 
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.patches as mpatches
+from matplotlib.patches import Ellipse
+from matplotlib.lines import Line2D
 
 # ── Emotion scale (negative → neutral → positive) ─────────────────────────────
 EMOTION_SCALE = [
@@ -77,6 +84,23 @@ ZONE_LABEL_FS     = 10
 
 WRAP_WIDTH = 22
 
+# ── Time-grounding oval styles ─────────────────────────────────────────────────
+# xw : x semi-axis in emotion-axis data units (total width = 2*xw)
+# yd : y semi-axis in days (matplotlib date units; total height = 2*yd days)
+# Tune these to taste — the visual circle/oval effect depends on timeline density.
+OVAL_STYLES = {
+    "dateTime":      {"xw": 0.12, "yd":  5, "alpha": 0.85, "ls": "-",  "lw": 2.0},
+    "rangeTime":     {"xw": 0.20, "yd": 10, "alpha": 0.65, "ls": "-",  "lw": 1.5},
+    "recurringTime": {"xw": 0.32, "yd": 18, "alpha": 0.45, "ls": "-",  "lw": 1.2},
+    "vagueTime":     {"xw": 0.45, "yd": 28, "alpha": 0.30, "ls": ":",  "lw": 1.5},
+}
+OVAL_LABEL = {
+    "dateTime":      "precise date",
+    "rangeTime":     "date range",
+    "recurringTime": "recurring",
+    "vagueTime":     "vague",
+}
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 def _grasp_type(url):   return url.split("#")[0].split("/")[-1]
@@ -84,6 +108,22 @@ def _grasp_value(url):  return url.split("#")[-1]
 def _source_label(url): return url.split("/")[-1]
 def _wrap(text, width=WRAP_WIDTH):
     return "\n".join(textwrap.wrap(text, width))
+
+def _extract_time_type(url):
+    """Extract time-grounding type from a URI, e.g. vagueTime from .../vagueTime."""
+    if not isinstance(url, str):
+        return None
+    return url.rstrip("/").split("/")[-1]
+
+def _extract_ns1_date(url):
+    """Extract an absolute date from a URI like .../2013-06-05T00:00:00."""
+    if not isinstance(url, str):
+        return pd.NaT
+    date_str = url.rstrip("/").split("/")[-1]
+    try:
+        return pd.to_datetime(date_str)
+    except Exception:
+        return pd.NaT
 
 
 def classify_activity(name):
@@ -109,11 +149,13 @@ def classify_activity(name):
 
 def load_data(path):
     df = pd.read_csv(path)
-    df["time"]         = pd.to_datetime(df["time"])
-    df["grasp_type"]   = df["perspective"].apply(_grasp_type)
-    df["grasp_value"]  = df["perspective"].apply(_grasp_value)
-    df["source_label"] = df["source"].apply(_source_label)
-    df["date_floor"]   = df["time"].dt.floor("D")
+    df["time"]          = pd.to_datetime(df["time"])
+    df["grasp_type"]    = df["perspective"].apply(_grasp_type)
+    df["grasp_value"]   = df["perspective"].apply(_grasp_value)
+    df["source_label"]  = df["source"].apply(_source_label)
+    df["date_floor"]    = df["time"].dt.floor("D")
+    df["time_type"]     = df["p"].apply(_extract_time_type)       if "p"       in df.columns else None
+    df["resolved_time"] = df["ns1Time"].apply(_extract_ns1_date)  if "ns1Time" in df.columns else pd.NaT
     return df
 
 
@@ -161,11 +203,19 @@ def plot_butterfly(df, output_file, dim="a4"):
 
     # --- Activity events ------------------------------------------------------
     events = (
-        df.groupby(["activity", "date_floor"])["time"]
-          .first()
+        df.groupby(["activity", "date_floor"])
+          .agg(
+              evt_time=("time", "first"),
+              time_type=("time_type", "first"),
+              resolved_time=("resolved_time", "first"),
+          )
           .reset_index()
-          .rename(columns={"time": "evt_time"})
     )
+    # Use ns1Time (resolved_time) for positioning when available
+    grounded = events["resolved_time"].notna()
+    events.loc[grounded, "evt_time"] = events.loc[grounded, "resolved_time"]
+    events["has_grounded_time"] = grounded
+
     events["atype"] = events["activity"].apply(classify_activity)
     events = _spread_events(events)
     events = _assign_label_dirs(events)
@@ -209,6 +259,24 @@ def plot_butterfly(df, output_file, dim="a4"):
         t         = row["plot_time"]
         color     = ACTIVITY_TYPE_COLORS[row["atype"]]
         label_dir = int(row["label_dir"])   # +1 = right, -1 = left
+
+        # Oval around the diamond when this activity has a grounded time (ns1Time)
+        ttype = row.get("time_type")
+        if row.get("has_grounded_time") and ttype in OVAL_STYLES:
+            style  = OVAL_STYLES[ttype]
+            t_num  = mdates.date2num(t)          # float days (matplotlib internal)
+            ell = Ellipse(
+                xy=(0, t_num),
+                width=2 * style["xw"] * sc,
+                height=2 * style["yd"],          # in days — scales visually with fig height
+                edgecolor=color,
+                facecolor="none",
+                alpha=style["alpha"],
+                linestyle=style["ls"],
+                linewidth=style["lw"] * sc,
+                zorder=4,
+            )
+            ax.add_patch(ell)
 
         # Diamond on the centre line at Y = time
         ax.scatter(0, t, color=color, s=230*sc**2, zorder=5, marker="D",
@@ -298,7 +366,8 @@ def plot_butterfly(df, output_file, dim="a4"):
 
     ax.set_title(
         "Activity Timeline — Emotion Perspectives by Speaker\n"
-        "◆ activity (coloured by type)   ○ = Rudolf   △ = agent",
+        "◆ activity (coloured by type)   ○ = Rudolf   △ = agent   "
+        "oval = grounded time (size encodes precision)",
         fontsize=TITLE_FS*sc,
     )
 
@@ -313,12 +382,30 @@ def plot_butterfly(df, output_file, dim="a4"):
                    markersize=11*sc, label=s)
         for s in (all_sources or list(SPEAKER_COLORS))
     ]
+
+    # Oval legend: all four precision levels, shown as outline patches
+    oval_handles = [
+        mpatches.Patch(
+            edgecolor="#444",
+            facecolor="none",
+            linestyle=OVAL_STYLES[tt]["ls"],
+            linewidth=OVAL_STYLES[tt]["lw"] * sc,
+            alpha=max(OVAL_STYLES[tt]["alpha"], 0.55),   # keep readable in legend
+            label=OVAL_LABEL[tt],
+        )
+        for tt in ["dateTime", "rangeTime", "recurringTime", "vagueTime"]
+    ]
+
     leg1 = ax.legend(handles=type_handles, title="Activity type",
                      loc="upper left", fontsize=LEGEND_FS*sc,
                      title_fontsize=LEGEND_TITLE_FS*sc, framealpha=0.9)
     ax.add_artist(leg1)
+    leg2 = ax.legend(handles=oval_handles, title="Time grounding",
+                     loc="upper right", fontsize=LEGEND_FS*sc,
+                     title_fontsize=LEGEND_TITLE_FS*sc, framealpha=0.9)
+    ax.add_artist(leg2)
     ax.legend(handles=speaker_handles, title="Speaker",
-              loc="upper right", fontsize=LEGEND_FS*sc,
+              loc="lower right", fontsize=LEGEND_FS*sc,
               title_fontsize=LEGEND_TITLE_FS*sc, framealpha=0.9)
 
     plt.tight_layout()
@@ -332,7 +419,7 @@ def main():
         description="Vertical butterfly activity timeline.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    p.add_argument("--input_file", nargs="?", default="query-result-rudolf.csv",
+    p.add_argument("--input_file", nargs="?", default="query-result-jan.csv",
                    help="CSV file produced by the SPARQL query")
     p.add_argument("--dim", choices=list(DIM_CONFIG), default="a4",
                    help="Output paper format (a4 / a3 / a1)")

@@ -1,0 +1,27 @@
+PREFIX ns1: <http://cltl.nl/leolani/n2mu/time/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX sem: <http://semanticweb.cs.vu.nl/2009/11/sem/>
+PREFIX n2mu: <http://cltl.nl/leolani/n2mu/>
+PREFIX gaf: <http://groundedannotationframework.org/gaf#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX grasp: <http://groundedannotationframework.org/grasp#>
+PREFIX graspl: <http://groundedannotationframework.org/grasp/level#>
+PREFIX leolaniWorld: <http://cltl.nl/leolani/world/>
+select ?a ?p ?ns1Time ?time ?activity ?patient ?source ?perspective where {
+   # ?a n2mu:patient ?patient .
+    VALUES ?p { ns1:vagueTime ns1:recurringTime ns1:rangeTime ns1:dateTime }
+    ?a ?p ?ns1Time .
+    ?a a n2mu:activity .
+    ?a rdfs:label ?activity .
+    ?a gaf:denotedIn ?u.
+    ?persona gaf:denotedIn ?u.
+    ?persona rdfs:label "Fatima" .
+    ?u grasp:hasAttribution ?o .
+    ?u sem:hasBeginTimeStamp ?time .
+    ?u grasp:wasAttributedTo ?source .
+    ?source rdfs:label ?sourcelabel .
+    FILTER(?sourcelabel = "fatima" || ?sourcelabel = "agent")
+	?o rdf:value ?perspective
+}
+
+# VALUES ?label ("Abdullah" || "Aicha" || "Ali" || "Ayşe" || "Fatima" || "Fatma" || "Ingrid" || "Jan" || "Johan" || "Johanna" || "Julia" || "Maria" || "Mehmet" || "Mohammed" || "Pieter" || "Rudolf" || "agent")

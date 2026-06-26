@@ -199,7 +199,7 @@ def get_triples(event, event_id):
                 triples.append(triple) 
     return triples
 
-def get_triples_with_types(event, event_id, now:date):
+def get_triples_with_types(event, event_id, utterence_time:date):
     triples = []
     if 'activity' in event and not event['activity'] is None:
         subject = event['activity']
@@ -268,17 +268,19 @@ def get_triples_with_types(event, event_id, now:date):
                 uri = ""
                 time_type = "dateTime"
                 if "date_range_start" in time and time["date_range_start"] is not None:
+                    time_type = "rangeTime"
                     uri = "http://cltl.nl/leolani/n2mu/time/" + parser.parse(time["date_range_start"]).date().isoformat()
                 elif "absolute_date" in time and time["absolute_date"] is not None:
+                    time_type = "dateTime"
                     uri = "http://cltl.nl/leolani/n2mu/time/" + parser.parse(time["absolute_date"]).date().isoformat()
                 elif a_type=="recurring":
                     ## We define a date 2 months ago as a baseline proxy for a series of recurring events
                     time_type = "recurringTime"
-                    uri = "http://cltl.nl/leolani/n2mu/time/" + (now.today() - relativedelta(months=2)).isoformat()
+                    uri = "http://cltl.nl/leolani/n2mu/time/" + (utterence_time - relativedelta(months=2)).isoformat()
                 elif a_type=="vague":
                     ## We define a date 1 month ago as a proxy for a vagualy defines series of events
                     time_type = "vagueTime"
-                    uri = "http://cltl.nl/leolani/n2mu/time/" + (now.today() - relativedelta(months=1)).isoformat()
+                    uri = "http://cltl.nl/leolani/n2mu/time/" + (utterence_time - relativedelta(months=1)).isoformat()
                 triple = {"subject": {"label": subject, "type":activity_type, "uri": subject_uri},
                   "predicate": {"label": "time", "uri": "http://cltl.nl/leolani/n2mu/time/"+time_type},
                   "object": {"label": a_label, "type": [a_type], "uri": uri}}
