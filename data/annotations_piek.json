@@ -1,0 +1,276 @@
+[
+  [
+    {
+      "chat": 0,
+      "date": "2013,Apr,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 1,
+        "speaker": "agent",
+        "utterance": "Hey Jan, I see that you're a fan of cycling. Has the Dutch weather been favorable for it lately?"
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "activity": "cycling",
+          "activity_type": "exercise",
+          "activity_id": "chat0.1",
+          "agent": [
+            {
+              "value": "Jan",
+              "type": "person"
+            }
+          ],
+          "patient": [],
+          "instrument": [],
+          "manner": [],
+          "location": [],
+          "result": [],
+          "time": [
+            "lately"
+          ],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 0,
+      "date": "2013,Apr,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 2,
+        "speaker": "Jan",
+        "utterance": "It's been quite unpredictable recently, so I haven't been out as often as I'd like. How does this affect my diabetes management?"
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "activity_id": "chat0.1",
+          "agent": [
+            {
+              "value": "I",
+              "type": "person"
+            }
+          ],
+          "patient": [],
+          "instrument": [],
+          "manner": [],
+          "location": [],
+          "result": [],
+          "time": [
+            "haven't been out as often"
+          ],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 0,
+      "date": "2013,Apr,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 3,
+        "speaker": "agent",
+        "utterance": "Physical activity, like cycling, is crucial in managing your diabetes. It helps your body use insulin better and can lower your blood sugar levels. If weather conditions are interfering with your routine, perhaps you could look for indoor exercises to stay active."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "activity_id": "chat0.1",
+          "agent": [],
+          "patient": [],
+          "instrument": [],
+          "manner": [],
+          "location": [],
+          "result": [
+            {
+              "value": "helps your body use insulin better and can lower your blood sugar levels",
+              "type": "goal"
+            }
+          ],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "activity": "indoor exercises",
+          "activity_type": "exercise",
+          "activity_id": "chat0.2",
+          "agent": [
+            {
+              "value": "you",
+              "type": "person"
+            }
+          ],
+          "patient": [],
+          "instrument": [],
+          "manner": [],
+          "location": [
+            {
+              "value": "indoor",
+              "type": "indoor"
+            }
+          ],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 0,
+      "date": "2013,Apr,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 4,
+        "speaker": "Jan",
+        "utterance": "Any suggestions for indoor exercises that could suit me?"
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "activity_id": "chat0.2",
+          "agent": [
+            {
+              "value": "me",
+              "type": "person"
+            }
+          ],
+          "patient": [],
+          "instrument": [],
+          "manner": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 0,
+      "date": "2013,Apr,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 5,
+        "speaker": "agent",
+        "utterance": "Definitely, Jan. Indoor walking or marching in place can be an excellent start. If possible, you could consider investing in a stationary exercise bike, which would be similar to your outdoor cycling. Strength training exercises using light weights or resistance bands are also beneficial."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "activity": "Indoor walking or marching in place",
+          "activity_type": "exercise",
+          "activity_id": "chat0.3",
+          "agent": [
+            {
+              "value": "Jan",
+              "type": "person"
+            }
+          ],
+          "patient": [],
+          "instrument": [],
+          "manner": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "activity": "stationary exercise bike",
+          "activity_type": "exercise",
+          "activity_id": "chat0.4",
+          "agent": [],
+          "patient": [],
+          "instrument": [],
+          "manner": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "activity": "Strength training exercises using light weights or resistance bands",
+          "activity_type": "",
+          "activity_id": "chat0.5",
+          "agent": [],
+          "patient": [],
+          "instrument": [],
+          "manner": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 0,
+      "date": "2013,Apr,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 6,
+        "speaker": "Jan",
+        "utterance": "I'll look into these options. I suppose sticking to my daily walks is also helpful?"
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "activity": "my daily walks",
+          "activity_type": "",
+          "activity_id": "chat0.6",
+          "agent": [
+            {
+              "value": "my",
+              "type": "person"
+            }
+          ],
+          "patient": [],
+          "instrument": [],
+          "manner": [],
+          "location": [],
+          "result": [],
+          "time": [
+            "daily"
+          ],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 0,
+      "date": "2013,Apr,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 7,
+        "speaker": "agent",
+        "utterance": "Yes, absolutely! Regular walking is an efficient and effective way to improve insulin sensitivity and manage your diabetes. Just make sure to adapt the intensity and duration to your abilities."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "activity_id": "chat0.6",
+          "agent": [],
+          "patient": [],
+          "instrument": [],
+          "manner": [
+            {
+              "value": "the intensity and duration to your abilities",
+              "type": "person"
+            }
+          ],
+          "location": [],
+          "result": [
+            {
+              "value": "efficient and effective way to improve insulin sensitivity and manage your diabetes",
+              "type": "impact"
+            }
+          ],
+          "time": [],
+          "time_resolved": []
+        }
+      ]
+    }
+  ]
+]

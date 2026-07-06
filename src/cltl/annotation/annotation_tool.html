@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SRL Annotation Tool</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; font-size: 14px; background: #f0f2f5; }
+
+#topbar {
+  background: #1a252f; color: white; padding: 8px 14px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-height: 46px;
+}
+#topbar h1 { font-size: 15px; font-weight: 600; white-space: nowrap; }
+#topbar label { font-size: 12px; display: flex; align-items: center; gap: 5px; }
+#topbar input[type=text] { padding: 3px 8px; border-radius: 4px; border: 1px solid #555; background: #2c3e50; color: white; font-size: 13px; width: 110px; }
+#topbar input[type=text]::placeholder { color: #aaa; }
+.topbtn { padding: 4px 11px; border-radius: 4px; border: none; cursor: pointer; font-size: 12px; white-space: nowrap; }
+.btn-green  { background: #27ae60; color: white; }
+.btn-blue   { background: #2980b9; color: white; }
+.btn-gray   { background: #7f8c8d; color: white; }
+.btn-red    { background: #c0392b; color: white; }
+.btn-orange { background: #d35400; color: white; }
+#status-msg { font-size: 11px; color: #aaa; margin-left: 4px; }
+
+#layout { display: flex; height: calc(100vh - 46px); }
+
+/* Sidebar */
+#sidebar { width: 210px; background: white; border-right: 1px solid #ddd; overflow-y: auto; flex-shrink: 0; }
+#sidebar-header { padding: 7px 12px; font-size: 11px; font-weight: 600; color: #7f8c8d; background: #ecf0f1; border-bottom: 1px solid #ddd; text-transform: uppercase; letter-spacing: .5px; }
+#sidebar-search { padding: 6px 8px; border-bottom: 1px solid #eee; }
+#sidebar-search input { width: 100%; padding: 4px 7px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; }
+.conv-item { padding: 7px 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0; }
+.conv-item:hover { background: #f8f9fa; }
+.conv-item.active { background: #2980b9; color: white; }
+.conv-item .ci-id { font-weight: 600; font-size: 13px; }
+.conv-item .ci-meta { font-size: 11px; color: #888; margin-top: 1px; }
+.conv-item.active .ci-meta { color: #d6eaf8; }
+.conv-item .ci-badge { display: inline-block; background: #e74c3c; color: white; border-radius: 8px; padding: 0 5px; font-size: 10px; margin-left: 4px; }
+.conv-item.active .ci-badge { background: rgba(255,255,255,0.3); }
+
+/* Content */
+#content { flex: 1; overflow-y: auto; padding: 14px; }
+#welcome { padding: 60px 40px; text-align: center; color: #aaa; }
+#welcome h2 { font-size: 20px; margin-bottom: 8px; }
+#welcome p { font-size: 13px; line-height: 1.6; }
+
+.conv-header { background: white; border-radius: 6px; border: 1px solid #ddd; padding: 10px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+.conv-header-left h3 { font-size: 15px; color: #2c3e50; }
+.conv-header-left .ch-meta { font-size: 12px; color: #7f8c8d; margin-top: 2px; }
+
+.turn-card { background: white; border-radius: 6px; margin-bottom: 10px; border: 1px solid #ddd; overflow: hidden; }
+.turn-header { padding: 5px 12px; background: #ecf0f1; display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.turn-num { font-weight: 600; color: #555; }
+.speaker-badge { padding: 1px 8px; border-radius: 9px; font-size: 11px; font-weight: 500; }
+.sp-agent { background: #2980b9; color: white; }
+.sp-human { background: #27ae60; color: white; }
+
+.utterance {
+  padding: 9px 12px 9px 12px; line-height: 1.65; font-size: 13px; color: #2c3e50;
+  cursor: text; user-select: text; border-bottom: 1px solid #f0f0f0;
+  position: relative;
+}
+.utterance:hover { background: #fefefe; }
+
+.anns-area { background: #fafafa; padding: 6px 10px 6px 10px; }
+.no-ann { font-size: 11px; color: #bbb; font-style: italic; padding: 2px 0; }
+
+.ann-card { background: white; border: 1px solid #dde; border-radius: 4px; margin-bottom: 6px; padding: 7px 9px; font-size: 12px; }
+.ann-card-head { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; flex-wrap: wrap; }
+.act-id-badge { background: #1a252f; color: #fff; padding: 2px 8px; border-radius: 9px; font-size: 11px; font-weight: 600; }
+.act-name { font-weight: 600; color: #1a252f; }
+.act-type { color: #7f8c8d; font-style: italic; }
+.ref-label { font-size: 11px; color: #e67e22; font-style: italic; }
+.annotator-label { font-size: 10px; color: #aaa; }
+
+.roles-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 5px; }
+.role-box { border: 1px solid #e0e0e0; border-radius: 3px; padding: 3px 6px; min-width: 72px; }
+.rl { font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: .3px; }
+.rvs { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 2px; }
+.rv { background: #d5e8d4; border: 1px solid #82b366; border-radius: 3px; padding: 1px 5px; font-size: 11px; display: flex; align-items: center; gap: 3px; }
+.rv.tv { background: #dae8fc; border-color: #6c8ebf; }
+.rv .x { cursor: pointer; color: #c0392b; font-size: 11px; line-height: 1; padding: 0 1px; }
+.rv .x:hover { color: #e74c3c; }
+.rv-empty { color: #ccc; font-size: 10px; }
+.tr-row { font-size: 11px; color: #7f8c8d; margin-bottom: 4px; display: flex; flex-wrap: wrap; gap: 4px; }
+.tr-chip { background: #eee; border-radius: 3px; padding: 1px 6px; display: flex; align-items: center; gap: 4px; }
+.tr-chip .x { cursor: pointer; color: #c0392b; }
+
+.ann-btns { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
+.ann-btns button { font-size: 11px; padding: 2px 8px; border-radius: 3px; border: 1px solid #ddd; cursor: pointer; background: #f8f8f8; color: #555; }
+.ann-btns button:hover { background: #eee; }
+.ann-btns .del-btn { color: #c0392b; border-color: #e0b4b4; }
+
+.add-ann-row { padding: 6px 10px; border-top: 1px solid #eee; background: #f8f9fa; display: flex; gap: 6px; align-items: center; }
+.add-ann-row button { font-size: 12px; padding: 3px 10px; border-radius: 4px; border: 1px solid #2980b9; color: #2980b9; cursor: pointer; background: white; }
+.add-ann-row button:hover { background: #ebf5fb; }
+.add-ann-row .hint { font-size: 11px; color: #aaa; }
+
+/* Modal */
+#overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; align-items: center; justify-content: center; }
+#overlay.on { display: flex; }
+#modal { background: white; border-radius: 8px; padding: 20px; width: 500px; max-width: 96vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,.3); }
+#modal h2 { font-size: 15px; margin-bottom: 14px; color: #1a252f; padding-bottom: 8px; border-bottom: 1px solid #eee; }
+.fg { margin-bottom: 11px; }
+.fg label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 3px; }
+.fg input, .fg select, .fg textarea { width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; }
+.fg textarea { height: 55px; resize: vertical; }
+.fg .hint-text { font-size: 11px; color: #aaa; margin-top: 2px; }
+.modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; padding-top: 10px; border-top: 1px solid #eee; }
+.modal-footer button { padding: 6px 16px; border-radius: 4px; border: none; cursor: pointer; font-size: 13px; }
+
+/* Role popup */
+#rpop { display: none; position: fixed; z-index: 200; background: white; border: 1px solid #ccc; border-radius: 6px; padding: 12px 14px; box-shadow: 0 4px 20px rgba(0,0,0,.2); min-width: 270px; max-width: 340px; }
+#rpop h4 { font-size: 13px; margin-bottom: 8px; color: #1a252f; }
+.sel-text-preview { background: #fffde7; border: 1px solid #f9ca24; border-radius: 3px; padding: 2px 7px; font-size: 12px; margin-bottom: 10px; display: block; word-break: break-word; }
+.radio-pills { display: flex; flex-wrap: wrap; gap: 5px; margin: 5px 0; }
+.radio-pills label { display: flex; align-items: center; gap: 4px; cursor: pointer; font-size: 12px; padding: 3px 8px; border: 1px solid #ddd; border-radius: 12px; }
+.radio-pills label:hover { background: #f5f5f5; }
+.radio-pills input[type=radio] { display: none; }
+.radio-pills input[type=radio]:checked + span { font-weight: 700; color: #2980b9; }
+.radio-pills label:has(input:checked) { border-color: #2980b9; background: #eaf4fd; }
+.rpop-btns { display: flex; gap: 7px; margin-top: 10px; }
+.rpop-btns button { padding: 5px 13px; border-radius: 4px; border: none; cursor: pointer; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <h1>SRL Annotation Tool</h1>
+  <label>Annotator: <input type="text" id="ann-name" value="piek" placeholder="your name"></label>
+  <label style="cursor:pointer">
+    <span class="topbtn btn-blue">Load conversations.json</span>
+    <input type="file" id="file-input" accept=".json" style="display:none">
+  </label>
+  <label style="cursor:pointer">
+    <span class="topbtn btn-gray">Load Existing Annotations</span>
+    <input type="file" id="ann-input" accept=".json" style="display:none">
+  </label>
+  <button class="topbtn btn-green" onclick="exportJSON()">Export JSON</button>
+  <span id="status-msg"></span>
+</div>
+
+<div id="layout">
+  <div id="sidebar">
+    <div id="sidebar-header">Conversations</div>
+    <div id="sidebar-search"><input type="text" id="search-box" placeholder="Filter by human, date…" oninput="renderSidebar()"></div>
+    <div id="conv-list"></div>
+  </div>
+  <div id="content">
+    <div id="welcome">
+      <h2>SRL Annotation Tool</h2>
+      <p>1. Click <strong>Load conversations.json</strong> to open the data file.<br>
+         2. Select a conversation in the sidebar.<br>
+         3. Click <strong>+ Add Activity Annotation</strong> under any turn to begin.<br>
+         4. Select text in an utterance to quickly assign a role to an existing annotation.<br>
+         5. Click <strong>Export JSON</strong> to save your work.</p>
+    </div>
+    <div id="conv-view" style="display:none"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="overlay">
+  <div id="modal">
+    <h2 id="modal-title"></h2>
+    <div id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<!-- Role popup -->
+<div id="rpop">
+  <h4>Assign Role</h4>
+  <span id="rpop-text" class="sel-text-preview"></span>
+  <div id="rpop-body"></div>
+</div>
+
+<script>
+// ═══ State ════════════════════════════════════════════════════════════════════
+let convs = [];         // raw conversations array
+let anns  = {};         // { chatId: { turnIdx: [OutputEntry] } }
+let pendingAnnData = null; // annotation JSON held until conversations.json is loaded
+let curChat = null;
+let pendingSel = null;  // { text, chatId, turnIdx }
+
+const ACTIVITY_TYPES = ['advise','diet','disease','exercise','measurement','medicine','mental condition','physical condition','social','social condition','symptom','take_drink','take_food','treatment'];
+const ROLE_TYPES = {
+  default: ['person','group','organization','object','substance','vehicle','tool','place','city','country','indoor','outdoor','other'],
+  result:  ['goal','impact']
+};
+function typeOptsForRole(role) {
+  const types = ROLE_TYPES[role] || ROLE_TYPES.default;
+  return types.map(t => `<option value="${t}">${t}</option>`).join('');
+}
+
+// ═══ File I/O ═════════════════════════════════════════════════════════════════
+document.getElementById('file-input').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try {
+      convs = JSON.parse(ev.target.result);
+      anns = {};
+      // apply annotations that were loaded before conversations
+      if (pendingAnnData) {
+        applyAnnData(pendingAnnData);
+        pendingAnnData = null;
+      }
+      renderSidebar();
+      const annMsg = Object.keys(anns).length ? ` — annotations applied` : '';
+      status(`Loaded ${convs.length} conversations${annMsg}`);
+      document.getElementById('welcome').style.display = 'block';
+      document.getElementById('conv-view').style.display = 'none';
+      curChat = null;
+    } catch(e) { alert('JSON parse error: ' + e.message); }
+  };
+  r.readAsText(f);
+  e.target.value = '';
+});
+
+document.getElementById('ann-input').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    try { importAnns(JSON.parse(ev.target.result)); }
+    catch(e) { alert('JSON parse error: ' + e.message); }
+  };
+  r.readAsText(f);
+  e.target.value = '';
+});
+
+function importAnns(data) {
+  if (convs.length === 0) {
+    // conversations not loaded yet — stash and apply when they are
+    pendingAnnData = data;
+    status('Annotations queued — now load conversations.json to apply them');
+    document.getElementById('welcome').innerHTML =
+      `<h2>SRL Annotation Tool</h2>
+       <p style="color:#e67e22;font-weight:600">Annotations file loaded and queued.<br>
+       Now click <strong>Load conversations.json</strong> to apply them.</p>`;
+    return;
+  }
+  applyAnnData(data);
+  if (curChat !== null) renderConv(curChat);
+  renderSidebar();
+  const total = Object.values(anns).reduce((s,t) => s + Object.values(t).reduce((s2,e) => s2+e.length,0), 0);
+  status(`Loaded ${total} annotations`);
+}
+
+function applyAnnData(data) {
+  // handle both [[item,…],…] and [item,…] and the events_srl_typed.json flat format
+  let list;
+  if (Array.isArray(data[0])) {
+    list = data.flat();         // array-of-arrays → flatten to turn items
+  } else {
+    list = data;                // already flat
+  }
+  let count = 0;
+  list.forEach(item => {
+    if (!item || typeof item.chat === 'undefined' || !item.Input || !item.Output) return;
+    const chatId = item.chat;
+    const conv = convs.find(c => c.chat === chatId);
+    if (!conv) return;
+    const tidx = conv.turns.findIndex(t => t.turn === item.Input.turn);
+    if (tidx === -1) return;
+    if (!anns[chatId]) anns[chatId] = {};
+    if (!anns[chatId][tidx]) anns[chatId][tidx] = [];
+    (item.Output || []).forEach(entry => {
+      anns[chatId][tidx].push(Object.assign(
+        { agent:[], patient:[], instrument:[], manner:[], location:[], result:[], time:[], time_resolved:[] },
+        entry
+      ));
+      count++;
+    });
+  });
+  return count;
+}
+
+// ═══ Sidebar ══════════════════════════════════════════════════════════════════
+function renderSidebar() {
+  const q = (document.getElementById('search-box').value || '').toLowerCase();
+  const list = document.getElementById('conv-list');
+  list.innerHTML = '';
+  convs.forEach(conv => {
+    if (q && !`${conv.human} ${conv.date} chat${conv.chat}`.toLowerCase().includes(q)) return;
+    const annCount = Object.values(anns[conv.chat] || {}).reduce((s,a) => s + a.length, 0);
+    const div = document.createElement('div');
+    div.className = 'conv-item' + (conv.chat === curChat ? ' active' : '');
+    div.innerHTML = `<div class="ci-id">Chat ${conv.chat}${annCount > 0 ? `<span class="ci-badge">${annCount}</span>` : ''}</div>
+      <div class="ci-meta">${esc(conv.human)} · ${esc(conv.date)} · ${conv.turns.length}t</div>`;
+    div.onclick = () => selectConv(conv.chat);
+    list.appendChild(div);
+  });
+}
+
+function selectConv(chatId) {
+  curChat = chatId;
+  renderSidebar();
+  renderConv(chatId);
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('conv-view').style.display = 'block';
+}
+
+// ═══ Conversation View ════════════════════════════════════════════════════════
+function renderConv(chatId) {
+  const conv = convs.find(c => c.chat === chatId);
+  if (!conv) return;
+  const view = document.getElementById('conv-view');
+  view.innerHTML = '';
+
+  const hdr = el('div','conv-header');
+  hdr.innerHTML = `<div class="conv-header-left">
+    <h3>Chat ${conv.chat} — ${esc(conv.human)}</h3>
+    <div class="ch-meta">${esc(conv.date)} · ${conv.turns.length} turns</div>
+  </div>`;
+  view.appendChild(hdr);
+
+  conv.turns.forEach((turn, tidx) => view.appendChild(buildTurnCard(conv, turn, tidx)));
+}
+
+function buildTurnCard(conv, turn, tidx) {
+  const card = el('div','turn-card');
+  card.id = `tc-${conv.chat}-${tidx}`;
+
+  const isHuman = turn.speaker !== 'agent';
+  const spBadge = `<span class="speaker-badge ${isHuman ? 'sp-human' : 'sp-agent'}">${esc(turn.speaker)}</span>`;
+  card.innerHTML = `
+    <div class="turn-header"><span class="turn-num">Turn ${turn.turn}</span>${spBadge}</div>
+    <div class="utterance" id="utt-${conv.chat}-${tidx}">${esc(turn.utterance)}</div>
+    <div class="anns-area" id="aa-${conv.chat}-${tidx}"></div>
+    <div class="add-ann-row">
+      <button onclick="openNewAnnModal(${conv.chat},${tidx})">+ Add Activity Annotation</button>
+      <span class="hint">or select text in the utterance to assign a role</span>
+    </div>`;
+
+  card.querySelector('.utterance').addEventListener('mouseup', e => handleSel(e, conv.chat, tidx));
+
+  // render anns asynchronously to avoid slow initial paint
+  setTimeout(() => renderAnnsArea(conv.chat, tidx), 0);
+  return card;
+}
+
+function refreshTurn(chatId, tidx) {
+  renderAnnsArea(chatId, tidx);
+  renderSidebar();
+}
+
+function renderAnnsArea(chatId, tidx) {
+  const area = document.getElementById(`aa-${chatId}-${tidx}`);
+  if (!area) return;
+  const entries = (anns[chatId] || {})[tidx] || [];
+  area.innerHTML = '';
+  if (!entries.length) { area.innerHTML = '<div class="no-ann">No annotations yet</div>'; return; }
+  entries.forEach((entry, ei) => area.appendChild(buildAnnCard(chatId, tidx, ei, entry)));
+}
+
+function buildAnnCard(chatId, tidx, ei, e) {
+  const card = el('div','ann-card');
+  const isRef = !e.activity;
+
+  let head = `<span class="act-id-badge">${esc(e.activity_id)}</span>`;
+  if (!isRef) {
+    head += `<span class="act-name">${esc(e.activity)}</span>
+             <span class="act-type">[${esc(e.activity_type||'')}]</span>`;
+  } else {
+    head += `<span class="ref-label">↩ reference to previous activity</span>`;
+  }
+  if (e.annotator) head += `<span class="annotator-label">by ${esc(e.annotator)}</span>`;
+
+  const ROLES = ['agent','patient','instrument','manner','location','result'];
+
+  const roleBoxes = ROLES.map(role => {
+    const vals = e[role] || [];
+    const chips = vals.length
+      ? vals.map((v,vi) =>
+          `<span class="rv">${esc(v.value)} <em style="font-size:10px;color:#666">(${esc(v.type)})</em>
+            <span class="x" onclick="delRoleVal('${chatId}',${tidx},${ei},'${role}',${vi})">×</span></span>`
+        ).join('')
+      : '<span class="rv-empty">—</span>';
+    return `<div class="role-box"><div class="rl">${role}</div><div class="rvs">${chips}</div></div>`;
+  }).join('');
+
+  const timeChips = (e.time||[]).map((t,ti) =>
+    `<span class="rv tv">${esc(t)}<span class="x" onclick="delTime('${chatId}',${tidx},${ei},${ti})">×</span></span>`
+  ).join('') || '<span class="rv-empty">—</span>';
+
+  const trChips = (e.time_resolved||[]).map((tr,tri) => {
+    let detail = tr.temporal_type || '';
+    if (tr.absolute_date) detail += ' @ ' + tr.absolute_date;
+    if (tr.date_range_start) detail += ' ' + tr.date_range_start + '→' + (tr.date_range_end||'?');
+    if (tr.recurrence_pattern) detail += ' ('+tr.recurrence_pattern+')';
+    return `<span class="tr-chip">${esc(tr.time_expression)}: ${esc(detail)}<span class="x" onclick="delTR('${chatId}',${tidx},${ei},${tri})">×</span></span>`;
+  }).join('');
+
+  card.innerHTML = `
+    <div class="ann-card-head">${head}</div>
+    <div class="roles-row">
+      ${roleBoxes}
+      <div class="role-box"><div class="rl">time</div><div class="rvs">${timeChips}</div></div>
+    </div>
+    ${trChips ? `<div class="tr-row">${trChips}</div>` : ''}
+    <div class="ann-btns">
+      <button onclick="openAddRoleModal('${chatId}',${tidx},${ei})">+ Role</button>
+      <button onclick="openTRModal('${chatId}',${tidx},${ei})">+ Time Resolved</button>
+      ${!isRef ? `<button onclick="openEditActivityModal('${chatId}',${tidx},${ei})">Edit Activity</button>` : ''}
+      <button class="del-btn" onclick="delAnn('${chatId}',${tidx},${ei})">Delete</button>
+    </div>`;
+  return card;
+}
+
+// ═══ Text Selection → Role Popup ══════════════════════════════════════════════
+function handleSel(e, chatId, tidx) {
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed) return;
+  const text = sel.toString().trim();
+  if (text.length < 1) return;
+  pendingSel = { text, chatId, tidx };
+  showRolePopup(e.clientX, e.clientY, chatId, tidx, text);
+}
+
+function showRolePopup(cx, cy, chatId, tidx, text) {
+  const entries = (anns[chatId] || {})[tidx] || [];
+  const pop = document.getElementById('rpop');
+  document.getElementById('rpop-text').textContent = '"' + text + '"';
+
+  const ROLES = ['agent','patient','instrument','manner','location','result','time'];
+  const rolePills = ROLES.map(r =>
+    `<label><input type="radio" name="pr" value="${r}"><span>${r}</span></label>`
+  ).join('');
+
+  const typeOpts = typeOptsForRole('agent'); // default; updated on role change
+
+  let annSel = '';
+  if (entries.length > 0) {
+    const opts = entries.map((e,i) =>
+      `<option value="${i}">${e.activity_id}${e.activity ? ': '+e.activity : ' (ref)'}</option>`
+    ).join('');
+    annSel = `<div class="fg" style="margin-bottom:8px">
+      <label style="font-size:12px;font-weight:600;color:#555">Annotation:</label>
+      <select id="pop-ann" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:12px">${opts}</select>
+    </div>`;
+  }
+
+  const newActBtn = `<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eee">
+    <button style="background:#27ae60;color:white;border:none;border-radius:4px;padding:4px 10px;font-size:12px;cursor:pointer;width:100%"
+      onclick="useSelAsActivity()">✦ Use as new activity name</button>
+  </div>`;
+
+  document.getElementById('rpop-body').innerHTML = entries.length === 0
+    ? `${newActBtn}
+       <div style="color:#aaa;font-size:11px;font-style:italic">No annotations yet — create an activity above, or add one below the turn first.</div>
+       <div class="rpop-btns" style="margin-top:8px"><button style="background:#eee;cursor:pointer" onclick="closePopup()">Close</button></div>`
+    : `${newActBtn}
+       ${annSel}
+       <div style="margin-bottom:6px">
+         <label style="font-size:12px;font-weight:600;color:#555">Role:</label>
+         <div class="radio-pills">${rolePills}</div>
+       </div>
+       <div id="pop-type-row" style="display:none;margin-bottom:6px">
+         <label style="font-size:12px;font-weight:600;color:#555">Type:</label>
+         <select id="pop-type" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:12px;margin-top:3px">${typeOpts}</select>
+       </div>
+       <div class="rpop-btns">
+         <button style="background:#2980b9;color:white;cursor:pointer" onclick="confirmRoleAssign()">Assign Role</button>
+         <button style="background:#eee;cursor:pointer" onclick="closePopup()">Cancel</button>
+       </div>`;
+
+  pop.querySelectorAll('input[name="pr"]').forEach(r => r.addEventListener('change', () => {
+    const tr = document.getElementById('pop-type-row');
+    const pt = document.getElementById('pop-type');
+    if (!tr) return;
+    tr.style.display = r.value === 'time' ? 'none' : 'block';
+    if (pt) pt.innerHTML = typeOptsForRole(r.value);
+  }));
+
+  // position
+  const pw = 290;
+  let px = cx + 12, py = cy + 12;
+  if (px + pw > window.innerWidth - 10) px = cx - pw - 12;
+  if (py + 340 > window.innerHeight - 10) py = Math.max(10, window.innerHeight - 350);
+  pop.style.left = px + 'px';
+  pop.style.top  = py + 'px';
+  pop.style.display = 'block';
+
+  setTimeout(() => document.addEventListener('mousedown', outsidePopup), 100);
+}
+
+function outsidePopup(e) {
+  if (!document.getElementById('rpop').contains(e.target)) closePopup();
+}
+function closePopup() {
+  document.getElementById('rpop').style.display = 'none';
+  document.removeEventListener('mousedown', outsidePopup);
+  pendingSel = null;
+}
+
+function useSelAsActivity() {
+  if (!pendingSel) return;
+  const { text, chatId, tidx } = pendingSel;
+  closePopup();
+  window.getSelection().removeAllRanges();
+  openNewAnnModal(chatId, tidx, text);
+}
+
+function confirmRoleAssign() {
+  if (!pendingSel) return;
+  const { text, chatId, tidx } = pendingSel;
+  const annIdxEl = document.getElementById('pop-ann');
+  const roleEl = document.querySelector('input[name="pr"]:checked');
+  if (!annIdxEl || !roleEl) { alert('Select a role'); return; }
+  const annIdx = parseInt(annIdxEl.value);
+  const role = roleEl.value;
+  const type = (document.getElementById('pop-type') || {}).value || 'other';
+
+  const entry = (anns[chatId][tidx] || [])[annIdx];
+  if (!entry) return;
+  if (role === 'time') { entry.time.push(text); }
+  else { entry[role].push({ value: text, type }); }
+
+  closePopup();
+  window.getSelection().removeAllRanges();
+  refreshTurn(chatId, tidx);
+}
+
+// ═══ Modal: New Annotation ════════════════════════════════════════════════════
+function openNewAnnModal(chatId, tidx, prefillActivity) {
+  const prevActs = getActivitiesUpTo(chatId, tidx);
+  const nextId   = nextActivityId(chatId);
+
+  const prevOpts = prevActs.map(a => `<option value="${a.id}">${a.id}: ${a.activity}</option>`).join('');
+  const atypeOpts = ACTIVITY_TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
+
+  const actVal = prefillActivity ? ` value="${esc(prefillActivity)}"` : '';
+  const prefillNote = prefillActivity
+    ? `<div style="background:#e8f8f0;border:1px solid #a9dfbf;border-radius:4px;padding:5px 8px;font-size:12px;margin-bottom:10px">
+        Pre-filled from selection: <strong>"${esc(prefillActivity)}"</strong>
+       </div>`
+    : '';
+
+  showModal('Add Annotation', `
+    ${prefillNote}
+    <div class="fg">
+      <label>Type:</label>
+      <div class="radio-pills" style="flex-wrap:nowrap">
+        <label><input type="radio" name="at" value="new" checked><span>New activity</span></label>
+        ${prevActs.length ? `<label><input type="radio" name="at" value="ref"><span>Reference previous activity</span></label>` : ''}
+      </div>
+    </div>
+    <div id="new-fields">
+      <div class="fg">
+        <label>Activity (word/phrase for this activity):</label>
+        <input type="text" id="m-act"${actVal} placeholder="e.g. cycling">
+        <div class="hint-text">Select text in the utterance and click "Use as new activity name" to fill this automatically.</div>
+      </div>
+      <div class="fg">
+        <label>Activity type:</label>
+        <select id="m-atype">
+          <option value="">— select type —</option>
+          ${atypeOpts}
+        </select>
+      </div>
+      <div class="fg">
+        <label>Activity ID (unique within this conversation):</label>
+        <input type="text" id="m-aid" value="${nextId}">
+        <div class="hint-text">Format: chat{N}.{M} — auto-generated, edit if needed</div>
+      </div>
+    </div>
+    ${prevActs.length ? `
+    <div id="ref-fields" style="display:none">
+      <div class="fg">
+        <label>Reference activity:</label>
+        <select id="m-ref">${prevOpts}</select>
+      </div>
+    </div>` : ''}
+  `, [
+    { label: 'Add Annotation', cls: 'btn-blue', fn: () => confirmNewAnn(chatId, tidx) },
+    { label: 'Cancel', cls: 'btn-gray', fn: closeModal }
+  ]);
+
+  document.querySelectorAll('input[name="at"]').forEach(r => r.addEventListener('change', () => {
+    document.getElementById('new-fields').style.display = r.value === 'new' ? 'block' : 'none';
+    const rf = document.getElementById('ref-fields');
+    if (rf) rf.style.display = r.value === 'ref' ? 'block' : 'none';
+  }));
+}
+
+function confirmNewAnn(chatId, tidx) {
+  const annType  = document.querySelector('input[name="at"]:checked')?.value || 'new';
+  const annotator = document.getElementById('ann-name').value.trim() || 'unknown';
+  const base = { annotator, agent:[], patient:[], instrument:[], manner:[], location:[], time:[], time_resolved:[] };
+
+  let entry;
+  if (annType === 'new') {
+    const activity = document.getElementById('m-act').value.trim();
+    const atype    = document.getElementById('m-atype').value.trim();
+    const aid      = document.getElementById('m-aid').value.trim();
+    if (!activity) { alert('Enter an activity name'); return; }
+    if (!aid)      { alert('Enter an activity ID');   return; }
+    entry = { ...base, activity, activity_type: atype, activity_id: aid };
+  } else {
+    const refId = document.getElementById('m-ref')?.value;
+    if (!refId) { alert('Select a reference activity'); return; }
+    entry = { ...base, activity_id: refId };
+  }
+
+  if (!anns[chatId]) anns[chatId] = {};
+  if (!anns[chatId][tidx]) anns[chatId][tidx] = [];
+  anns[chatId][tidx].push(entry);
+  closeModal();
+  refreshTurn(chatId, tidx);
+}
+
+// ═══ Modal: Edit Activity ═════════════════════════════════════════════════════
+function openEditActivityModal(chatId, tidx, ei) {
+  const e = anns[chatId][tidx][ei];
+  const atypeOpts = ACTIVITY_TYPES.map(t =>
+    `<option value="${t}"${t === (e.activity_type||'') ? ' selected' : ''}>${t}</option>`
+  ).join('');
+  showModal('Edit Activity', `
+    <div class="fg">
+      <label>Activity:</label>
+      <input type="text" id="e-act" value="${esc(e.activity||'')}">
+    </div>
+    <div class="fg">
+      <label>Activity type:</label>
+      <select id="e-atype">
+        <option value="">— select type —</option>
+        ${atypeOpts}
+      </select>
+    </div>
+    <div class="fg">
+      <label>Activity ID:</label>
+      <input type="text" id="e-aid" value="${esc(e.activity_id||'')}">
+    </div>
+  `, [
+    { label: 'Save', cls: 'btn-blue', fn: () => {
+        e.activity      = document.getElementById('e-act').value.trim();
+        e.activity_type = document.getElementById('e-atype').value.trim();
+        e.activity_id   = document.getElementById('e-aid').value.trim();
+        closeModal(); refreshTurn(chatId, tidx);
+    }},
+    { label: 'Cancel', cls: 'btn-gray', fn: closeModal }
+  ]);
+}
+
+// ═══ Modal: Add Role ══════════════════════════════════════════════════════════
+function openAddRoleModal(chatId, tidx, ei) {
+  const conv = convs.find(c => c.chat === parseInt(chatId));
+  const utt  = conv?.turns[tidx]?.utterance || '';
+  const ROLES = ['agent','patient','instrument','manner','location','result','time'];
+  const rolePills = ROLES.map(r =>
+    `<label><input type="radio" name="ar" value="${r}"><span>${r}</span></label>`
+  ).join('');
+
+  showModal('Add Role Value', `
+    <div class="fg">
+      <label>Utterance:</label>
+      <div style="background:#f9f9f9;border:1px solid #ddd;border-radius:4px;padding:8px;font-size:13px;color:#2c3e50;line-height:1.5">${esc(utt)}</div>
+    </div>
+    <div class="fg">
+      <label>Phrase (type or copy from utterance):</label>
+      <input type="text" id="r-phrase" placeholder="e.g. Jan">
+    </div>
+    <div class="fg">
+      <label>Role:</label>
+      <div class="radio-pills">${rolePills}</div>
+    </div>
+    <div class="fg" id="r-type-row" style="display:none">
+      <label>Type:</label>
+      <select id="r-type">${typeOptsForRole('agent')}</select>
+    </div>
+  `, [
+    { label: 'Add Role', cls: 'btn-blue', fn: () => confirmAddRole(chatId, tidx, ei) },
+    { label: 'Cancel', cls: 'btn-gray', fn: closeModal }
+  ]);
+
+  document.querySelectorAll('input[name="ar"]').forEach(r => r.addEventListener('change', () => {
+    const tr = document.getElementById('r-type-row');
+    const rt = document.getElementById('r-type');
+    tr.style.display = r.value === 'time' ? 'none' : 'block';
+    if (rt) rt.innerHTML = typeOptsForRole(r.value);
+  }));
+}
+
+function confirmAddRole(chatId, tidx, ei) {
+  const phrase = document.getElementById('r-phrase').value.trim();
+  const roleEl = document.querySelector('input[name="ar"]:checked');
+  if (!phrase)  { alert('Enter a phrase'); return; }
+  if (!roleEl)  { alert('Select a role');  return; }
+  const role = roleEl.value;
+  const type = (document.getElementById('r-type') || {}).value || 'other';
+  const entry = anns[chatId][tidx][ei];
+  if (role === 'time') { entry.time.push(phrase); }
+  else { entry[role].push({ value: phrase, type }); }
+  closeModal();
+  refreshTurn(chatId, tidx);
+}
+
+// ═══ Modal: Time Resolved ═════════════════════════════════════════════════════
+function openTRModal(chatId, tidx, ei) {
+  const entry = anns[chatId]?.[tidx]?.[ei];
+  const texprOpts = (entry?.time || []).map(t => `<option value="${t}">${t}</option>`).join('');
+
+  showModal('Add Time Resolution', `
+    <div class="fg">
+      <label>Time expression:</label>
+      ${texprOpts
+        ? `<select id="tr-expr"><option value="">— type below —</option>${texprOpts}</select>
+           <input type="text" id="tr-expr-custom" placeholder="or type custom expression" style="margin-top:5px">`
+        : `<input type="text" id="tr-expr-custom" placeholder="e.g. recently, last week">`}
+    </div>
+    <div class="fg">
+      <label>Temporal type:</label>
+      <select id="tr-type">
+        <option value="point">point</option>
+        <option value="range" selected>range</option>
+        <option value="duration">duration</option>
+        <option value="recurring">recurring</option>
+        <option value="vague">vague</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Absolute date (YYYY-MM-DD):</label>
+      <input type="text" id="tr-abs" placeholder="e.g. 2013-04-13">
+    </div>
+    <div class="fg">
+      <label>Date range start (YYYY-MM-DD):</label>
+      <input type="text" id="tr-start" placeholder="e.g. 2013-04-01">
+    </div>
+    <div class="fg">
+      <label>Date range end (YYYY-MM-DD):</label>
+      <input type="text" id="tr-end" placeholder="e.g. 2013-04-13">
+    </div>
+    <div class="fg">
+      <label>Recurrence pattern:</label>
+      <input type="text" id="tr-recur" placeholder="e.g. weekly, every morning">
+    </div>
+  `, [
+    { label: 'Add', cls: 'btn-blue', fn: () => confirmTR(chatId, tidx, ei) },
+    { label: 'Cancel', cls: 'btn-gray', fn: closeModal }
+  ]);
+}
+
+function confirmTR(chatId, tidx, ei) {
+  const selEl    = document.getElementById('tr-expr');
+  const customEl = document.getElementById('tr-expr-custom');
+  const expr = (customEl && customEl.value.trim()) || (selEl && selEl.value) || '';
+  if (!expr) { alert('Enter a time expression'); return; }
+
+  const entry = anns[chatId][tidx][ei];
+  if (!entry.time_resolved) entry.time_resolved = [];
+  entry.time_resolved.push({
+    time_expression:    expr,
+    temporal_type:      document.getElementById('tr-type').value || null,
+    absolute_date:      document.getElementById('tr-abs').value.trim()   || null,
+    date_range_start:   document.getElementById('tr-start').value.trim() || null,
+    date_range_end:     document.getElementById('tr-end').value.trim()   || null,
+    recurrence_pattern: document.getElementById('tr-recur').value.trim() || null,
+  });
+  closeModal();
+  refreshTurn(chatId, tidx);
+}
+
+// ═══ Delete Helpers ═══════════════════════════════════════════════════════════
+function delAnn(chatId, tidx, ei) {
+  if (!confirm('Delete this annotation?')) return;
+  anns[chatId][tidx].splice(ei, 1);
+  refreshTurn(chatId, tidx);
+}
+function delRoleVal(chatId, tidx, ei, role, vi) {
+  anns[chatId][tidx][ei][role].splice(vi, 1);
+  refreshTurn(chatId, tidx);
+}
+function delTime(chatId, tidx, ei, ti) {
+  anns[chatId][tidx][ei].time.splice(ti, 1);
+  refreshTurn(chatId, tidx);
+}
+function delTR(chatId, tidx, ei, tri) {
+  anns[chatId][tidx][ei].time_resolved.splice(tri, 1);
+  refreshTurn(chatId, tidx);
+}
+
+// ═══ Activity ID Helpers ══════════════════════════════════════════════════════
+function getActivitiesUpTo(chatId, tidx) {
+  const result = [];
+  const ca = anns[chatId] || {};
+  Object.keys(ca).sort((a,b) => a-b).forEach(t => {
+    if (parseInt(t) > tidx) return;
+    ca[t].forEach(e => { if (e.activity) result.push({ id: e.activity_id, activity: e.activity }); });
+  });
+  return result;
+}
+
+function nextActivityId(chatId) {
+  let max = 0;
+  Object.values(anns[chatId] || {}).forEach(entries =>
+    entries.forEach(e => { const m = (e.activity_id||'').match(/\.(\d+)$/); if (m) max = Math.max(max, +m[1]); })
+  );
+  return `chat${chatId}.${max + 1}`;
+}
+
+// ═══ Export ═══════════════════════════════════════════════════════════════════
+function exportJSON() {
+  const output = [];
+  convs.forEach(conv => {
+    const ca = anns[conv.chat] || {};
+    const convOut = [];
+    conv.turns.forEach((turn, tidx) => {
+      const entries = ca[tidx] || [];
+      if (!entries.length) return;
+      convOut.push({
+        chat: conv.chat, date: conv.date, human: conv.human,
+        Input: { turn: turn.turn, speaker: turn.speaker, utterance: turn.utterance },
+        Output: entries.map(fmtEntry)
+      });
+    });
+    if (convOut.length) output.push(convOut);
+  });
+
+  const name = document.getElementById('ann-name').value.trim() || 'export';
+  const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = `annotations_${name}.json`; a.click();
+  URL.revokeObjectURL(url);
+  status('Exported!');
+}
+
+function fmtEntry(e) {
+  const out = { annotator: e.annotator };
+  if (e.activity) {
+    out.activity      = e.activity;
+    out.activity_type = e.activity_type || '';
+  }
+  out.activity_id   = e.activity_id;
+  out.agent         = e.agent || [];
+  out.patient       = e.patient || [];
+  out.instrument    = e.instrument || [];
+  out.manner        = e.manner || [];
+  out.location      = e.location || [];
+  out.result        = e.result || [];
+  out.time          = e.time || [];
+  out.time_resolved = e.time_resolved || [];
+  return out;
+}
+
+// ═══ Modal Helpers ════════════════════════════════════════════════════════════
+function showModal(title, bodyHtml, actions) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = bodyHtml;
+  const footer = document.getElementById('modal-footer');
+  footer.innerHTML = '';
+  actions.forEach(a => {
+    const btn = document.createElement('button');
+    btn.textContent = a.label;
+    btn.className = a.cls;
+    btn.onclick = a.fn;
+    footer.appendChild(btn);
+  });
+  document.getElementById('overlay').classList.add('on');
+}
+function closeModal() { document.getElementById('overlay').classList.remove('on'); }
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) closeModal();
+});
+
+// ═══ Utils ════════════════════════════════════════════════════════════════════
+function el(tag, cls) { const e = document.createElement(tag); if (cls) e.className = cls; return e; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function status(msg) { const s = document.getElementById('status-msg'); s.textContent = msg; setTimeout(()=>s.textContent='',3000); }
+</script>
+</body>
+</html>
