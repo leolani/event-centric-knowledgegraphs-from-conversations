@@ -183,6 +183,7 @@ let anns  = {};         // { chatId: { turnIdx: [OutputEntry] } }
 let pendingAnnData = null; // annotation JSON held until conversations.json is loaded
 let curChat = null;
 let pendingSel = null;  // { text, chatId, turnIdx }
+let trConvDate = null;  // Date of the conversation currently open in the Time Resolved modal
 
 const ACTIVITY_TYPES = ['advise','diet','disease','exercise','measurement','medicine','mental condition','physical condition','social','social condition','symptom','take_drink','take_food','treatment'];
 const ROLE_TYPES = {
@@ -192,6 +193,55 @@ const ROLE_TYPES = {
 function typeOptsForRole(role) {
   const types = ROLE_TYPES[role] || ROLE_TYPES.default;
   return types.map(t => `<option value="${t}">${t}</option>`).join('');
+}
+
+// ═══ Offset helpers ═══════════════════════════════════════════════════════════
+// Locate a phrase inside an utterance to auto-fill offset/length (falls back to
+// case-insensitive search; returns offset:null when the phrase can't be found).
+function locatePhrase(utterance, phrase) {
+  if (!utterance || !phrase) return { offset: null, length: phrase ? phrase.length : 0 };
+  let idx = utterance.indexOf(phrase);
+  if (idx === -1) idx = utterance.toLowerCase().indexOf(phrase.toLowerCase());
+  return idx === -1 ? { offset: null, length: phrase.length } : { offset: idx, length: phrase.length };
+}
+
+// Convert a DOM Range's start position into a character offset relative to `container`,
+// so text selected with the mouse maps back to an offset into the original utterance string.
+function computeOffset(container, range) {
+  let offset = 0, found = false;
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+  let node;
+  while (node = walker.nextNode()) {
+    if (node === range.startContainer) { offset += range.startOffset; found = true; break; }
+    offset += node.textContent.length;
+  }
+  return found ? offset : null;
+}
+
+// ═══ Date helpers (for Time Resolved quick-fill) ═════════════════════════════════
+const MONTH_ABBR = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+// conv.date looks like "2013,Apr,13" — the conversation's own "now" for grounding relative expressions
+function parseConvDate(dateStr) {
+  if (!dateStr) return null;
+  const parts = String(dateStr).split(',').map(s => s.trim());
+  if (parts.length !== 3) return null;
+  const month = MONTH_ABBR[parts[1]];
+  if (month === undefined) return null;
+  const d = new Date(parseInt(parts[0]), month, parseInt(parts[2]));
+  return isNaN(d.getTime()) ? null : d;
+}
+function fmtISODate(d) {
+  if (!d) return '';
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function addDays(date, n)   { const d = new Date(date); d.setDate(d.getDate() + n); return d; }
+function addMonths(date, n) { const d = new Date(date); d.setMonth(d.getMonth() + n); return d; }
+function trQuickFill(fieldId, kind) {
+  if (!trConvDate) return;
+  const d = kind === 'week' ? addDays(trConvDate, -7)
+          : kind === 'month' ? addMonths(trConvDate, -1)
+          : trConvDate; // 'now' — the conversation's own date
+  document.getElementById(fieldId).value = fmtISODate(d);
 }
 
 // ═══ File I/O ═════════════════════════════════════════════════════════════════
@@ -248,6 +298,64 @@ function importAnns(data) {
   status(`Loaded ${total} annotations`);
 }
 
+const ROLE_KEYS = ['agent','patient','instrument','manner','location','result'];
+
+// Normalize one raw Output entry (legacy flat format, new nested "activity" format,
+// or a previous export of this tool) into the tool's internal flat representation,
+// filling in offset/length wherever they're missing.
+function normalizeEntry(raw, utterance) {
+  const entry = { annotator: raw.annotator, time_resolved: raw.time_resolved || [] };
+  ROLE_KEYS.forEach(role => { entry[role] = []; });
+  entry.time = [];
+
+  const act = raw.activity;
+  if (act && typeof act === 'object' && !Array.isArray(act)) {
+    // new nested format: {value, offset, length, type, activity_id} or {activity_id} for a reference
+    if (act.value) {
+      const loc = locatePhrase(utterance, act.value);
+      entry.activity        = act.value;
+      entry.activity_type   = act.type || '';
+      entry.activity_offset = act.offset ?? loc.offset;
+      entry.activity_length = act.length ?? loc.length;
+    }
+    entry.activity_id = act.activity_id;
+  } else if (typeof act === 'string' && act) {
+    // legacy flat format (e.g. events_srl_typed.json): activity is a plain string
+    const loc = locatePhrase(utterance, act);
+    entry.activity        = act;
+    entry.activity_type   = raw.activity_type || '';
+    entry.activity_offset = loc.offset;
+    entry.activity_length = loc.length;
+    entry.activity_id     = raw.activity_id;
+  } else {
+    entry.activity_id = raw.activity_id;
+  }
+
+  ROLE_KEYS.forEach(role => {
+    (raw[role] || []).forEach(v => {
+      if (!v || typeof v !== 'object') return;
+      const loc = locatePhrase(utterance, v.value);
+      entry[role].push({
+        value: v.value, type: v.type,
+        offset: v.offset ?? loc.offset,
+        length: v.length ?? loc.length
+      });
+    });
+  });
+
+  (raw.time || []).forEach(t => {
+    if (typeof t === 'string') {
+      const loc = locatePhrase(utterance, t);
+      entry.time.push({ value: t, offset: loc.offset, length: loc.length });
+    } else if (t && typeof t === 'object') {
+      const loc = locatePhrase(utterance, t.value);
+      entry.time.push({ value: t.value, offset: t.offset ?? loc.offset, length: t.length ?? loc.length });
+    }
+  });
+
+  return entry;
+}
+
 function applyAnnData(data) {
   // handle both [[item,…],…] and [item,…] and the events_srl_typed.json flat format
   let list;
@@ -266,11 +374,9 @@ function applyAnnData(data) {
     if (tidx === -1) return;
     if (!anns[chatId]) anns[chatId] = {};
     if (!anns[chatId][tidx]) anns[chatId][tidx] = [];
+    const utterance = conv.turns[tidx].utterance || '';
     (item.Output || []).forEach(entry => {
-      anns[chatId][tidx].push(Object.assign(
-        { agent:[], patient:[], instrument:[], manner:[], location:[], result:[], time:[], time_resolved:[] },
-        entry
-      ));
+      anns[chatId][tidx].push(normalizeEntry(entry, utterance));
       count++;
     });
   });
@@ -361,7 +467,7 @@ function buildAnnCard(chatId, tidx, ei, e) {
 
   let head = `<span class="act-id-badge">${esc(e.activity_id)}</span>`;
   if (!isRef) {
-    head += `<span class="act-name">${esc(e.activity)}</span>
+    head += `<span class="act-name" title="offset ${e.activity_offset ?? '—'}, length ${e.activity_length ?? '—'}">${esc(e.activity)}</span>
              <span class="act-type">[${esc(e.activity_type||'')}]</span>`;
   } else {
     head += `<span class="ref-label">↩ reference to previous activity</span>`;
@@ -374,7 +480,7 @@ function buildAnnCard(chatId, tidx, ei, e) {
     const vals = e[role] || [];
     const chips = vals.length
       ? vals.map((v,vi) =>
-          `<span class="rv">${esc(v.value)} <em style="font-size:10px;color:#666">(${esc(v.type)})</em>
+          `<span class="rv" title="offset ${v.offset ?? '—'}, length ${v.length ?? '—'}">${esc(v.value)} <em style="font-size:10px;color:#666">(${esc(v.type)})</em>
             <span class="x" onclick="delRoleVal('${chatId}',${tidx},${ei},'${role}',${vi})">×</span></span>`
         ).join('')
       : '<span class="rv-empty">—</span>';
@@ -382,7 +488,7 @@ function buildAnnCard(chatId, tidx, ei, e) {
   }).join('');
 
   const timeChips = (e.time||[]).map((t,ti) =>
-    `<span class="rv tv">${esc(t)}<span class="x" onclick="delTime('${chatId}',${tidx},${ei},${ti})">×</span></span>`
+    `<span class="rv tv" title="offset ${t.offset ?? '—'}, length ${t.length ?? '—'}">${esc(t.value)}<span class="x" onclick="delTime('${chatId}',${tidx},${ei},${ti})">×</span></span>`
   ).join('') || '<span class="rv-empty">—</span>';
 
   const trChips = (e.time_resolved||[]).map((tr,tri) => {
@@ -413,9 +519,18 @@ function buildAnnCard(chatId, tidx, ei, e) {
 function handleSel(e, chatId, tidx) {
   const sel = window.getSelection();
   if (!sel || sel.isCollapsed) return;
-  const text = sel.toString().trim();
+  const raw = sel.toString();
+  const text = raw.trim();
   if (text.length < 1) return;
-  pendingSel = { text, chatId, tidx };
+
+  const uttEl = document.getElementById(`utt-${chatId}-${tidx}`);
+  let offset = null;
+  if (uttEl) {
+    const rawOffset = computeOffset(uttEl, sel.getRangeAt(0));
+    if (rawOffset !== null) offset = rawOffset + (raw.length - raw.replace(/^\s+/, '').length);
+  }
+
+  pendingSel = { text, chatId, tidx, offset, length: text.length };
   showRolePopup(e.clientX, e.clientY, chatId, tidx, text);
 }
 
@@ -497,15 +612,15 @@ function closePopup() {
 
 function useSelAsActivity() {
   if (!pendingSel) return;
-  const { text, chatId, tidx } = pendingSel;
+  const { text, chatId, tidx, offset, length } = pendingSel;
   closePopup();
   window.getSelection().removeAllRanges();
-  openNewAnnModal(chatId, tidx, text);
+  openNewAnnModal(chatId, tidx, text, offset, length);
 }
 
 function confirmRoleAssign() {
   if (!pendingSel) return;
-  const { text, chatId, tidx } = pendingSel;
+  const { text, chatId, tidx, offset, length } = pendingSel;
   const annIdxEl = document.getElementById('pop-ann');
   const roleEl = document.querySelector('input[name="pr"]:checked');
   if (!annIdxEl || !roleEl) { alert('Select a role'); return; }
@@ -515,8 +630,8 @@ function confirmRoleAssign() {
 
   const entry = (anns[chatId][tidx] || [])[annIdx];
   if (!entry) return;
-  if (role === 'time') { entry.time.push(text); }
-  else { entry[role].push({ value: text, type }); }
+  if (role === 'time') { entry.time.push({ value: text, offset, length }); }
+  else { entry[role].push({ value: text, type, offset, length }); }
 
   closePopup();
   window.getSelection().removeAllRanges();
@@ -524,14 +639,20 @@ function confirmRoleAssign() {
 }
 
 // ═══ Modal: New Annotation ════════════════════════════════════════════════════
-function openNewAnnModal(chatId, tidx, prefillActivity) {
+function openNewAnnModal(chatId, tidx, prefillActivity, prefillOffset, prefillLength) {
   const prevActs = getActivitiesUpTo(chatId, tidx);
   const nextId   = nextActivityId(chatId);
+  const conv = convs.find(c => c.chat === chatId);
+  const utterance = conv?.turns[tidx]?.utterance || '';
 
   const prevOpts = prevActs.map(a => `<option value="${a.id}">${a.id}: ${a.activity}</option>`).join('');
   const atypeOpts = ACTIVITY_TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
 
   const actVal = prefillActivity ? ` value="${esc(prefillActivity)}"` : '';
+  const initLoc = prefillActivity
+    ? { offset: prefillOffset ?? locatePhrase(utterance, prefillActivity).offset,
+        length: prefillLength ?? prefillActivity.length }
+    : { offset: null, length: null };
   const prefillNote = prefillActivity
     ? `<div style="background:#e8f8f0;border:1px solid #a9dfbf;border-radius:4px;padding:5px 8px;font-size:12px;margin-bottom:10px">
         Pre-filled from selection: <strong>"${esc(prefillActivity)}"</strong>
@@ -552,6 +673,16 @@ function openNewAnnModal(chatId, tidx, prefillActivity) {
         <label>Activity (word/phrase for this activity):</label>
         <input type="text" id="m-act"${actVal} placeholder="e.g. cycling">
         <div class="hint-text">Select text in the utterance and click "Use as new activity name" to fill this automatically.</div>
+      </div>
+      <div class="fg" style="display:flex;gap:8px">
+        <div style="flex:1">
+          <label>Offset:</label>
+          <input type="number" id="m-act-offset" value="${initLoc.offset ?? ''}" min="0">
+        </div>
+        <div style="flex:1">
+          <label>Length:</label>
+          <input type="number" id="m-act-length" value="${initLoc.length ?? ''}" min="0">
+        </div>
       </div>
       <div class="fg">
         <label>Activity type:</label>
@@ -583,21 +714,31 @@ function openNewAnnModal(chatId, tidx, prefillActivity) {
     const rf = document.getElementById('ref-fields');
     if (rf) rf.style.display = r.value === 'ref' ? 'block' : 'none';
   }));
+
+  document.getElementById('m-act').addEventListener('input', ev => {
+    const loc = locatePhrase(utterance, ev.target.value.trim());
+    document.getElementById('m-act-offset').value = loc.offset ?? '';
+    document.getElementById('m-act-length').value = loc.length ?? '';
+  });
 }
 
 function confirmNewAnn(chatId, tidx) {
   const annType  = document.querySelector('input[name="at"]:checked')?.value || 'new';
   const annotator = document.getElementById('ann-name').value.trim() || 'unknown';
-  const base = { annotator, agent:[], patient:[], instrument:[], manner:[], location:[], time:[], time_resolved:[] };
+  const base = { annotator, agent:[], patient:[], instrument:[], manner:[], location:[], result:[], time:[], time_resolved:[] };
 
   let entry;
   if (annType === 'new') {
     const activity = document.getElementById('m-act').value.trim();
     const atype    = document.getElementById('m-atype').value.trim();
     const aid      = document.getElementById('m-aid').value.trim();
+    const offsetVal = document.getElementById('m-act-offset').value;
+    const lengthVal = document.getElementById('m-act-length').value;
     if (!activity) { alert('Enter an activity name'); return; }
     if (!aid)      { alert('Enter an activity ID');   return; }
-    entry = { ...base, activity, activity_type: atype, activity_id: aid };
+    entry = { ...base, activity, activity_type: atype, activity_id: aid,
+      activity_offset: offsetVal === '' ? null : parseInt(offsetVal),
+      activity_length: lengthVal === '' ? activity.length : parseInt(lengthVal) };
   } else {
     const refId = document.getElementById('m-ref')?.value;
     if (!refId) { alert('Select a reference activity'); return; }
@@ -622,6 +763,16 @@ function openEditActivityModal(chatId, tidx, ei) {
       <label>Activity:</label>
       <input type="text" id="e-act" value="${esc(e.activity||'')}">
     </div>
+    <div class="fg" style="display:flex;gap:8px">
+      <div style="flex:1">
+        <label>Offset:</label>
+        <input type="number" id="e-act-offset" value="${e.activity_offset ?? ''}" min="0">
+      </div>
+      <div style="flex:1">
+        <label>Length:</label>
+        <input type="number" id="e-act-length" value="${e.activity_length ?? ''}" min="0">
+      </div>
+    </div>
     <div class="fg">
       <label>Activity type:</label>
       <select id="e-atype">
@@ -638,6 +789,10 @@ function openEditActivityModal(chatId, tidx, ei) {
         e.activity      = document.getElementById('e-act').value.trim();
         e.activity_type = document.getElementById('e-atype').value.trim();
         e.activity_id   = document.getElementById('e-aid').value.trim();
+        const ov = document.getElementById('e-act-offset').value;
+        const lv = document.getElementById('e-act-length').value;
+        e.activity_offset = ov === '' ? null : parseInt(ov);
+        e.activity_length = lv === '' ? e.activity.length : parseInt(lv);
         closeModal(); refreshTurn(chatId, tidx);
     }},
     { label: 'Cancel', cls: 'btn-gray', fn: closeModal }
@@ -662,6 +817,16 @@ function openAddRoleModal(chatId, tidx, ei) {
       <label>Phrase (type or copy from utterance):</label>
       <input type="text" id="r-phrase" placeholder="e.g. Jan">
     </div>
+    <div class="fg" style="display:flex;gap:8px">
+      <div style="flex:1">
+        <label>Offset:</label>
+        <input type="number" id="r-offset" min="0">
+      </div>
+      <div style="flex:1">
+        <label>Length:</label>
+        <input type="number" id="r-length" min="0">
+      </div>
+    </div>
     <div class="fg">
       <label>Role:</label>
       <div class="radio-pills">${rolePills}</div>
@@ -674,6 +839,12 @@ function openAddRoleModal(chatId, tidx, ei) {
     { label: 'Add Role', cls: 'btn-blue', fn: () => confirmAddRole(chatId, tidx, ei) },
     { label: 'Cancel', cls: 'btn-gray', fn: closeModal }
   ]);
+
+  document.getElementById('r-phrase').addEventListener('input', ev => {
+    const loc = locatePhrase(utt, ev.target.value.trim());
+    document.getElementById('r-offset').value = loc.offset ?? '';
+    document.getElementById('r-length').value = loc.length ?? '';
+  });
 
   document.querySelectorAll('input[name="ar"]').forEach(r => r.addEventListener('change', () => {
     const tr = document.getElementById('r-type-row');
@@ -690,9 +861,13 @@ function confirmAddRole(chatId, tidx, ei) {
   if (!roleEl)  { alert('Select a role');  return; }
   const role = roleEl.value;
   const type = (document.getElementById('r-type') || {}).value || 'other';
+  const offsetVal = document.getElementById('r-offset').value;
+  const lengthVal = document.getElementById('r-length').value;
+  const offset = offsetVal === '' ? null : parseInt(offsetVal);
+  const length = lengthVal === '' ? phrase.length : parseInt(lengthVal);
   const entry = anns[chatId][tidx][ei];
-  if (role === 'time') { entry.time.push(phrase); }
-  else { entry[role].push({ value: phrase, type }); }
+  if (role === 'time') { entry.time.push({ value: phrase, offset, length }); }
+  else { entry[role].push({ value: phrase, type, offset, length }); }
   closeModal();
   refreshTurn(chatId, tidx);
 }
@@ -700,13 +875,18 @@ function confirmAddRole(chatId, tidx, ei) {
 // ═══ Modal: Time Resolved ═════════════════════════════════════════════════════
 function openTRModal(chatId, tidx, ei) {
   const entry = anns[chatId]?.[tidx]?.[ei];
-  const texprOpts = (entry?.time || []).map(t => `<option value="${t}">${t}</option>`).join('');
+  const conv = convs.find(c => c.chat === parseInt(chatId));
+  trConvDate = conv ? parseConvDate(conv.date) : null;
+  const times = entry?.time || [];
+  // first time role is auto-selected so the expression is pre-filled without extra clicks
+  const texprOpts = times.map((t,i) => `<option value="${esc(t.value)}"${i===0?' selected':''}>${esc(t.value)}</option>`).join('');
+  const qdBtn = 'style="font-size:11px;padding:2px 8px;border-radius:3px;border:1px solid #ddd;cursor:pointer;background:#f8f8f8;color:#555"';
 
   showModal('Add Time Resolution', `
     <div class="fg">
       <label>Time expression:</label>
       ${texprOpts
-        ? `<select id="tr-expr"><option value="">— type below —</option>${texprOpts}</select>
+        ? `<select id="tr-expr">${texprOpts}<option value="">— type custom below —</option></select>
            <input type="text" id="tr-expr-custom" placeholder="or type custom expression" style="margin-top:5px">`
         : `<input type="text" id="tr-expr-custom" placeholder="e.g. recently, last week">`}
     </div>
@@ -727,10 +907,17 @@ function openTRModal(chatId, tidx, ei) {
     <div class="fg">
       <label>Date range start (YYYY-MM-DD):</label>
       <input type="text" id="tr-start" placeholder="e.g. 2013-04-01">
+      <div style="display:flex;gap:6px;margin-top:4px">
+        <button type="button" ${qdBtn} onclick="trQuickFill('tr-start','week')"${trConvDate?'':' disabled'}>1 week earlier</button>
+        <button type="button" ${qdBtn} onclick="trQuickFill('tr-start','month')"${trConvDate?'':' disabled'}>1 month earlier</button>
+      </div>
     </div>
     <div class="fg">
       <label>Date range end (YYYY-MM-DD):</label>
       <input type="text" id="tr-end" placeholder="e.g. 2013-04-13">
+      <div style="display:flex;gap:6px;margin-top:4px">
+        <button type="button" ${qdBtn} onclick="trQuickFill('tr-end','now')"${trConvDate?'':' disabled'}>Conversation date</button>
+      </div>
     </div>
     <div class="fg">
       <label>Recurrence pattern:</label>
@@ -829,11 +1016,15 @@ function exportJSON() {
 
 function fmtEntry(e) {
   const out = { annotator: e.annotator };
-  if (e.activity) {
-    out.activity      = e.activity;
-    out.activity_type = e.activity_type || '';
-  }
-  out.activity_id   = e.activity_id;
+  out.activity = e.activity
+    ? {
+        value: e.activity,
+        offset: e.activity_offset ?? null,
+        length: e.activity_length ?? e.activity.length,
+        type: e.activity_type || '',
+        activity_id: e.activity_id
+      }
+    : { activity_id: e.activity_id };
   out.agent         = e.agent || [];
   out.patient       = e.patient || [];
   out.instrument    = e.instrument || [];

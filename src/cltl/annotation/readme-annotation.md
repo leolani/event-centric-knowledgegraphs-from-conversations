@@ -114,7 +114,6 @@ The activity type dropdown contains the types found in `events_srl_typed.json`:
 
 ```json
 [
-  [
     {
       "chat": 0,
       "date": "2013,Apr,13",
@@ -122,21 +121,19 @@ The activity type dropdown contains the types found in `events_srl_typed.json`:
       "Input": {
         "turn": 1,
         "speaker": "agent",
-        "utterance": "Hey Jan, I see that you're a fan of cycling..."
+        "utterance": "Hey Jan, I see that you're a fan of cycling. Has the Dutch weather been favorable for it lately?"
       },
       "Output": [
         {
           "annotator": "piek",
-          "activity": "cycling",
-          "activity_type": "exercise",
-          "activity_id": "chat0.1",
-          "agent": [{ "value": "Jan", "type": "person" }],
+          "activity": {"value": "cycling", "offset": 36, "length": 7, "type": "exercise", "activity_id": "chat0.1"},
+          "agent": [{"value": "Jan", "offset": 4, "length": 3, "type": "person"}],
           "patient": [],
           "instrument": [],
           "manner": [],
           "location": [],
           "result": [],
-          "time": ["lately"],
+          "time": [{"value": "lately", "offset": 89 "length": 6}],
           "time_resolved": [
             {
               "time_expression": "lately",
@@ -151,30 +148,35 @@ The activity type dropdown contains the types found in `events_srl_typed.json`:
       ]
     },
     {
-      "chat": 0,
-      "date": "2013,Apr,13",
-      "human": "Jan",
-      "Input": {
-        "turn": 2,
-        "speaker": "Jan",
-        "utterance": "It's been quite unpredictable recently..."
-      },
-      "Output": [
-        {
-          "annotator": "piek",
-          "activity_id": "chat0.1",
-          "agent": [{ "value": "Jan", "type": "person" }],
-          "patient": [],
-          "instrument": [],
-          "manner": [],
-          "location": [],
-          "result": [],
-          "time": ["haven't been out as often"],
-          "time_resolved": []
-        }
-      ]
-    }
-  ]
+         "chat": 0,
+         "date": "2013,Apr,13",
+         "human": "Jan",
+         "Input": {
+            "turn": 2,
+            "speaker": "Jan",
+            "utterance": "quite unpredictable recently",
+         },
+         "Output": [
+            {
+               "annotator": "piek",
+               "activity": {"activity_id": "chat0.1"},
+               "agent": [],
+               "patient": [],
+               "instrument": [],
+               "manner": [],
+               "location": [],
+               "result": [],
+               "time": [{"value": "quite unpredictable recently", "offset": 0, "length": 28 }],
+          "time_resolved": [
+            {
+              "time_expression": "quite unpredictable recently",
+              "temporal_type": "vague",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": null
+            }
+      }
 ]
 ```
 
