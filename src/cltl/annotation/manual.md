@@ -69,7 +69,8 @@ You can add more than one activity to the same turn using the "+Add Activity Ann
 
 ## Resolving time
 
-A specific option is given to resolve any time expressions that are annotated:
+A specific option is given to resolve any time expressions that are annotated through the "Add Time Resolution".
+A pop-up will appear that shows the annotated time expression. You first need to choose the type of time expression, where you can choose from:
 
 - point
 - range
