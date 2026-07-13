@@ -3,7 +3,6 @@
 This document contains the guidelines for annotating conversations between diabetes patients and a lifestyle coach. The conversations are described in:
 
 ```angular2html
-
 Stergios Ntanavaras, Maaike de Boer, Piek Vossen, 2026, A Synthetic Conversational Dataset for Type 2 Diabetes Management, 8th Clinical NLP Workshop, LREC2026, La Palma.
 ```
 
@@ -48,6 +47,20 @@ When annotating the next turn, there are no words and expressions that can be se
 In that case, you select the identifier of a given activity/event without selecting a word or phrase, and still mark the words and expressions for roles
 that are expressed.
 
+## Get started
+
+Open the annotation_tool.html file in your local browser. Load the conversations.json file with the conversations.
+This file is located in the ```data``` folder of this repository.
+After loading this file, 258 chats should be shown in the left panel.
+You can search for chats with a specific patient or date (e.g. searching for a year).
+The chats range from January 2010 till June 2015. The patients are: 
+
+```angular2html
+"Abdullah", "Aicha", "Ali", "Ayşe", "Fatima", "Fatma", "Ingrid", "Jan",
+"Johan", "Johanna", "Julia", "Maria", "Mehmet", "Mohammed", "Pieter", "Rudolf"
+```
+When you select a chat it will be shown in the main panel turn by turn with the name of the patient and the date of the chat on top.
+
 ## Activity mentioned in an utterance:
 
 ### Annotating the activity
@@ -67,23 +80,34 @@ The annotation is now shown in the conversation and you can continue to add any 
 
 You can add more than one activity to the same turn using the "+Add Activity Annotation". You are given the option to either create a new one or use a given activity/condition.
 
-## Resolving time
+### Resolving time
 
 A specific option is given to resolve any time expressions that are annotated through the "Add Time Resolution".
 A pop-up will appear that shows the annotated time expression. You first need to choose the type of time expression, where you can choose from:
 
-- point
-- range
-- duration
-- recurring
-- vague
+- point: a specific point in time (date) on which the activity/condition took place
+- range: a period in time during which the activity/condition, indicated by the start and end date
+- duration: how long the activity/condition took place (this is different from the range as it is not grounded in time on a date)
+- recurring: the activity/condition re-occurs either regularly or irregularly at least during a certain period
+- vague: unclear when the activity/condition took place
 
-Absolute date
-Date range start
-Date rang end
-Recurrence patterns
+Depending on the choice for the type of time expression, further details should be filled in.
+Absolute date should be given for ```point``` expressions, Date range start
+and Date range end for ```range``` expressions. The start date can be filled in freely or chosen from a week or month before the conversation date.
+The end date can also be chosen freely or set to the conversaiotn date. In the case of ```recurring``` expressions a pattern can be extracted though a drop-down menu:"daily", "regularly", "often", "now-and-then", "sometimes", "rarely". 
 
 
+### Speaker perspective
+
+In addition to annotating the content of the utterance, the emotional perspective of the speaker can be annotated.
+The emotions are based on the 27 [Google GO emotions](https://github.com/google-research/google-research/tree/master/goemotions). 
+At the right side of the screen a drop down menu is given with the GO emotions, divided into positive, negative and ambiguous emotions.
+The default value is "neutral" which is the most common emotion. If no selection is made the default value is saved.
+
+### Saving and reloading
+
+The annotations are saved in memory. Before stopping the annotations, they need to be saved using the green Export JSON button.
+To continue the annotation, first load the conversations again and next load the existing annotations on top of the conversations.
 
 
 

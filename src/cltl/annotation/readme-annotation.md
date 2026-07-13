@@ -80,13 +80,17 @@ Click **+ Time Resolved** on any annotation card to ground a time expression to 
 | Absolute date | `2013-04-13` |
 | Date range start | `2013-04-01` |
 | Date range end | `2013-04-13` |
-| Recurrence pattern | `weekly`, `every morning` |
+| Recurrence pattern | `daily`, `regularly`, `often`, `now-and-then`, `sometimes`, `rarely` |
 
 ### Editing and deleting
 
 - Click **Edit Activity** on a card to change the activity name, type, or ID.
 - Click **×** next to any role value, time expression, or time resolution to remove it.
 - Click **Delete** on a card to remove the entire annotation entry.
+
+### Step 4 — Annotate the speaker's emotion (optional)
+
+Each turn header has a **speaker emotion** dropdown (next to the speaker badge), listing the 28 Google GoEmotions classes (see `src/cltl/emotion_classes.py`). `neutral` is pinned at the top and is the default for every turn. Below it, the remaining emotions are grouped into **Positive**, **Negative**, and **Ambiguous** (`surprise`, `realization`), each sorted alphabetically. Select the emotion expressed by the speaker in that utterance; it is exported as `speaker_emotion` in each Output entry for the turn (see below).
 
 ## Semantic roles
 
@@ -126,6 +130,7 @@ The activity type dropdown contains the types found in `events_srl_typed.json`:
       "Output": [
         {
           "annotator": "piek",
+          "speaker_emotion": "curiosity",
           "activity": {"value": "cycling", "offset": 36, "length": 7, "type": "exercise", "activity_id": "chat0.1"},
           "agent": [{"value": "Jan", "offset": 4, "length": 3, "type": "person"}],
           "patient": [],
@@ -133,7 +138,7 @@ The activity type dropdown contains the types found in `events_srl_typed.json`:
           "manner": [],
           "location": [],
           "result": [],
-          "time": [{"value": "lately", "offset": 89 "length": 6}],
+          "time": [{"value": "lately", "offset": 89, "length": 6}],
           "time_resolved": [
             {
               "time_expression": "lately",
@@ -154,11 +159,12 @@ The activity type dropdown contains the types found in `events_srl_typed.json`:
          "Input": {
             "turn": 2,
             "speaker": "Jan",
-            "utterance": "quite unpredictable recently",
+            "utterance": "quite unpredictable recently"
          },
          "Output": [
             {
                "annotator": "piek",
+               "speaker_emotion": "disappointment",
                "activity": {"activity_id": "chat0.1"},
                "agent": [],
                "patient": [],
@@ -166,17 +172,20 @@ The activity type dropdown contains the types found in `events_srl_typed.json`:
                "manner": [],
                "location": [],
                "result": [],
-               "time": [{"value": "quite unpredictable recently", "offset": 0, "length": 28 }],
-          "time_resolved": [
-            {
-              "time_expression": "quite unpredictable recently",
-              "temporal_type": "vague",
-              "absolute_date": null,
-              "date_range_start": null,
-              "date_range_end": null,
-              "recurrence_pattern": null
+               "time": [{"value": "quite unpredictable recently", "offset": 0, "length": 28}],
+               "time_resolved": [
+                 {
+                   "time_expression": "quite unpredictable recently",
+                   "temporal_type": "vague",
+                   "absolute_date": null,
+                   "date_range_start": null,
+                   "date_range_end": null,
+                   "recurrence_pattern": null
+                 }
+               ]
             }
-      }
+         ]
+    }
 ]
 ```
 

@@ -55,6 +55,8 @@ body { font-family: system-ui, sans-serif; font-size: 14px; background: #f0f2f5;
 .speaker-badge { padding: 1px 8px; border-radius: 9px; font-size: 11px; font-weight: 500; }
 .sp-agent { background: #2980b9; color: white; }
 .sp-human { background: #27ae60; color: white; }
+.emotion-label { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 11px; color: #7f8c8d; text-transform: uppercase; letter-spacing: .3px; }
+.emotion-select { padding: 2px 6px; border-radius: 4px; border: 1px solid #ccc; font-size: 11px; background: white; color: #555; text-transform: none; letter-spacing: normal; }
 
 .utterance {
   padding: 9px 12px 9px 12px; line-height: 1.65; font-size: 13px; color: #2c3e50;
@@ -180,12 +182,30 @@ body { font-family: system-ui, sans-serif; font-size: 14px; background: #f0f2f5;
 // ═══ State ════════════════════════════════════════════════════════════════════
 let convs = [];         // raw conversations array
 let anns  = {};         // { chatId: { turnIdx: [OutputEntry] } }
+let turnEmotions = {};  // { chatId: { turnIdx: 'joy' } } — speaker_emotion per utterance
 let pendingAnnData = null; // annotation JSON held until conversations.json is loaded
 let curChat = null;
 let pendingSel = null;  // { text, chatId, turnIdx }
 let trConvDate = null;  // Date of the conversation currently open in the Time Resolved modal
 
 const ACTIVITY_TYPES = ['advise','diet','disease','exercise','measurement','medicine','mental condition','physical condition','social','social condition','symptom','take_drink','take_food','treatment'];
+const RECURRENCE_PATTERNS = ['daily','regularly','often','now-and-then','sometimes','rarely'];
+// Google GoEmotions taxonomy (28 classes), matching GoEmotion enum in src/cltl/emotion_classes.py,
+// grouped by sentiment (per go_sentiment_map) and sorted alphabetically within each group.
+const GO_EMOTION_GROUPS = {
+  positive:  ['admiration','amusement','approval','caring','curiosity','desire','excitement','gratitude','joy','love','optimism','pride','relief'],
+  negative:  ['anger','annoyance','confusion','disappointment','disapproval','disgust','embarrassment','fear','grief','nervousness','remorse','sadness'],
+  ambiguous: ['realization','surprise']
+};
+const DEFAULT_EMOTION = 'neutral';
+function emotionOpts(selected) {
+  const mk = em => `<option value="${em}"${em === selected ? ' selected' : ''}>${em}</option>`;
+  const group = (label, list) => `<optgroup label="${label}">${list.map(mk).join('')}</optgroup>`;
+  return mk(DEFAULT_EMOTION)
+    + group('Positive', GO_EMOTION_GROUPS.positive)
+    + group('Negative', GO_EMOTION_GROUPS.negative)
+    + group('Ambiguous', GO_EMOTION_GROUPS.ambiguous);
+}
 const ROLE_TYPES = {
   default: ['person','group','organization','object','substance','vehicle','tool','place','city','country','indoor','outdoor','other'],
   result:  ['goal','impact']
@@ -252,6 +272,7 @@ document.getElementById('file-input').addEventListener('change', e => {
     try {
       convs = JSON.parse(ev.target.result);
       anns = {};
+      turnEmotions = {};
       // apply annotations that were loaded before conversations
       if (pendingAnnData) {
         applyAnnData(pendingAnnData);
@@ -379,6 +400,11 @@ function applyAnnData(data) {
       anns[chatId][tidx].push(normalizeEntry(entry, utterance));
       count++;
     });
+    const emo = (item.Output || []).map(o => o.speaker_emotion).find(Boolean);
+    if (emo) {
+      if (!turnEmotions[chatId]) turnEmotions[chatId] = {};
+      turnEmotions[chatId][tidx] = emo;
+    }
   });
   return count;
 }
@@ -431,8 +457,14 @@ function buildTurnCard(conv, turn, tidx) {
 
   const isHuman = turn.speaker !== 'agent';
   const spBadge = `<span class="speaker-badge ${isHuman ? 'sp-human' : 'sp-agent'}">${esc(turn.speaker)}</span>`;
+  const curEmotion = (turnEmotions[conv.chat] || {})[tidx] || DEFAULT_EMOTION;
+  const emoSelect = `<label class="emotion-label">speaker emotion
+    <select class="emotion-select" onchange="setTurnEmotion(${conv.chat},${tidx},this.value)">
+      ${emotionOpts(curEmotion)}
+    </select>
+  </label>`;
   card.innerHTML = `
-    <div class="turn-header"><span class="turn-num">Turn ${turn.turn}</span>${spBadge}</div>
+    <div class="turn-header"><span class="turn-num">Turn ${turn.turn}</span>${spBadge}${emoSelect}</div>
     <div class="utterance" id="utt-${conv.chat}-${tidx}">${esc(turn.utterance)}</div>
     <div class="anns-area" id="aa-${conv.chat}-${tidx}"></div>
     <div class="add-ann-row">
@@ -921,7 +953,10 @@ function openTRModal(chatId, tidx, ei) {
     </div>
     <div class="fg">
       <label>Recurrence pattern:</label>
-      <input type="text" id="tr-recur" placeholder="e.g. weekly, every morning">
+      <select id="tr-recur">
+        <option value="">— select pattern —</option>
+        ${RECURRENCE_PATTERNS.map(p => `<option value="${p}">${p}</option>`).join('')}
+      </select>
     </div>
   `, [
     { label: 'Add', cls: 'btn-blue', fn: () => confirmTR(chatId, tidx, ei) },
@@ -947,6 +982,11 @@ function confirmTR(chatId, tidx, ei) {
   });
   closeModal();
   refreshTurn(chatId, tidx);
+}
+
+function setTurnEmotion(chatId, tidx, value) {
+  if (!turnEmotions[chatId]) turnEmotions[chatId] = {};
+  turnEmotions[chatId][tidx] = value || DEFAULT_EMOTION;
 }
 
 // ═══ Delete Helpers ═══════════════════════════════════════════════════════════
@@ -996,10 +1036,11 @@ function exportJSON() {
     conv.turns.forEach((turn, tidx) => {
       const entries = ca[tidx] || [];
       if (!entries.length) return;
+      const emotion = (turnEmotions[conv.chat] || {})[tidx] || DEFAULT_EMOTION;
       convOut.push({
         chat: conv.chat, date: conv.date, human: conv.human,
         Input: { turn: turn.turn, speaker: turn.speaker, utterance: turn.utterance },
-        Output: entries.map(fmtEntry)
+        Output: entries.map(e => fmtEntry(e, emotion))
       });
     });
     if (convOut.length) output.push(convOut);
@@ -1014,8 +1055,8 @@ function exportJSON() {
   status('Exported!');
 }
 
-function fmtEntry(e) {
-  const out = { annotator: e.annotator };
+function fmtEntry(e, speakerEmotion) {
+  const out = { annotator: e.annotator, speaker_emotion: speakerEmotion || DEFAULT_EMOTION };
   out.activity = e.activity
     ? {
         value: e.activity,
