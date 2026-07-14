@@ -114,80 +114,8 @@ The activity type dropdown contains the types found in `events_srl_typed.json`:
 
 ## Output format
 
-**Export JSON** saves a file named `annotations_<annotator>.json`. The structure is an array of conversations, each being an array of annotated turns:
-
-```json
-[
-    {
-      "chat": 0,
-      "date": "2013,Apr,13",
-      "human": "Jan",
-      "Input": {
-        "turn": 1,
-        "speaker": "agent",
-        "utterance": "Hey Jan, I see that you're a fan of cycling. Has the Dutch weather been favorable for it lately?"
-      },
-      "Output": [
-        {
-          "annotator": "piek",
-          "speaker_emotion": "curiosity",
-          "activity": {"value": "cycling", "offset": 36, "length": 7, "type": "exercise", "activity_id": "chat0.1"},
-          "agent": [{"value": "Jan", "offset": 4, "length": 3, "type": "person"}],
-          "patient": [],
-          "instrument": [],
-          "manner": [],
-          "location": [],
-          "result": [],
-          "time": [{"value": "lately", "offset": 89, "length": 6}],
-          "time_resolved": [
-            {
-              "time_expression": "lately",
-              "temporal_type": "range",
-              "absolute_date": null,
-              "date_range_start": "2013-04-01",
-              "date_range_end": "2013-04-13",
-              "recurrence_pattern": null
-            }
-          ]
-        }
-      ]
-    },
-    {
-         "chat": 0,
-         "date": "2013,Apr,13",
-         "human": "Jan",
-         "Input": {
-            "turn": 2,
-            "speaker": "Jan",
-            "utterance": "quite unpredictable recently"
-         },
-         "Output": [
-            {
-               "annotator": "piek",
-               "speaker_emotion": "disappointment",
-               "activity": {"activity_id": "chat0.1"},
-               "agent": [],
-               "patient": [],
-               "instrument": [],
-               "manner": [],
-               "location": [],
-               "result": [],
-               "time": [{"value": "quite unpredictable recently", "offset": 0, "length": 28}],
-               "time_resolved": [
-                 {
-                   "time_expression": "quite unpredictable recently",
-                   "temporal_type": "vague",
-                   "absolute_date": null,
-                   "date_range_start": null,
-                   "date_range_end": null,
-                   "recurrence_pattern": null
-                 }
-               ]
-            }
-         ]
-    }
-]
-```
+**Export JSON** saves a file named `annotations_<annotator>.json`. The structure is an array of conversations, each being an array of annotated turns.
+An example of the structure can be found in ```annotations.json```.
 
 Turns with no annotations are omitted from the export. A **reference entry** (second turn above) has `activity_id` but no `activity` or `activity_type` fields — it links additional role information to an activity defined in an earlier turn.
 

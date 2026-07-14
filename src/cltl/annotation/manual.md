@@ -109,6 +109,6 @@ The default value is "neutral" which is the most common emotion. If no selection
 The annotations are saved in memory. Before stopping the annotations, they need to be saved using the green Export JSON button.
 To continue the annotation, first load the conversations again and next load the existing annotations on top of the conversations.
 
-
+An example of annotation of the first chat in the data set can be found in ```annotation.json``` in the data folder.
 
 

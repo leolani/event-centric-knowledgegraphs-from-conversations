@@ -12,6 +12,7 @@
       "Output": [
         {
           "annotator": "piek",
+          "speaker_emotion": "neutral",
           "activity": {
             "value": "cycling",
             "offset": 36,
@@ -64,6 +65,7 @@
       "Output": [
         {
           "annotator": "piek",
+          "speaker_emotion": "fear",
           "activity": {
             "activity_id": "chat0.1"
           },
@@ -105,6 +107,7 @@
       "Output": [
         {
           "annotator": "piek",
+          "speaker_emotion": "caring",
           "activity": {
             "activity_id": "chat0.1"
           },
@@ -137,7 +140,8 @@
       },
       "Output": [
         {
-          "annotator": "piek",
+          "annotator": "piek",          
+          "speaker_emotion": "curiosity",
           "activity": {
             "value": "indoor exercises",
             "offset": 20,
@@ -182,6 +186,7 @@
       "Output": [
         {
           "annotator": "piek",
+          "speaker_emotion": "neutral",
           "activity": {
             "value": "Indoor walking",
             "offset": 17,
@@ -287,6 +292,7 @@
       "Output": [
         {
           "annotator": "piek",
+          "speaker_emotion": "realization",
           "activity": {
             "value": "walks",
             "offset": 61,
@@ -339,6 +345,7 @@
       "Output": [
         {
           "annotator": "piek",
+          "speaker_emotion": "caring",
           "activity": {
             "activity_id": "chat0.7"
           },
