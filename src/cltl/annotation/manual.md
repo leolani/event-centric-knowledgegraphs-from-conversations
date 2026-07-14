@@ -96,7 +96,6 @@ Absolute date should be given for ```point``` expressions, Date range start
 and Date range end for ```range``` expressions. The start date can be filled in freely or chosen from a week or month before the conversation date.
 The end date can also be chosen freely or set to the conversaiotn date. In the case of ```recurring``` expressions a pattern can be extracted though a drop-down menu:"daily", "regularly", "often", "now-and-then", "sometimes", "rarely". 
 
-
 ### Speaker perspective
 
 In addition to annotating the content of the utterance, the emotional perspective of the speaker can be annotated.
