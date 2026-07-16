@@ -281,10 +281,10 @@
           "patient": [],
           "instrument": [
             {
-              "value": "ight weights or resistance bands",
+              "value": "light weights or resistance bands",
               "type": "tool",
-              "offset": 236,
-              "length": 32
+              "offset": 235,
+              "length": 33
             }
           ],
           "manner": [],

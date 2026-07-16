@@ -9,7 +9,7 @@ from collections import defaultdict
 
 import pandas as pd
 
-ZIP_PATH = "../../data/capsules_with_event_details.json.zip"
+ZIP_PATH = "../../../data/capsules_with_event_details.json.zip"
 JSON_NAME = "capsules_with_event_details.json"
 OUTPUT_CSV = "data/emotion_by_author_counts.csv"
 

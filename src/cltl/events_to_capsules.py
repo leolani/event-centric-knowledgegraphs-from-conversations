@@ -1,11 +1,9 @@
-import json
 import random
 from cltl.commons.discrete import UtteranceType
 from datetime import date, datetime
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
-from emotion_classes import EmotionType
-from emotion_extraction import GoEmotionDetector
+from src.cltl.perspective.emotion_extraction import GoEmotionDetector
 
 model_path = "AnasAlokla/multilingual_go_emotions"
 #  Languages: Arabic, English, French, Spanish, Dutch, Turkish

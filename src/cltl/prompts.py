@@ -65,8 +65,81 @@ class ActivityType(str, Enum):
         mental_condition = "mental condition"
         symptom = "symptom"
         disease = "disease"
+        other = "other"
 
-prompt_conversational_srl_activity_type = '''You will receive a conversation in JSON format between two speakers: a diabetes patient and a lifestyle coach. 
+
+class RoleType(str, Enum):
+        person = "person"
+        group = "group"
+        organization = "organization"
+        object = "object"
+        substance = "substance"
+        vehicle = "vehicle"
+        tool = "tool"
+        place = "place"
+        city = "city"
+        country = "country"
+        indoor = "indoor"
+        outdoor = "outdoor"
+        other = "other"
+
+
+class ResultType(str, Enum):
+        goal = "goal"
+        impact = "impact"
+
+
+class EmotionLabel(str, Enum):
+        admiration = "admiration"
+        amusement = "amusement"
+        anger = "anger"
+        annoyance = "annoyance"
+        approval = "approval"
+        caring = "caring"
+        confusion = "confusion"
+        curiosity = "curiosity"
+        desire = "desire"
+        disappointment = "disappointment"
+        disapproval = "disapproval"
+        disgust = "disgust"
+        embarrassment = "embarrassment"
+        excitement = "excitement"
+        fear = "fear"
+        gratitude = "gratitude"
+        grief = "grief"
+        joy = "joy"
+        love = "love"
+        nervousness = "nervousness"
+        optimism = "optimism"
+        pride = "pride"
+        realization = "realization"
+        relief = "relief"
+        remorse = "remorse"
+        sadness = "sadness"
+        surprise = "surprise"
+        neutral = "neutral"
+
+
+class Factuality(str, Enum):
+        confirm = "confirm"
+        deny = "deny"
+        expect = "expect"
+
+
+class Certainty(str, Enum):
+        certain = "certain"
+        uncertain = "uncertain"
+        neutral = "neutral"
+
+
+class TemporalType(str, Enum):
+        point = "point"
+        range = "range"
+        duration = "duration"
+        recurring = "recurring"
+        vague = "vague"
+
+prompt_conversational_srl_activity_type = '''You will receive a conversation in JSON format between two speakers: a diabetes patient and a lifestyle coach.
     The conversation contains the name of the diabetes patient and the date on which the conversation took place.
     You need to extract activities and conditions of the diabetes patient from the last turn in the conversation. You can use the preceding turns as the context.
     Only extract Activities of Daily Life in which the diabetes patient participates or physical, social or mental conditions of the patient in relation to the patient's lifestyle.
@@ -160,6 +233,179 @@ prompt_conversational_srl_activity_type = '''You will receive a conversation in 
                     {"activity": "dinner",  "activity_type":"take_food","agent": ["Fatima"], "patient": ["steamed vegetables"], "time": ["yesterday"]},
                     {"activity": "experience",  "activity_type":"physical condition", "agent": ["Fatima"], "patient": ["weight gain"], "time": ["recently"]},
                     {"activity": "experience",  "activity_type":"physical condition", "agent": ["Fatima"], "patient": ["dizziness"], "time": ["occasionally"]}
-                ]  
+                ]
+    <end of examples>
+    '''
+
+prompt_conversational_srl_annotation = '''You will receive a conversation in JSON format between two speakers: a diabetes patient and a lifestyle coach.
+    The conversation contains the name of the diabetes patient, the date on which the conversation took place, and a list of turns.
+    You need to extract activities and conditions of the diabetes patient from the LAST turn in the conversation only. Use the preceding turns purely as context, e.g. to recognize that the last turn continues talking about an activity or condition that was already introduced earlier.
+    Only extract Activities of Daily Life in which the diabetes patient participates, or physical, social or mental conditions of the patient in relation to the patient's lifestyle.
+    The activity or condition itself must be represented as a noun phrase copied verbatim from the utterance (e.g. "cycling", "insulin injection", "weight gain"), not as a verb.
+
+    Output a JSON array. Each element of the array is one annotation entry for the last turn, structured as follows:
+
+    **perspective** (required, identical on every entry for this turn): the speaker's stance on their own utterance.
+    - emotion: one of "admiration", "amusement", "anger", "annoyance", "approval", "caring", "confusion", "curiosity", "desire", "disappointment", "disapproval", "disgust", "embarrassment", "excitement", "fear", "gratitude", "grief", "joy", "love", "nervousness", "optimism", "pride", "realization", "relief", "remorse", "sadness", "surprise", "neutral"
+    - factuality: "confirm", "deny" or "expect"
+    - certainty: "certain", "uncertain" or "neutral"
+
+    **activity** (required):
+    - If this is the first time the activity or condition is mentioned in the conversation: {"value": <verbatim phrase>, "offset": <int>, "length": <int>, "type": <activity_type>, "activity_id": "chat{N}.{M}"}, where N is the chat number and M increases by 1 for every new activity, in the order it is first introduced.
+    - If the last turn continues talking about an activity or condition that was already introduced in an earlier turn (visible in the given context): output only {"activity_id": "chat{N}.{M}"}, reusing the existing id, without value, offset, length or type. Any new role information from the last turn (e.g. a new time or location) is still attached to this entry.
+    - activity_type must be one of: "exercise", "measurement", "take_food", "take_drink", "advise", "social", "diet", "treatment", "medicine", "physical condition", "social condition", "mental condition", "symptom", "disease", "other".
+
+    **Semantic roles** (all optional, all arrays; only include a role if the text of the LAST turn supports it):
+    - agent, patient, instrument, manner, location: arrays of {"value": <verbatim phrase>, "type": <role_type>, "offset": <int>, "length": <int>}, where role_type is one of "person", "group", "organization", "object", "substance", "vehicle", "tool", "place", "city", "country", "indoor", "outdoor", "other".
+    - result: array of {"value": <verbatim phrase>, "type": "goal" or "impact", "offset": <int>, "length": <int>}.
+    - time: array of {"value": <verbatim phrase>, "offset": <int>, "length": <int>}.
+    - time_resolved: array of {"time_expression": <verbatim phrase matching a "time" entry>, "temporal_type": "point", "range", "duration", "recurring" or "vague", "absolute_date": <"YYYY-MM-DD" or null>, "date_range_start": <"YYYY-MM-DD" or null>, "date_range_end": <"YYYY-MM-DD" or null>, "recurrence_pattern": <string or null>}, grounding each time expression to a calendar date using the conversation's date as the reference point.
+
+    Every "offset" and "length" MUST be computed against the utterance text of the LAST turn only (0-indexed character offset, length in characters), and the substring of the utterance at [offset : offset + length] must exactly equal "value".
+    Do not output any other text than the JSON array.
+
+    <start of examples>
+    Example 1:
+        Input: {
+            "chat": 6,
+            "human": "Jan",
+            "date": "2010,Dec,13",
+            "turns": [
+                {
+                    "turn": 1,
+                    "speaker": "Jan",
+                    "utterance": "I've been noticing tingling in my feet lately. Is this something common with Type 2 Diabetes?"
+                }
+                ]
+                }
+        Output: [
+                    {
+                        "perspective": {"emotion": "nervousness", "factuality": "expect", "certainty": "uncertain"},
+                        "activity": {"value": "tingling in my feet", "offset": 19, "length": 19, "type": "physical condition", "activity_id": "chat6.1"},
+                        "agent": [{"value": "I", "type": "person", "offset": 0, "length": 1}],
+                        "patient": [], "instrument": [], "manner": [], "location": [], "result": [],
+                        "time": [{"value": "lately", "offset": 39, "length": 6}],
+                        "time_resolved": [{"time_expression": "lately", "temporal_type": "range", "absolute_date": null, "date_range_start": "2010-12-06", "date_range_end": "2010-12-13", "recurrence_pattern": null}]
+                    }
+                ]
+
+    Example 2 (continuation of the same conversation, turn 2 refers back to the activity introduced in turn 1):
+        Input: {
+            "chat": 6,
+            "human": "Jan",
+            "date": "2010,Dec,13",
+            "turns": [
+                {
+                    "turn": 1,
+                    "speaker": "Jan",
+                    "utterance": "I've been noticing tingling in my feet lately. Is this something common with Type 2 Diabetes?"
+                },
+                {
+                    "turn": 2,
+                    "speaker": "Jan",
+                    "utterance": "I think it has actually gotten worse over the past week, especially in my toes."
+                }
+                ]
+                }
+        Output: [
+                    {
+                        "perspective": {"emotion": "disappointment", "factuality": "confirm", "certainty": "certain"},
+                        "activity": {"activity_id": "chat6.1"},
+                        "agent": [{"value": "I", "type": "person", "offset": 0, "length": 1}],
+                        "patient": [], "instrument": [], "manner": [],
+                        "location": [{"value": "toes", "type": "other", "offset": 74, "length": 4}],
+                        "result": [],
+                        "time": [{"value": "the past week", "offset": 42, "length": 13}],
+                        "time_resolved": [{"time_expression": "the past week", "temporal_type": "range", "absolute_date": null, "date_range_start": "2010-12-06", "date_range_end": "2010-12-13", "recurrence_pattern": null}]
+                    }
+                ]
+
+    Example 3:
+        Input: {
+            "chat": 7,
+            "human": "Fatima",
+            "date": "2012,Jan,31",
+            "turns": [
+                    {
+                        "turn": 1,
+                        "speaker": "agent",
+                        "utterance": "Fatima, I understand that you've been managing your Type 2 Diabetes for quite some time now. Can you tell me more about your current medication regimen?"
+                    },
+                    {
+                        "turn": 2,
+                        "speaker": "Fatima",
+                        "utterance": "I take metformin tablets twice daily, and also an evening insulin injection. Besides, I take a daily aspirin for heart health, as advised by my doctor."
+                    }
+                ]
+                }
+        Output: [
+                    {
+                        "perspective": {"emotion": "neutral", "factuality": "confirm", "certainty": "certain"},
+                        "activity": {"value": "metformin tablets", "offset": 7, "length": 17, "type": "medicine", "activity_id": "chat7.1"},
+                        "agent": [{"value": "I", "type": "person", "offset": 0, "length": 1}],
+                        "patient": [], "instrument": [], "manner": [], "location": [], "result": [],
+                        "time": [{"value": "twice daily", "offset": 25, "length": 11}],
+                        "time_resolved": [{"time_expression": "twice daily", "temporal_type": "recurring", "absolute_date": null, "date_range_start": null, "date_range_end": null, "recurrence_pattern": "twice daily"}]
+                    },
+                    {
+                        "perspective": {"emotion": "neutral", "factuality": "confirm", "certainty": "certain"},
+                        "activity": {"value": "insulin injection", "offset": 58, "length": 17, "type": "medicine", "activity_id": "chat7.2"},
+                        "agent": [], "patient": [], "instrument": [], "manner": [], "location": [], "result": [],
+                        "time": [{"value": "evening", "offset": 50, "length": 7}],
+                        "time_resolved": []
+                    },
+                    {
+                        "perspective": {"emotion": "neutral", "factuality": "confirm", "certainty": "certain"},
+                        "activity": {"value": "aspirin", "offset": 101, "length": 7, "type": "medicine", "activity_id": "chat7.3"},
+                        "agent": [{"value": "I", "type": "person", "offset": 86, "length": 1}],
+                        "patient": [], "instrument": [], "manner": [], "location": [],
+                        "result": [{"value": "heart health", "type": "goal", "offset": 113, "length": 12}],
+                        "time": [{"value": "daily", "offset": 95, "length": 5}],
+                        "time_resolved": []
+                    }
+                ]
+
+    Example 4 (only the LAST turn is annotated; turn 2's food items are ignored because they belong to an earlier turn):
+        Input: {
+            "chat": 8,
+            "human": "Fatima",
+            "date": "2012,Jan,31",
+            "turns": [
+                    {       "turn": 1,
+                            "speaker": "agent",
+                            "utterance": "What did you eat yesterday"
+                    },
+                    {       "turn": 2,
+                            "speaker": "Fatima",
+                            "utterance": "Yes, for lunch, I had grilled chicken with salad, and for dinner, I cooked a fish with some steamed vegetables."
+                    },
+                    {       "turn": 3,
+                            "speaker": "agent",
+                            "utterance": "Any other worries?"
+                    },
+                    {
+                        "turn": 4,
+                        "speaker": "Fatima",
+                        "utterance": "I do have some concerns about the side effects of my medications, especially the insulin injection. I've been experiencing some weight gain and occasional dizziness. I'm not sure if these are common side effects or if I should discuss them with my doctor."
+                    }
+                ]
+            }
+        Output: [
+                    {
+                        "perspective": {"emotion": "nervousness", "factuality": "confirm", "certainty": "uncertain"},
+                        "activity": {"value": "weight gain", "offset": 128, "length": 11, "type": "physical condition", "activity_id": "chat8.1"},
+                        "agent": [{"value": "I", "type": "person", "offset": 100, "length": 1}],
+                        "patient": [], "instrument": [], "manner": [], "location": [], "result": [], "time": [],
+                        "time_resolved": []
+                    },
+                    {
+                        "perspective": {"emotion": "nervousness", "factuality": "confirm", "certainty": "uncertain"},
+                        "activity": {"value": "dizziness", "offset": 155, "length": 9, "type": "physical condition", "activity_id": "chat8.2"},
+                        "agent": [{"value": "I", "type": "person", "offset": 100, "length": 1}],
+                        "patient": [], "instrument": [], "manner": [], "location": [], "result": [],
+                        "time": [{"value": "occasional", "offset": 144, "length": 10}],
+                        "time_resolved": []
+                    }
+                ]
     <end of examples>
     '''

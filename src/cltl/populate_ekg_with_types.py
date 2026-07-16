@@ -11,7 +11,7 @@ import events_to_capsules
 from dateutil import parser
 from datetime import date, datetime
 from enum import Enum
-from emotion_extraction import GoEmotionDetector
+from src.cltl.perspective.emotion_extraction import GoEmotionDetector
 import zipfile
 
 def get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector):

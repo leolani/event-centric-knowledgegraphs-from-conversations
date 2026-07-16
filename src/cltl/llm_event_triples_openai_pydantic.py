@@ -1,47 +1,102 @@
 import json
+import os
+import re
 from openai import OpenAI
-from typing import Optional, Literal
+from typing import Optional
 from pydantic import BaseModel
 import prompts as prompts
 
 #https://platform.openai.com/docs/guides/structured-outputs?api-mode=chat
 
 #predicates = ["sem:hasActor", "sem:hasTimne", "sem:hasPlace"]
-path = "../../../openaikey1.txt"
-file = open(path, "r")
-key = file.read()
+
+def _load_key() -> str:
+    env = os.environ.get("OPENAI_API_KEY")
+    if not env:
+        raise SystemExit("OPENAI_API_KEY environment variable not set.")
+    return env
 
 
-class EventTripleExtraction(BaseModel):
+key = _load_key()
+
+ACTIVITY_ID_PATTERN = re.compile(r"^chat(\d+)\.(\d+)$")
+
+
+class Perspective(BaseModel):
     model_config = {"json_schema_mode": "validation"}
-    
-    activity: str
-    activity_type: prompts.ActivityType
-    agent: Optional[list[str]]=[]
-    patient: Optional[list[str]]=[]
-    instrument: Optional[list[str]]=[]
-    manner: Optional[list[str]]=[]
-    location: Optional[list[str]]=[]
-    time: Optional[list[str]]=[]
-    
-    @classmethod
-    def to_openai_function(cls):
-        """Convert the Pydantic model to OpenAI function definition for tool use."""
-        return {
-            "type": "function",
-            "function": {
-                "name": "extract_event",
-                "description": "Extract structured event details with semantic roles from text.",
-                "parameters": cls.model_json_schema()
-            }
-        }
+
+    emotion: prompts.EmotionLabel
+    factuality: prompts.Factuality
+    certainty: prompts.Certainty
 
 
-class EventExtractions(BaseModel):
+class Activity(BaseModel):
     model_config = {"json_schema_mode": "validation"}
-    
-    extractions: list[EventTripleExtraction]
-    
+
+    activity_id: str
+    value: Optional[str] = None
+    offset: Optional[int] = None
+    length: Optional[int] = None
+    type: Optional[prompts.ActivityType] = None
+
+
+class RoleSpan(BaseModel):
+    model_config = {"json_schema_mode": "validation"}
+
+    value: str
+    type: prompts.RoleType
+    offset: int
+    length: int
+
+
+class ResultSpan(BaseModel):
+    model_config = {"json_schema_mode": "validation"}
+
+    value: str
+    type: prompts.ResultType
+    offset: int
+    length: int
+
+
+class TimeSpan(BaseModel):
+    model_config = {"json_schema_mode": "validation"}
+
+    value: str
+    offset: int
+    length: int
+
+
+class TimeResolved(BaseModel):
+    model_config = {"json_schema_mode": "validation"}
+
+    time_expression: str
+    temporal_type: prompts.TemporalType
+    absolute_date: Optional[str] = None
+    date_range_start: Optional[str] = None
+    date_range_end: Optional[str] = None
+    recurrence_pattern: Optional[str] = None
+
+
+class SRLAnnotation(BaseModel):
+    model_config = {"json_schema_mode": "validation"}
+
+    perspective: Perspective
+    activity: Activity
+    agent: Optional[list[RoleSpan]] = []
+    patient: Optional[list[RoleSpan]] = []
+    instrument: Optional[list[RoleSpan]] = []
+    manner: Optional[list[RoleSpan]] = []
+    location: Optional[list[RoleSpan]] = []
+    result: Optional[list[ResultSpan]] = []
+    time: Optional[list[TimeSpan]] = []
+    time_resolved: Optional[list[TimeResolved]] = []
+
+
+class SRLAnnotations(BaseModel):
+    model_config = {"json_schema_mode": "validation"}
+
+    extractions: list[SRLAnnotation]
+
     @classmethod
     def to_openai_function(cls):
         """Convert the Pydantic model to OpenAI function definition for tool use."""
@@ -49,22 +104,23 @@ class EventExtractions(BaseModel):
             "type": "function",
             "function": {
                 "name": "extract_events",
-                "description": "Extract list of structured event details with semantic roles from text.",
+                "description": "Extract offset-anchored SRL annotations with activity identifiers and speaker perspective from text, matching the annotations.json format.",
                 "parameters": cls.model_json_schema()
             }
         }
 
 
 class LLM_EventExtraction:
-    
+
     def __init__(self):
         self._client = OpenAI(api_key=key)
         self._history = []
-        self._instruct = [{"role": "system", "content": prompts.prompt_conversational_srl_activity_type}]
+        self._instruct = [{"role": "system", "content": prompts.prompt_conversational_srl_annotation}]
+        self._known_activity_ids = set()
 
     def process_input(self, turn):
         # 2. Define the OpenAI function call parameters
-        function_schema = EventExtractions.to_openai_function()
+        function_schema = SRLAnnotations.to_openai_function()
 
         self._history.append({"role": "user", "content": "Input: {}".format(turn)})
 
@@ -75,7 +131,7 @@ class LLM_EventExtraction:
         # You can set tool_choice to "required" if you insist the model calls the function,
         # or "auto" to let it decide.
         response = self._client.chat.completions.create(
-            model="gpt-3.5-turbo-0125",  # or your specific model
+            model="gpt-5.1",
             messages=messages,
             tools=[function_schema],
             tool_choice = "required"  # Force function call otherwise use :auto"
@@ -89,15 +145,12 @@ class LLM_EventExtraction:
         if tool_calls:
             # The model invoked the function
             available_functions = {
-                "extract_events": EventExtractions,
+                "extract_events": SRLAnnotations,
             }
             for tool_call in tool_calls:
                 function_name = tool_call.function.name
                 function_to_call = available_functions[function_name]
                 function_args = json.loads(tool_call.function.arguments)
-                # print('function_name', function_name)
-                # print('function_to_call', function_to_call)
-                # print('function_args', function_args)
                 # Parse the response into a Pydantic model
                 try:
                     structured_output = function_to_call(**function_args)
@@ -112,14 +165,66 @@ class LLM_EventExtraction:
             # Fallback if the model didn't call the function
             return response_message.content
 
+    def check_compliance(self, chat_number, utterance, extractions):
+        """Validate a turn's extractions against the annotations.json Output-entry schema:
+        activity_id format/continuity, presence of offset/length/type for new vs. reference
+        activities, and that every value's offset/length matches the turn's utterance text.
+        Returns a list of human-readable violation strings (empty if fully compliant)."""
+        issues = []
+        for i, extraction in enumerate(extractions):
+            prefix = f"extraction[{i}]"
+            activity = extraction.activity
+
+            match = ACTIVITY_ID_PATTERN.match(activity.activity_id)
+            if not match:
+                issues.append(f"{prefix}: activity_id '{activity.activity_id}' does not match 'chat<N>.<M>'")
+            elif int(match.group(1)) != chat_number:
+                issues.append(f"{prefix}: activity_id '{activity.activity_id}' does not belong to chat {chat_number}")
+
+            spans = []
+            if activity.value is not None:
+                if activity.offset is None or activity.length is None or activity.type is None:
+                    issues.append(f"{prefix}: new activity '{activity.value}' is missing offset, length or type")
+                else:
+                    spans.append(("activity", activity.value, activity.offset, activity.length))
+                self._known_activity_ids.add(activity.activity_id)
+            else:
+                if activity.activity_id not in self._known_activity_ids:
+                    issues.append(f"{prefix}: activity_id '{activity.activity_id}' references an activity not introduced earlier in this conversation")
+                if activity.offset is not None or activity.length is not None or activity.type is not None:
+                    issues.append(f"{prefix}: reference to '{activity.activity_id}' should not carry offset, length or type")
+
+            for role_name in ("agent", "patient", "instrument", "manner", "location", "result", "time"):
+                for role in getattr(extraction, role_name):
+                    spans.append((role_name, role.value, role.offset, role.length))
+
+            for role_name, value, offset, length in spans:
+                if offset < 0 or length < 0 or offset + length > len(utterance):
+                    issues.append(f"{prefix}: {role_name} offset/length ({offset},{length}) out of bounds for utterance of length {len(utterance)}")
+                elif utterance[offset:offset + length] != value:
+                    issues.append(f"{prefix}: {role_name} value '{value}' does not match utterance[{offset}:{offset + length}]='{utterance[offset:offset + length]}'")
+
+            time_values = {t.value for t in extraction.time}
+            for resolved in extraction.time_resolved:
+                if resolved.time_expression not in time_values:
+                    issues.append(f"{prefix}: time_resolved expression '{resolved.time_expression}' has no matching entry in time")
+
+        return issues
+
     def annotate_all_turns_in_conversation(self, input={}):
         annotations = []
         self._history = []
+        self._known_activity_ids = set()
         print("Annotating a conversation with {} utterances".format(len(input['turns'])))
         for index, turn in enumerate(input['turns']):
             print('turn', turn)
-            response = self.process_input(turn['utterance'])
+            response = self.process_input(turn)
             if response:
+                issues = self.check_compliance(input['chat'], turn['utterance'], response)
+                if issues:
+                    print(f"Compliance issues for chat {input['chat']} turn {turn['turn']}:")
+                    for issue in issues:
+                        print(" -", issue)
                 annotation={"chat": input['chat'], "date": input["date"], "human": input["human"], "Input": turn, "Output": response}
                 annotations.append(annotation)
         return annotations
@@ -150,7 +255,7 @@ if __name__ == "__main__":
             {
                 "turn": 4,
                 "speaker": "agent",
-                "utterance": "That's a great start. You might want to also focus on portion control to maintain a balanced calorie intake and avoid added sugars and refined grains. This diet\u2019s high fiber content can particularly help in managing your blood sugar."
+                "utterance": "That's a great start. You might want to also focus on portion control to maintain a balanced calorie intake and avoid added sugars and refined grains. This diet’s high fiber content can particularly help in managing your blood sugar."
             },
             {
                 "turn": 5,
@@ -170,7 +275,7 @@ if __name__ == "__main__":
             {
                 "turn": 8,
                 "speaker": "agent",
-                "utterance": "You're welcome, Mehmet! It's wonderful that you\u2019re involving your family in your health journey. This can make managing your condition more enjoyable and sustainable."
+                "utterance": "You're welcome, Mehmet! It's wonderful that you’re involving your family in your health journey. This can make managing your condition more enjoyable and sustainable."
             }
         ]
     },

@@ -1,11 +1,20 @@
+import os
 from openai import OpenAI
+from pydantic import BaseModel
 import prompts as prompts
 #https://platform.openai.com/docs/guides/structured-outputs?api-mode=chat
 
 
-path = "../../../openaikey1.txt"
-file = open(path, "r")
-key = file.read()
+def _load_key() -> str:
+    env = os.environ.get("OPENAI_API_KEY")
+    if env:
+        return env
+    path = "../../../openaikey1.txt"
+    with open(path) as fh:
+        return fh.read().strip()
+
+
+key = _load_key()
 
 
 class EventTripleExtraction(BaseModel):

@@ -18,11 +18,7 @@ from pydantic import BaseModel, Field
 
 def _load_key() -> str:
     env = os.environ.get("OPENAI_API_KEY")
-    if env:
-        return env
-    key_path =  "../../../keys/openaikey1.txt"
-    with open(key_path) as fh:
-        return fh.read().strip()
+    return env
 
 
 client = OpenAI(api_key=_load_key())
