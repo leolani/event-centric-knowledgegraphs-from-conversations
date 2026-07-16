@@ -12,7 +12,11 @@
       "Output": [
         {
           "annotator": "piek",
-          "speaker_emotion": "neutral",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "expect",
+            "certainty": "uncertain"
+          },
           "activity": {
             "value": "cycling",
             "offset": 36,
@@ -65,33 +69,42 @@
       "Output": [
         {
           "annotator": "piek",
-          "speaker_emotion": "fear",
+          "perspective": {
+            "emotion": "disappointment",
+            "factuality": "deny",
+            "certainty": "certain"
+          },
           "activity": {
             "activity_id": "chat0.1"
           },
-          "agent": [],
+          "agent": [
+            {
+              "value": "I",
+              "type": "person",
+              "offset": 43,
+              "length": 1
+            }
+          ],
           "patient": [],
           "instrument": [],
           "manner": [],
           "location": [],
-          "result": [],
-          "time": [
+          "result": [
             {
-              "value": "quite unpredictable recently",
-              "offset": 10,
-              "length": 28
+              "value": "diabetes management",
+              "type": "goal",
+              "offset": 108,
+              "length": 19
             }
           ],
-          "time_resolved": [
+          "time": [
             {
-              "time_expression": "quite unpredictable recently",
-              "temporal_type": "vague",
-              "absolute_date": null,
-              "date_range_start": "2013-03-13",
-              "date_range_end": "2013-04-13",
-              "recurrence_pattern": "unpredictable"
+              "value": "been out as often as I'd like",
+              "offset": 53,
+              "length": 29
             }
-          ]
+          ],
+          "time_resolved": []
         }
       ]
     },
@@ -107,23 +120,57 @@
       "Output": [
         {
           "annotator": "piek",
-          "speaker_emotion": "caring",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
           "activity": {
             "activity_id": "chat0.1"
           },
-          "agent": [],
+          "agent": [
+            {
+              "value": "you",
+              "type": "person",
+              "offset": 213,
+              "length": 3
+            }
+          ],
           "patient": [],
           "instrument": [],
           "manner": [],
           "location": [],
           "result": [
             {
-              "value": "crucial in managing your diabetes",
+              "value": "your body use insulin better and can lower your blood sugar levels",
               "type": "goal",
-              "offset": 36,
-              "length": 33
+              "offset": 80,
+              "length": 66
             }
           ],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "indoor exercises",
+            "offset": 232,
+            "length": 16,
+            "type": "exercise",
+            "activity_id": "chat0.2"
+          },
+          "agent": [],
+          "patient": [],
+          "instrument": [],
+          "manner": [],
+          "location": [],
+          "result": [],
           "time": [],
           "time_resolved": []
         }
@@ -140,34 +187,20 @@
       },
       "Output": [
         {
-          "annotator": "piek",          
-          "speaker_emotion": "curiosity",
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "curiosity",
+            "factuality": "expect",
+            "certainty": "uncertain"
+          },
           "activity": {
-            "value": "indoor exercises",
-            "offset": 20,
-            "length": 16,
-            "type": "exercise",
             "activity_id": "chat0.2"
           },
-          "agent": [
-            {
-              "value": "me",
-              "type": "person",
-              "offset": 53,
-              "length": 2
-            }
-          ],
+          "agent": [],
           "patient": [],
           "instrument": [],
           "manner": [],
-          "location": [
-            {
-              "value": "indoor",
-              "type": "place",
-              "offset": 20,
-              "length": 6
-            }
-          ],
+          "location": [],
           "result": [],
           "time": [],
           "time_resolved": []
@@ -186,12 +219,16 @@
       "Output": [
         {
           "annotator": "piek",
-          "speaker_emotion": "neutral",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
           "activity": {
-            "value": "Indoor walking",
+            "value": "Indoor walking or marching in place",
             "offset": 17,
-            "length": 14,
-            "type": "",
+            "length": 35,
+            "type": "exercise",
             "activity_id": "chat0.3"
           },
           "agent": [],
@@ -205,11 +242,16 @@
         },
         {
           "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
           "activity": {
-            "value": "marching in place",
-            "offset": 35,
-            "length": 17,
-            "type": "",
+            "value": "stationary exercise bike",
+            "offset": 127,
+            "length": 24,
+            "type": "exercise",
             "activity_id": "chat0.4"
           },
           "agent": [],
@@ -223,53 +265,26 @@
         },
         {
           "annotator": "piek",
-          "activity": {
-            "value": "stationary exercise bike",
-            "offset": 127,
-            "length": 24,
-            "type": "",
-            "activity_id": "chat0.5"
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
           },
-          "agent": [],
-          "patient": [],
-          "instrument": [],
-          "manner": [],
-          "location": [],
-          "result": [],
-          "time": [],
-          "time_resolved": []
-        },
-        {
-          "annotator": "piek",
-          "activity": {
-            "activity_id": "chat0.1"
-          },
-          "agent": [],
-          "patient": [],
-          "instrument": [],
-          "manner": [],
-          "location": [],
-          "result": [],
-          "time": [],
-          "time_resolved": []
-        },
-        {
-          "annotator": "piek",
           "activity": {
             "value": "Strength training exercises",
             "offset": 201,
             "length": 27,
-            "type": "",
-            "activity_id": "chat0.6"
+            "type": "exercise",
+            "activity_id": "chat0.5"
           },
           "agent": [],
           "patient": [],
           "instrument": [
             {
-              "value": "light weights or resistance bands",
+              "value": "ight weights or resistance bands",
               "type": "tool",
-              "offset": 235,
-              "length": 33
+              "offset": 236,
+              "length": 32
             }
           ],
           "manner": [],
@@ -277,108 +292,6 @@
           "result": [],
           "time": [],
           "time_resolved": []
-        }
-      ]
-    },
-    {
-      "chat": 0,
-      "date": "2013,Apr,13",
-      "human": "Jan",
-      "Input": {
-        "turn": 6,
-        "speaker": "Jan",
-        "utterance": "I'll look into these options. I suppose sticking to my daily walks is also helpful?"
-      },
-      "Output": [
-        {
-          "annotator": "piek",
-          "speaker_emotion": "realization",
-          "activity": {
-            "value": "walks",
-            "offset": 61,
-            "length": 5,
-            "type": "",
-            "activity_id": "chat0.7"
-          },
-          "agent": [
-            {
-              "value": "my",
-              "type": "person",
-              "offset": 52,
-              "length": 2
-            }
-          ],
-          "patient": [],
-          "instrument": [],
-          "manner": [],
-          "location": [],
-          "result": [],
-          "time": [
-            {
-              "value": "daily",
-              "offset": 55,
-              "length": 5
-            }
-          ],
-          "time_resolved": [
-            {
-              "time_expression": "daily",
-              "temporal_type": "recurring",
-              "absolute_date": null,
-              "date_range_start": null,
-              "date_range_end": null,
-              "recurrence_pattern": "daily"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "chat": 0,
-      "date": "2013,Apr,13",
-      "human": "Jan",
-      "Input": {
-        "turn": 7,
-        "speaker": "agent",
-        "utterance": "Yes, absolutely! Regular walking is an efficient and effective way to improve insulin sensitivity and manage your diabetes. Just make sure to adapt the intensity and duration to your abilities."
-      },
-      "Output": [
-        {
-          "annotator": "piek",
-          "speaker_emotion": "caring",
-          "activity": {
-            "activity_id": "chat0.7"
-          },
-          "agent": [],
-          "patient": [],
-          "instrument": [],
-          "manner": [],
-          "location": [],
-          "result": [
-            {
-              "value": "improve insulin sensitivity and manage your diabetes",
-              "type": "goal",
-              "offset": 70,
-              "length": 52
-            }
-          ],
-          "time": [
-            {
-              "value": "Regular",
-              "offset": 17,
-              "length": 7
-            }
-          ],
-          "time_resolved": [
-            {
-              "time_expression": "Regular",
-              "temporal_type": "recurring",
-              "absolute_date": null,
-              "date_range_start": null,
-              "date_range_end": null,
-              "recurrence_pattern": "regular"
-            }
-          ]
         }
       ]
     }

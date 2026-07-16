@@ -182,13 +182,15 @@ body { font-family: system-ui, sans-serif; font-size: 14px; background: #f0f2f5;
 // ═══ State ════════════════════════════════════════════════════════════════════
 let convs = [];         // raw conversations array
 let anns  = {};         // { chatId: { turnIdx: [OutputEntry] } }
-let turnEmotions = {};  // { chatId: { turnIdx: 'joy' } } — speaker_emotion per utterance
+let turnEmotions = {};    // { chatId: { turnIdx: 'joy' } } — speaker_emotion per utterance
+let turnCertainty = {};   // { chatId: { turnIdx: 'neutral' } } — speaker_certainty per utterance
+let turnFactuality = {};  // { chatId: { turnIdx: 'confirm' } } — speaker_factuality per utterance
 let pendingAnnData = null; // annotation JSON held until conversations.json is loaded
 let curChat = null;
 let pendingSel = null;  // { text, chatId, turnIdx }
 let trConvDate = null;  // Date of the conversation currently open in the Time Resolved modal
 
-const ACTIVITY_TYPES = ['advise','diet','disease','exercise','measurement','medicine','mental condition','physical condition','social','social condition','symptom','take_drink','take_food','treatment'];
+const ACTIVITY_TYPES = ['advise','diet','disease','exercise','measurement','medicine','mental condition','physical condition','social','social condition','symptom','take_drink','take_food','treatment','other'];
 const RECURRENCE_PATTERNS = ['daily','regularly','often','now-and-then','sometimes','rarely'];
 // Google GoEmotions taxonomy (28 classes), matching GoEmotion enum in src/cltl/emotion_classes.py,
 // grouped by sentiment (per go_sentiment_map) and sorted alphabetically within each group.
@@ -205,6 +207,13 @@ function emotionOpts(selected) {
     + group('Positive', GO_EMOTION_GROUPS.positive)
     + group('Negative', GO_EMOTION_GROUPS.negative)
     + group('Ambiguous', GO_EMOTION_GROUPS.ambiguous);
+}
+const CERTAINTY_VALUES = ['certain','uncertain','neutral'];
+const DEFAULT_CERTAINTY = 'neutral';
+const FACTUALITY_VALUES = ['confirm','deny','expect'];
+const DEFAULT_FACTUALITY = 'confirm';
+function simpleOpts(values, selected) {
+  return values.map(v => `<option value="${v}"${v === selected ? ' selected' : ''}>${v}</option>`).join('');
 }
 const ROLE_TYPES = {
   default: ['person','group','organization','object','substance','vehicle','tool','place','city','country','indoor','outdoor','other'],
@@ -273,6 +282,8 @@ document.getElementById('file-input').addEventListener('change', e => {
       convs = JSON.parse(ev.target.result);
       anns = {};
       turnEmotions = {};
+      turnCertainty = {};
+      turnFactuality = {};
       // apply annotations that were loaded before conversations
       if (pendingAnnData) {
         applyAnnData(pendingAnnData);
@@ -400,10 +411,20 @@ function applyAnnData(data) {
       anns[chatId][tidx].push(normalizeEntry(entry, utterance));
       count++;
     });
-    const emo = (item.Output || []).map(o => o.speaker_emotion).find(Boolean);
+    const emo = (item.Output || []).map(o => o.perspective?.emotion ?? o.speaker_emotion).find(Boolean);
     if (emo) {
       if (!turnEmotions[chatId]) turnEmotions[chatId] = {};
       turnEmotions[chatId][tidx] = emo;
+    }
+    const cert = (item.Output || []).map(o => o.perspective?.certainty ?? o.speaker_certainty).find(Boolean);
+    if (cert) {
+      if (!turnCertainty[chatId]) turnCertainty[chatId] = {};
+      turnCertainty[chatId][tidx] = cert;
+    }
+    const fact = (item.Output || []).map(o => o.perspective?.factuality ?? o.speaker_factuality).find(Boolean);
+    if (fact) {
+      if (!turnFactuality[chatId]) turnFactuality[chatId] = {};
+      turnFactuality[chatId][tidx] = fact;
     }
   });
   return count;
@@ -463,8 +484,20 @@ function buildTurnCard(conv, turn, tidx) {
       ${emotionOpts(curEmotion)}
     </select>
   </label>`;
+  const curCertainty = (turnCertainty[conv.chat] || {})[tidx] || DEFAULT_CERTAINTY;
+  const certSelect = `<label class="emotion-label">speaker certainty
+    <select class="emotion-select" onchange="setTurnCertainty(${conv.chat},${tidx},this.value)">
+      ${simpleOpts(CERTAINTY_VALUES, curCertainty)}
+    </select>
+  </label>`;
+  const curFactuality = (turnFactuality[conv.chat] || {})[tidx] || DEFAULT_FACTUALITY;
+  const factSelect = `<label class="emotion-label">speaker factuality
+    <select class="emotion-select" onchange="setTurnFactuality(${conv.chat},${tidx},this.value)">
+      ${simpleOpts(FACTUALITY_VALUES, curFactuality)}
+    </select>
+  </label>`;
   card.innerHTML = `
-    <div class="turn-header"><span class="turn-num">Turn ${turn.turn}</span>${spBadge}${emoSelect}</div>
+    <div class="turn-header"><span class="turn-num">Turn ${turn.turn}</span>${spBadge}${emoSelect}${certSelect}${factSelect}</div>
     <div class="utterance" id="utt-${conv.chat}-${tidx}">${esc(turn.utterance)}</div>
     <div class="anns-area" id="aa-${conv.chat}-${tidx}"></div>
     <div class="add-ann-row">
@@ -988,6 +1021,14 @@ function setTurnEmotion(chatId, tidx, value) {
   if (!turnEmotions[chatId]) turnEmotions[chatId] = {};
   turnEmotions[chatId][tidx] = value || DEFAULT_EMOTION;
 }
+function setTurnCertainty(chatId, tidx, value) {
+  if (!turnCertainty[chatId]) turnCertainty[chatId] = {};
+  turnCertainty[chatId][tidx] = value || DEFAULT_CERTAINTY;
+}
+function setTurnFactuality(chatId, tidx, value) {
+  if (!turnFactuality[chatId]) turnFactuality[chatId] = {};
+  turnFactuality[chatId][tidx] = value || DEFAULT_FACTUALITY;
+}
 
 // ═══ Delete Helpers ═══════════════════════════════════════════════════════════
 function delAnn(chatId, tidx, ei) {
@@ -1037,10 +1078,12 @@ function exportJSON() {
       const entries = ca[tidx] || [];
       if (!entries.length) return;
       const emotion = (turnEmotions[conv.chat] || {})[tidx] || DEFAULT_EMOTION;
+      const certainty = (turnCertainty[conv.chat] || {})[tidx] || DEFAULT_CERTAINTY;
+      const factuality = (turnFactuality[conv.chat] || {})[tidx] || DEFAULT_FACTUALITY;
       convOut.push({
         chat: conv.chat, date: conv.date, human: conv.human,
         Input: { turn: turn.turn, speaker: turn.speaker, utterance: turn.utterance },
-        Output: entries.map(e => fmtEntry(e, emotion))
+        Output: entries.map(e => fmtEntry(e, emotion, certainty, factuality))
       });
     });
     if (convOut.length) output.push(convOut);
@@ -1055,8 +1098,15 @@ function exportJSON() {
   status('Exported!');
 }
 
-function fmtEntry(e, speakerEmotion) {
-  const out = { annotator: e.annotator, speaker_emotion: speakerEmotion || DEFAULT_EMOTION };
+function fmtEntry(e, speakerEmotion, speakerCertainty, speakerFactuality) {
+  const out = {
+    annotator: e.annotator,
+    perspective: {
+      emotion: speakerEmotion || DEFAULT_EMOTION,
+      factuality: speakerFactuality || DEFAULT_FACTUALITY,
+      certainty: speakerCertainty || DEFAULT_CERTAINTY
+    }
+  };
   out.activity = e.activity
     ? {
         value: e.activity,

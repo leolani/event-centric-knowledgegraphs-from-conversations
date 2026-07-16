@@ -88,9 +88,17 @@ Click **+ Time Resolved** on any annotation card to ground a time expression to 
 - Click **×** next to any role value, time expression, or time resolution to remove it.
 - Click **Delete** on a card to remove the entire annotation entry.
 
-### Step 4 — Annotate the speaker's emotion (optional)
+### Step 4 — Annotate the speaker's perspective
 
-Each turn header has a **speaker emotion** dropdown (next to the speaker badge), listing the 28 Google GoEmotions classes (see `src/cltl/emotion_classes.py`). `neutral` is pinned at the top and is the default for every turn. Below it, the remaining emotions are grouped into **Positive**, **Negative**, and **Ambiguous** (`surprise`, `realization`), each sorted alphabetically. Select the emotion expressed by the speaker in that utterance; it is exported as `speaker_emotion` in each Output entry for the turn (see below).
+Each turn header has three dropdowns next to the speaker badge, capturing the speaker's perspective on their utterance. All three are exported together as a single `perspective` object on each Output entry for the turn (see [Output format](#output-format)).
+
+| Dropdown | Values | Default |
+|---|---|---|
+| **speaker emotion** | The 28 Google GoEmotions classes (see `src/cltl/emotion_classes.py`). `neutral` is pinned at the top; the rest are grouped into **Positive**, **Negative**, and **Ambiguous** (`surprise`, `realization`), each sorted alphabetically. | `neutral` |
+| **speaker certainty** | `certain`, `uncertain`, `neutral` | `neutral` |
+| **speaker factuality** | `confirm`, `deny`, `expect` | `confirm` |
+
+Select the values that best describe the speaker's emotion, certainty, and factuality (confirming, denying, or merely expecting the activity) for that utterance.
 
 ## Semantic roles
 
@@ -110,7 +118,7 @@ Each annotation entry can carry the following roles. All roles except `time` tak
 
 The activity type dropdown contains the types found in `events_srl_typed.json`:
 
-`advise` · `diet` · `disease` · `exercise` · `measurement` · `medicine` · `mental condition` · `physical condition` · `social` · `social condition` · `symptom` · `take_drink` · `take_food` · `treatment`
+`advise` · `diet` · `disease` · `exercise` · `measurement` · `medicine` · `mental condition` · `physical condition` · `social` · `social condition` · `symptom` · `take_drink` · `take_food` · `treatment` · `other`
 
 ## Output format
 
@@ -118,6 +126,14 @@ The activity type dropdown contains the types found in `events_srl_typed.json`:
 An example of the structure can be found in ```annotations.json```.
 
 Turns with no annotations are omitted from the export. A **reference entry** (second turn above) has `activity_id` but no `activity` or `activity_type` fields — it links additional role information to an activity defined in an earlier turn.
+
+Every Output entry carries a `perspective` object with the turn's speaker-perspective annotations (see [Step 4](#step-4--annotate-the-speakers-perspective)):
+
+```json
+{ "perspective": { "emotion": "neutral", "factuality": "confirm", "certainty": "neutral" } }
+```
+
+Since these three dropdowns apply to the whole turn, every Output entry for the same turn is exported with the same `perspective` values.
 
 ## Tips
 
