@@ -82,6 +82,11 @@ Click **+ Time Resolved** on any annotation card to ground a time expression to 
 | Date range end | `2013-04-13` |
 | Recurrence pattern | `daily`, `regularly`, `often`, `now-and-then`, `sometimes`, `rarely` |
 
+Unlike the other rows, **Temporal type** and **Recurrence pattern** are closed dropdowns, not
+free-text examples — their values are `TemporalType` and `RecurrencePattern` in
+`src/cltl/data_type.py`. `Recurrence pattern` can also be left blank (`— select pattern —`) for
+a non-recurring time expression.
+
 ### Editing and deleting
 
 - Click **Edit Activity** on a card to change the activity name, type, or ID.
@@ -94,7 +99,7 @@ Each turn header has three dropdowns next to the speaker badge, capturing the sp
 
 | Dropdown | Values | Default |
 |---|---|---|
-| **speaker emotion** | The 28 Google GoEmotions classes (see `src/cltl/emotion_classes.py`). `neutral` is pinned at the top; the rest are grouped into **Positive**, **Negative**, and **Ambiguous** (`surprise`, `realization`), each sorted alphabetically. | `neutral` |
+| **speaker emotion** | The 28 Google GoEmotions classes (`EmotionLabel` in `src/cltl/data_type.py`). `neutral` is pinned at the top; the rest are grouped into **Positive**, **Negative**, and **Ambiguous** (`surprise`, `realization`) per `EMOTION_GROUPS`, each sorted alphabetically. | `neutral` |
 | **speaker certainty** | `certain`, `uncertain`, `neutral` | `neutral` |
 | **speaker factuality** | `confirm`, `deny`, `expect` | `confirm` |
 
@@ -102,7 +107,7 @@ Select the values that best describe the speaker's emotion, certainty, and factu
 
 ## Semantic roles
 
-Each annotation entry can carry the following roles. All roles except `time` take a **value** (the phrase) and a **type** (from the dropdown).
+Each annotation entry can carry the following roles. All roles except `time` take a **value** (the phrase) and a **type** (from the dropdown). The `agent`/`patient`/`instrument`/`manner`/`location` types come from `RoleType`, and `result` types from `ResultType`, both in `src/cltl/data_type.py` (`ROLE_TYPES["default"]` and `ROLE_TYPES["result"]`).
 
 | Role | Description | Types |
 |---|---|---|
@@ -116,9 +121,23 @@ Each annotation entry can carry the following roles. All roles except `time` tak
 
 ## Activity types
 
-The activity type dropdown contains the types found in `events_srl_typed.json`:
+The activity type dropdown contains the values of `ActivityType` in `src/cltl/data_type.py`
+(matching the types found in `events_srl_typed.json`):
 
 `advise` · `diet` · `disease` · `exercise` · `measurement` · `medicine` · `mental condition` · `physical condition` · `social` · `social condition` · `symptom` · `take_drink` · `take_food` · `treatment` · `other`
+
+## Dropdown values
+
+Every closed-vocabulary dropdown in this tool (activity type, role type, result type, speaker
+emotion/certainty/factuality, temporal type, recurrence pattern) is generated from the enums in
+`src/cltl/data_type.py` — the same enums used by the LLM extraction prompt (`prompts.py`) and its
+Pydantic models (`llm_event_triples_openai_pydantic.py`), so the tool, the prompt and the code can
+never drift out of sync. The generated file is `dropdown_values.js`, loaded by
+`annotation_tool.html`. After changing an enum in `data_type.py`, regenerate it with:
+
+```
+python src/cltl/annotation/generate_dropdown_values.py
+```
 
 ## Output format
 

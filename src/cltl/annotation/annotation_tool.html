@@ -178,6 +178,12 @@ body { font-family: system-ui, sans-serif; font-size: 14px; background: #f0f2f5;
   <div id="rpop-body"></div>
 </div>
 
+<!-- Dropdown value lists (ACTIVITY_TYPES, ROLE_TYPES, CERTAINTY_VALUES, FACTUALITY_VALUES,
+     GO_EMOTION_GROUPS, TEMPORAL_TYPES, RECURRENCE_PATTERNS, and their DEFAULT_* values) are
+     generated from the enums in src/cltl/prompts.py by generate_dropdown_values.py, so the
+     tool, the LLM prompt and the Pydantic models all draw on the same closed vocabularies.
+     Re-run that script after changing an enum in prompts.py. -->
+<script src="dropdown_values.js"></script>
 <script>
 // ═══ State ════════════════════════════════════════════════════════════════════
 let convs = [];         // raw conversations array
@@ -190,16 +196,9 @@ let curChat = null;
 let pendingSel = null;  // { text, chatId, turnIdx }
 let trConvDate = null;  // Date of the conversation currently open in the Time Resolved modal
 
-const ACTIVITY_TYPES = ['advise','diet','disease','exercise','measurement','medicine','mental condition','physical condition','social','social condition','symptom','take_drink','take_food','treatment','other'];
-const RECURRENCE_PATTERNS = ['daily','regularly','often','now-and-then','sometimes','rarely'];
-// Google GoEmotions taxonomy (28 classes), matching GoEmotion enum in src/cltl/emotion_classes.py,
-// grouped by sentiment (per go_sentiment_map) and sorted alphabetically within each group.
-const GO_EMOTION_GROUPS = {
-  positive:  ['admiration','amusement','approval','caring','curiosity','desire','excitement','gratitude','joy','love','optimism','pride','relief'],
-  negative:  ['anger','annoyance','confusion','disappointment','disapproval','disgust','embarrassment','fear','grief','nervousness','remorse','sadness'],
-  ambiguous: ['realization','surprise']
-};
-const DEFAULT_EMOTION = 'neutral';
+// Dropdown value consts (ACTIVITY_TYPES, ROLE_TYPES, CERTAINTY_VALUES, DEFAULT_CERTAINTY,
+// FACTUALITY_VALUES, DEFAULT_FACTUALITY, DEFAULT_EMOTION, GO_EMOTION_GROUPS, TEMPORAL_TYPES,
+// DEFAULT_TEMPORAL_TYPE, RECURRENCE_PATTERNS) come from dropdown_values.js, loaded above.
 function emotionOpts(selected) {
   const mk = em => `<option value="${em}"${em === selected ? ' selected' : ''}>${em}</option>`;
   const group = (label, list) => `<optgroup label="${label}">${list.map(mk).join('')}</optgroup>`;
@@ -208,17 +207,9 @@ function emotionOpts(selected) {
     + group('Negative', GO_EMOTION_GROUPS.negative)
     + group('Ambiguous', GO_EMOTION_GROUPS.ambiguous);
 }
-const CERTAINTY_VALUES = ['certain','uncertain','neutral'];
-const DEFAULT_CERTAINTY = 'neutral';
-const FACTUALITY_VALUES = ['confirm','deny','expect'];
-const DEFAULT_FACTUALITY = 'confirm';
 function simpleOpts(values, selected) {
   return values.map(v => `<option value="${v}"${v === selected ? ' selected' : ''}>${v}</option>`).join('');
 }
-const ROLE_TYPES = {
-  default: ['person','group','organization','object','substance','vehicle','tool','place','city','country','indoor','outdoor','other'],
-  result:  ['goal','impact']
-};
 function typeOptsForRole(role) {
   const types = ROLE_TYPES[role] || ROLE_TYPES.default;
   return types.map(t => `<option value="${t}">${t}</option>`).join('');
@@ -957,13 +948,7 @@ function openTRModal(chatId, tidx, ei) {
     </div>
     <div class="fg">
       <label>Temporal type:</label>
-      <select id="tr-type">
-        <option value="point">point</option>
-        <option value="range" selected>range</option>
-        <option value="duration">duration</option>
-        <option value="recurring">recurring</option>
-        <option value="vague">vague</option>
-      </select>
+      <select id="tr-type">${simpleOpts(TEMPORAL_TYPES, DEFAULT_TEMPORAL_TYPE)}</select>
     </div>
     <div class="fg">
       <label>Absolute date (YYYY-MM-DD):</label>

@@ -5,6 +5,7 @@ from openai import OpenAI
 from typing import Optional
 from pydantic import BaseModel
 import prompts as prompts
+import data_type as data_type
 
 #https://platform.openai.com/docs/guides/structured-outputs?api-mode=chat
 
@@ -25,9 +26,9 @@ ACTIVITY_ID_PATTERN = re.compile(r"^chat(\d+)\.(\d+)$")
 class Perspective(BaseModel):
     model_config = {"json_schema_mode": "validation"}
 
-    emotion: prompts.EmotionLabel
-    factuality: prompts.Factuality
-    certainty: prompts.Certainty
+    emotion: data_type.EmotionLabel
+    factuality: data_type.Factuality
+    certainty: data_type.Certainty
 
 
 class Activity(BaseModel):
@@ -37,14 +38,14 @@ class Activity(BaseModel):
     value: Optional[str] = None
     offset: Optional[int] = None
     length: Optional[int] = None
-    type: Optional[prompts.ActivityType] = None
+    type: Optional[data_type.ActivityType] = None
 
 
 class RoleSpan(BaseModel):
     model_config = {"json_schema_mode": "validation"}
 
     value: str
-    type: prompts.RoleType
+    type: data_type.RoleType
     offset: int
     length: int
 
@@ -53,7 +54,7 @@ class ResultSpan(BaseModel):
     model_config = {"json_schema_mode": "validation"}
 
     value: str
-    type: prompts.ResultType
+    type: data_type.ResultType
     offset: int
     length: int
 
@@ -70,11 +71,11 @@ class TimeResolved(BaseModel):
     model_config = {"json_schema_mode": "validation"}
 
     time_expression: str
-    temporal_type: prompts.TemporalType
+    temporal_type: data_type.TemporalType
     absolute_date: Optional[str] = None
     date_range_start: Optional[str] = None
     date_range_end: Optional[str] = None
-    recurrence_pattern: Optional[str] = None
+    recurrence_pattern: Optional[data_type.RecurrencePattern] = None
 
 
 class SRLAnnotation(BaseModel):

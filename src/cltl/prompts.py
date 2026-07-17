@@ -1,4 +1,16 @@
-from enum import Enum
+from string import Template
+
+from data_type import (
+    ActivityType,
+    RoleType,
+    ResultType,
+    EmotionLabel,
+    Factuality,
+    Certainty,
+    TemporalType,
+    RecurrencePattern,
+    quoted_values,
+)
 
 prompt_conversational_srl = '''You will receive a conversation in JSON format between two speakers: one a diabetes patient and one a lifestyle coach. 
         The conversation contains the name of the diabetes patient and date on which the conversation took place.
@@ -49,95 +61,6 @@ prompt_conversational_srl = '''You will receive a conversation in JSON format be
                     ]
         <end of examples>
         '''
-
-class ActivityType(str, Enum):
-        exercise = "exercise"
-        measurement = "measurement"
-        take_food = "take_food"
-        take_drink = "take_drink"
-        advise = "advise"
-        social = "social"
-        diet = "diet"
-        treatment = "treatment"
-        medicine = "medicine"
-        physical_condition = "physical condition"
-        social_condition = "social condition"
-        mental_condition = "mental condition"
-        symptom = "symptom"
-        disease = "disease"
-        other = "other"
-
-
-class RoleType(str, Enum):
-        person = "person"
-        group = "group"
-        organization = "organization"
-        object = "object"
-        substance = "substance"
-        vehicle = "vehicle"
-        tool = "tool"
-        place = "place"
-        city = "city"
-        country = "country"
-        indoor = "indoor"
-        outdoor = "outdoor"
-        other = "other"
-
-
-class ResultType(str, Enum):
-        goal = "goal"
-        impact = "impact"
-
-
-class EmotionLabel(str, Enum):
-        admiration = "admiration"
-        amusement = "amusement"
-        anger = "anger"
-        annoyance = "annoyance"
-        approval = "approval"
-        caring = "caring"
-        confusion = "confusion"
-        curiosity = "curiosity"
-        desire = "desire"
-        disappointment = "disappointment"
-        disapproval = "disapproval"
-        disgust = "disgust"
-        embarrassment = "embarrassment"
-        excitement = "excitement"
-        fear = "fear"
-        gratitude = "gratitude"
-        grief = "grief"
-        joy = "joy"
-        love = "love"
-        nervousness = "nervousness"
-        optimism = "optimism"
-        pride = "pride"
-        realization = "realization"
-        relief = "relief"
-        remorse = "remorse"
-        sadness = "sadness"
-        surprise = "surprise"
-        neutral = "neutral"
-
-
-class Factuality(str, Enum):
-        confirm = "confirm"
-        deny = "deny"
-        expect = "expect"
-
-
-class Certainty(str, Enum):
-        certain = "certain"
-        uncertain = "uncertain"
-        neutral = "neutral"
-
-
-class TemporalType(str, Enum):
-        point = "point"
-        range = "range"
-        duration = "duration"
-        recurring = "recurring"
-        vague = "vague"
 
 prompt_conversational_srl_activity_type = '''You will receive a conversation in JSON format between two speakers: a diabetes patient and a lifestyle coach.
     The conversation contains the name of the diabetes patient and the date on which the conversation took place.
@@ -237,29 +160,31 @@ prompt_conversational_srl_activity_type = '''You will receive a conversation in 
     <end of examples>
     '''
 
-prompt_conversational_srl_annotation = '''You will receive a conversation in JSON format between two speakers: a diabetes patient and a lifestyle coach.
+_prompt_conversational_srl_annotation_template = Template('''You will receive a conversation in JSON format between two speakers: a diabetes patient and a lifestyle coach.
     The conversation contains the name of the diabetes patient, the date on which the conversation took place, and a list of turns.
     You need to extract activities and conditions of the diabetes patient from the LAST turn in the conversation only. Use the preceding turns purely as context, e.g. to recognize that the last turn continues talking about an activity or condition that was already introduced earlier.
     Only extract Activities of Daily Life in which the diabetes patient participates, or physical, social or mental conditions of the patient in relation to the patient's lifestyle.
     The activity or condition itself must be represented as a noun phrase copied verbatim from the utterance (e.g. "cycling", "insulin injection", "weight gain"), not as a verb.
 
+    Every enumerated field below is restricted to exactly the values listed (the same closed vocabularies used by the annotation tool's dropdowns) — never invent a value outside these lists. Where the list includes "other", use it only when none of the other values fit; roles or fields whose lists do NOT include "other" (result, recurrence_pattern) should simply be omitted or left null instead of forcing a bad fit.
+
     Output a JSON array. Each element of the array is one annotation entry for the last turn, structured as follows:
 
     **perspective** (required, identical on every entry for this turn): the speaker's stance on their own utterance.
-    - emotion: one of "admiration", "amusement", "anger", "annoyance", "approval", "caring", "confusion", "curiosity", "desire", "disappointment", "disapproval", "disgust", "embarrassment", "excitement", "fear", "gratitude", "grief", "joy", "love", "nervousness", "optimism", "pride", "realization", "relief", "remorse", "sadness", "surprise", "neutral"
-    - factuality: "confirm", "deny" or "expect"
-    - certainty: "certain", "uncertain" or "neutral"
+    - emotion: one of $emotion_values
+    - factuality: one of $factuality_values
+    - certainty: one of $certainty_values
 
     **activity** (required):
     - If this is the first time the activity or condition is mentioned in the conversation: {"value": <verbatim phrase>, "offset": <int>, "length": <int>, "type": <activity_type>, "activity_id": "chat{N}.{M}"}, where N is the chat number and M increases by 1 for every new activity, in the order it is first introduced.
     - If the last turn continues talking about an activity or condition that was already introduced in an earlier turn (visible in the given context): output only {"activity_id": "chat{N}.{M}"}, reusing the existing id, without value, offset, length or type. Any new role information from the last turn (e.g. a new time or location) is still attached to this entry.
-    - activity_type must be one of: "exercise", "measurement", "take_food", "take_drink", "advise", "social", "diet", "treatment", "medicine", "physical condition", "social condition", "mental condition", "symptom", "disease", "other".
+    - activity_type must be one of: $activity_type_values.
 
     **Semantic roles** (all optional, all arrays; only include a role if the text of the LAST turn supports it):
-    - agent, patient, instrument, manner, location: arrays of {"value": <verbatim phrase>, "type": <role_type>, "offset": <int>, "length": <int>}, where role_type is one of "person", "group", "organization", "object", "substance", "vehicle", "tool", "place", "city", "country", "indoor", "outdoor", "other".
-    - result: array of {"value": <verbatim phrase>, "type": "goal" or "impact", "offset": <int>, "length": <int>}.
+    - agent, patient, instrument, manner, location: arrays of {"value": <verbatim phrase>, "type": <role_type>, "offset": <int>, "length": <int>}, where role_type is one of $role_type_values.
+    - result: array of {"value": <verbatim phrase>, "type": <result_type>, "offset": <int>, "length": <int>}, where result_type is one of $result_type_values.
     - time: array of {"value": <verbatim phrase>, "offset": <int>, "length": <int>}.
-    - time_resolved: array of {"time_expression": <verbatim phrase matching a "time" entry>, "temporal_type": "point", "range", "duration", "recurring" or "vague", "absolute_date": <"YYYY-MM-DD" or null>, "date_range_start": <"YYYY-MM-DD" or null>, "date_range_end": <"YYYY-MM-DD" or null>, "recurrence_pattern": <string or null>}, grounding each time expression to a calendar date using the conversation's date as the reference point.
+    - time_resolved: array of {"time_expression": <verbatim phrase matching a "time" entry>, "temporal_type": <temporal_type>, "absolute_date": <"YYYY-MM-DD" or null>, "date_range_start": <"YYYY-MM-DD" or null>, "date_range_end": <"YYYY-MM-DD" or null>, "recurrence_pattern": <recurrence_pattern or null>}, grounding each time expression to a calendar date using the conversation's date as the reference point. temporal_type is one of $temporal_type_values. recurrence_pattern is one of $recurrence_pattern_values when the time expression clearly recurs on one of those patterns, otherwise null (e.g. "twice daily" is best captured as recurrence_pattern "daily" plus the free-text time value "twice daily").
 
     Every "offset" and "length" MUST be computed against the utterance text of the LAST turn only (0-indexed character offset, length in characters), and the substring of the utterance at [offset : offset + length] must exactly equal "value".
     Do not output any other text than the JSON array.
@@ -345,7 +270,7 @@ prompt_conversational_srl_annotation = '''You will receive a conversation in JSO
                         "agent": [{"value": "I", "type": "person", "offset": 0, "length": 1}],
                         "patient": [], "instrument": [], "manner": [], "location": [], "result": [],
                         "time": [{"value": "twice daily", "offset": 25, "length": 11}],
-                        "time_resolved": [{"time_expression": "twice daily", "temporal_type": "recurring", "absolute_date": null, "date_range_start": null, "date_range_end": null, "recurrence_pattern": "twice daily"}]
+                        "time_resolved": [{"time_expression": "twice daily", "temporal_type": "recurring", "absolute_date": null, "date_range_start": null, "date_range_end": null, "recurrence_pattern": "daily"}]
                     },
                     {
                         "perspective": {"emotion": "neutral", "factuality": "confirm", "certainty": "certain"},
@@ -408,4 +333,15 @@ prompt_conversational_srl_annotation = '''You will receive a conversation in JSO
                     }
                 ]
     <end of examples>
-    '''
+    ''')
+
+prompt_conversational_srl_annotation = _prompt_conversational_srl_annotation_template.substitute(
+        emotion_values=quoted_values(EmotionLabel),
+        factuality_values=quoted_values(Factuality),
+        certainty_values=quoted_values(Certainty),
+        activity_type_values=quoted_values(ActivityType),
+        role_type_values=quoted_values(RoleType),
+        result_type_values=quoted_values(ResultType),
+        temporal_type_values=quoted_values(TemporalType),
+        recurrence_pattern_values=quoted_values(RecurrencePattern),
+)

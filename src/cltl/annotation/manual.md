@@ -99,9 +99,22 @@ The end date can also be chosen freely or set to the conversaiotn date. In the c
 ### Speaker perspective
 
 In addition to annotating the content of the utterance, the emotional perspective of the speaker can be annotated.
-The emotions are based on the 27 [Google GO emotions](https://github.com/google-research/google-research/tree/master/goemotions). 
+The emotions are based on the 28 [Google GO emotions](https://github.com/google-research/google-research/tree/master/goemotions). 
 At the right side of the screen a drop down menu is given with the GO emotions, divided into positive, negative and ambiguous emotions.
 The default value is "neutral" which is the most common emotion. If no selection is made the default value is saved.
+
+### Where the drop-down options come from
+
+Every drop-down in the tool — activity type, role type, result type, speaker emotion,
+certainty, factuality, temporal type, and recurrence pattern — is generated from a single
+Python file, `data_type.py`, rather than typed into the tool by hand. That file is also what
+the LLM extraction prompt and the automatic annotation code use, so a human annotator and the
+automatic pipeline are always offered the exact same set of choices. The generated list of
+values that the tool actually loads lives in `dropdown_values.js`, next to `annotation_tool.html`.
+If you believe a value is missing or wrong (e.g. a new activity type is needed), that has to be
+changed in `data_type.py` and `dropdown_values.js` regenerated — see the "Dropdown values"
+section of `readme-annotation.md` for how. Any manual edits to `dropdown_values.js` itself will
+be lost the next time it is regenerated.
 
 ### Saving and reloading
 
