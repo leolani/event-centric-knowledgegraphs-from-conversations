@@ -519,12 +519,17 @@ function renderAnnsArea(chatId, tidx) {
 
 function buildAnnCard(chatId, tidx, ei, e) {
   const card = el('div','ann-card');
-  const isRef = !e.activity;
+  const isRef = isReferenceEntry(chatId, e);
 
   let head = `<span class="act-id-badge">${esc(e.activity_id)}</span>`;
   if (!isRef) {
     head += `<span class="act-name" title="offset ${e.activity_offset ?? '—'}, length ${e.activity_length ?? '—'}">${esc(e.activity)}</span>
              <span class="act-type">[${esc(e.activity_type||'')}]</span>`;
+  } else if (e.activity) {
+    const refType = getActivityType(chatId, e.activity_id);
+    head += `<span class="ref-label">↩ refers to previous activity as</span>
+             <span class="act-name" title="offset ${e.activity_offset ?? '—'}, length ${e.activity_length ?? '—'}">${esc(e.activity)}</span>
+             <span class="act-type">[${esc(refType)}]</span>`;
   } else {
     head += `<span class="ref-label">↩ reference to previous activity</span>`;
   }
@@ -565,7 +570,7 @@ function buildAnnCard(chatId, tidx, ei, e) {
     <div class="ann-btns">
       <button onclick="openAddRoleModal('${chatId}',${tidx},${ei})">+ Role</button>
       <button onclick="openTRModal('${chatId}',${tidx},${ei})">+ Time Resolved</button>
-      ${!isRef ? `<button onclick="openEditActivityModal('${chatId}',${tidx},${ei})">Edit Activity</button>` : ''}
+      ${(!isRef || e.activity) ? `<button onclick="openEditActivityModal('${chatId}',${tidx},${ei})">Edit Activity</button>` : ''}
       <button class="del-btn" onclick="delAnn('${chatId}',${tidx},${ei})">Delete</button>
     </div>`;
   return card;
@@ -799,6 +804,17 @@ function confirmNewAnn(chatId, tidx) {
     const refId = document.getElementById('m-ref')?.value;
     if (!refId) { alert('Select a reference activity'); return; }
     entry = { ...base, activity_id: refId };
+    // If a phrase was selected/entered (e.g. via "Use as new activity name" followed by
+    // switching to "Reference previous activity"), keep it: it's where in THIS turn the
+    // activity is referred to. The activity_id and type are still reused from the origin.
+    const phrase = document.getElementById('m-act').value.trim();
+    if (phrase) {
+      const offsetVal = document.getElementById('m-act-offset').value;
+      const lengthVal = document.getElementById('m-act-length').value;
+      entry.activity        = phrase;
+      entry.activity_offset = offsetVal === '' ? null : parseInt(offsetVal);
+      entry.activity_length = lengthVal === '' ? phrase.length : parseInt(lengthVal);
+    }
   }
 
   if (!anns[chatId]) anns[chatId] = {};
@@ -811,9 +827,24 @@ function confirmNewAnn(chatId, tidx) {
 // ═══ Modal: Edit Activity ═════════════════════════════════════════════════════
 function openEditActivityModal(chatId, tidx, ei) {
   const e = anns[chatId][tidx][ei];
+  const isRef = isReferenceEntry(chatId, e);
   const atypeOpts = ACTIVITY_TYPES.map(t =>
     `<option value="${t}"${t === (e.activity_type||'') ? ' selected' : ''}>${t}</option>`
   ).join('');
+  // A reference entry's type is always inherited from the activity it points to (see
+  // getActivityType) — it isn't a separate field on the reference entry itself.
+  const typeField = isRef
+    ? `<div class="fg">
+        <label>Activity type (inherited from ${esc(e.activity_id)}):</label>
+        <div style="padding:5px 0;color:#555;font-size:13px">${esc(getActivityType(chatId, e.activity_id) || '—')}</div>
+      </div>`
+    : `<div class="fg">
+        <label>Activity type:</label>
+        <select id="e-atype">
+          <option value="">— select type —</option>
+          ${atypeOpts}
+        </select>
+      </div>`;
   showModal('Edit Activity', `
     <div class="fg">
       <label>Activity:</label>
@@ -829,13 +860,7 @@ function openEditActivityModal(chatId, tidx, ei) {
         <input type="number" id="e-act-length" value="${e.activity_length ?? ''}" min="0">
       </div>
     </div>
-    <div class="fg">
-      <label>Activity type:</label>
-      <select id="e-atype">
-        <option value="">— select type —</option>
-        ${atypeOpts}
-      </select>
-    </div>
+    ${typeField}
     <div class="fg">
       <label>Activity ID:</label>
       <input type="text" id="e-aid" value="${esc(e.activity_id||'')}">
@@ -843,7 +868,7 @@ function openEditActivityModal(chatId, tidx, ei) {
   `, [
     { label: 'Save', cls: 'btn-blue', fn: () => {
         e.activity      = document.getElementById('e-act').value.trim();
-        e.activity_type = document.getElementById('e-atype').value.trim();
+        if (!isRef) e.activity_type = document.getElementById('e-atype').value.trim();
         e.activity_id   = document.getElementById('e-aid').value.trim();
         const ov = document.getElementById('e-act-offset').value;
         const lv = document.getElementById('e-act-length').value;
@@ -1037,12 +1062,44 @@ function delTR(chatId, tidx, ei, tri) {
 // ═══ Activity ID Helpers ══════════════════════════════════════════════════════
 function getActivitiesUpTo(chatId, tidx) {
   const result = [];
+  const seen = new Set();
   const ca = anns[chatId] || {};
   Object.keys(ca).sort((a,b) => a-b).forEach(t => {
     if (parseInt(t) > tidx) return;
-    ca[t].forEach(e => { if (e.activity) result.push({ id: e.activity_id, activity: e.activity }); });
+    // Dedupe by activity_id: an activity may now be mentioned more than once (the
+    // origin entry, plus any reference entries that also capture their own referring
+    // phrase) — only the origin's phrase should appear as a candidate to reference.
+    ca[t].forEach(e => {
+      if (e.activity && !seen.has(e.activity_id)) {
+        seen.add(e.activity_id);
+        result.push({ id: e.activity_id, activity: e.activity });
+      }
+    });
   });
   return result;
+}
+
+// The entry that first introduced an activity_id (the one that "owns" its activity
+// value/type). Any later entry using the same activity_id is a reference to it, even
+// if that later entry also captures its own referring phrase/offset/length.
+function findOriginEntry(chatId, activityId) {
+  const ca = anns[chatId] || {};
+  const turnIdxs = Object.keys(ca).map(Number).sort((a,b) => a-b);
+  for (const t of turnIdxs) {
+    for (const e of ca[t]) {
+      if (e.activity_id === activityId) return e;
+    }
+  }
+  return null;
+}
+
+function isReferenceEntry(chatId, e) {
+  return findOriginEntry(chatId, e.activity_id) !== e;
+}
+
+function getActivityType(chatId, activityId) {
+  const origin = findOriginEntry(chatId, activityId);
+  return (origin && origin.activity_type) || '';
 }
 
 function nextActivityId(chatId) {
@@ -1068,7 +1125,7 @@ function exportJSON() {
       convOut.push({
         chat: conv.chat, date: conv.date, human: conv.human,
         Input: { turn: turn.turn, speaker: turn.speaker, utterance: turn.utterance },
-        Output: entries.map(e => fmtEntry(e, emotion, certainty, factuality))
+        Output: entries.map(e => fmtEntry(e, conv.chat, emotion, certainty, factuality))
       });
     });
     if (convOut.length) output.push(convOut);
@@ -1083,7 +1140,7 @@ function exportJSON() {
   status('Exported!');
 }
 
-function fmtEntry(e, speakerEmotion, speakerCertainty, speakerFactuality) {
+function fmtEntry(e, chatId, speakerEmotion, speakerCertainty, speakerFactuality) {
   const out = {
     annotator: e.annotator,
     perspective: {
@@ -1092,12 +1149,13 @@ function fmtEntry(e, speakerEmotion, speakerCertainty, speakerFactuality) {
       certainty: speakerCertainty || DEFAULT_CERTAINTY
     }
   };
+  const isRef = isReferenceEntry(chatId, e);
   out.activity = e.activity
     ? {
         value: e.activity,
         offset: e.activity_offset ?? null,
         length: e.activity_length ?? e.activity.length,
-        type: e.activity_type || '',
+        type: (isRef ? getActivityType(chatId, e.activity_id) : e.activity_type) || '',
         activity_id: e.activity_id
       }
     : { activity_id: e.activity_id };

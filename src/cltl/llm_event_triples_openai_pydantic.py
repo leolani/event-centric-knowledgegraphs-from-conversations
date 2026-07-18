@@ -117,7 +117,7 @@ class LLM_EventExtraction:
         self._client = OpenAI(api_key=key)
         self._history = []
         self._instruct = [{"role": "system", "content": prompts.prompt_conversational_srl_annotation}]
-        self._known_activity_ids = set()
+        self._known_activities = {}
 
     def process_input(self, turn):
         # 2. Define the OpenAI function call parameters
@@ -167,9 +167,16 @@ class LLM_EventExtraction:
             return response_message.content
 
     def check_compliance(self, chat_number, utterance, extractions):
-        """Validate a turn's extractions against the annotations.json Output-entry schema:
-        activity_id format/continuity, presence of offset/length/type for new vs. reference
-        activities, and that every value's offset/length matches the turn's utterance text.
+        """Validate a turn's extractions against the annotations.json Output-entry schema.
+
+        An activity entry is either:
+        - a first-time (or anchored-reference) mention: value/offset/length/type all present.
+          A first-time mention mints a new activity_id; an anchored reference reuses an
+          activity_id already seen in this conversation and MUST reuse that activity's type
+          exactly (mirrors the annotation tool: reusing an id also reuses its type).
+        - a bare (anchorless) reference: activity_id only, value/offset/length/type all None.
+
+        Also checks that every value's offset/length matches the turn's utterance text.
         Returns a list of human-readable violation strings (empty if fully compliant)."""
         issues = []
         for i, extraction in enumerate(extractions):
@@ -185,15 +192,19 @@ class LLM_EventExtraction:
             spans = []
             if activity.value is not None:
                 if activity.offset is None or activity.length is None or activity.type is None:
-                    issues.append(f"{prefix}: new activity '{activity.value}' is missing offset, length or type")
+                    issues.append(f"{prefix}: activity '{activity.value}' is missing offset, length or type")
                 else:
                     spans.append(("activity", activity.value, activity.offset, activity.length))
-                self._known_activity_ids.add(activity.activity_id)
+                    known_type = self._known_activities.get(activity.activity_id)
+                    if known_type is None:
+                        self._known_activities[activity.activity_id] = activity.type
+                    elif activity.type != known_type:
+                        issues.append(f"{prefix}: activity_id '{activity.activity_id}' reused with type '{activity.type.value}' but was first introduced as '{known_type.value}'")
             else:
-                if activity.activity_id not in self._known_activity_ids:
+                if activity.activity_id not in self._known_activities:
                     issues.append(f"{prefix}: activity_id '{activity.activity_id}' references an activity not introduced earlier in this conversation")
                 if activity.offset is not None or activity.length is not None or activity.type is not None:
-                    issues.append(f"{prefix}: reference to '{activity.activity_id}' should not carry offset, length or type")
+                    issues.append(f"{prefix}: bare reference to '{activity.activity_id}' should not carry offset, length or type without a value")
 
             for role_name in ("agent", "patient", "instrument", "manner", "location", "result", "time"):
                 for role in getattr(extraction, role_name):
@@ -215,7 +226,7 @@ class LLM_EventExtraction:
     def annotate_all_turns_in_conversation(self, input={}):
         annotations = []
         self._history = []
-        self._known_activity_ids = set()
+        self._known_activities = {}
         print("Annotating a conversation with {} utterances".format(len(input['turns'])))
         for index, turn in enumerate(input['turns']):
             print('turn', turn)

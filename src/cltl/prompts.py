@@ -177,7 +177,8 @@ _prompt_conversational_srl_annotation_template = Template('''You will receive a 
 
     **activity** (required):
     - If this is the first time the activity or condition is mentioned in the conversation: {"value": <verbatim phrase>, "offset": <int>, "length": <int>, "type": <activity_type>, "activity_id": "chat{N}.{M}"}, where N is the chat number and M increases by 1 for every new activity, in the order it is first introduced.
-    - If the last turn continues talking about an activity or condition that was already introduced in an earlier turn (visible in the given context): output only {"activity_id": "chat{N}.{M}"}, reusing the existing id, without value, offset, length or type. Any new role information from the last turn (e.g. a new time or location) is still attached to this entry.
+    - If the last turn continues talking about an activity or condition that was already introduced in an earlier turn (visible in the given context) AND the last turn contains a word or phrase that refers to it (e.g. a pronoun like "it"/"this", or a repeated mention): output the SAME shape as above — {"value": <verbatim phrase>, "offset": <int>, "length": <int>, "type": <activity_type>, "activity_id": "chat{N}.{M}"} — but reuse the EXISTING activity_id and the EXISTING type from when it was first introduced; do not mint a new id or invent a different type.
+    - If the last turn continues talking about that activity or condition but contains no word or phrase that specifically refers to it (only new role information, e.g. a new time or location, is being added): output only {"activity_id": "chat{N}.{M}"}, reusing the existing id, without value, offset, length or type.
     - activity_type must be one of: $activity_type_values.
 
     **Semantic roles** (all optional, all arrays; only include a role if the text of the LAST turn supports it):
@@ -214,7 +215,7 @@ _prompt_conversational_srl_annotation_template = Template('''You will receive a 
                     }
                 ]
 
-    Example 2 (continuation of the same conversation, turn 2 refers back to the activity introduced in turn 1):
+    Example 2 (continuation of the same conversation, turn 2 refers back to the activity introduced in turn 1 using the pronoun "it" — reuse its activity_id "chat6.1" and its type "physical condition"):
         Input: {
             "chat": 6,
             "human": "Jan",
@@ -235,7 +236,7 @@ _prompt_conversational_srl_annotation_template = Template('''You will receive a 
         Output: [
                     {
                         "perspective": {"emotion": "disappointment", "factuality": "confirm", "certainty": "certain"},
-                        "activity": {"activity_id": "chat6.1"},
+                        "activity": {"value": "it", "offset": 8, "length": 2, "type": "physical condition", "activity_id": "chat6.1"},
                         "agent": [{"value": "I", "type": "person", "offset": 0, "length": 1}],
                         "patient": [], "instrument": [], "manner": [],
                         "location": [{"value": "toes", "type": "other", "offset": 74, "length": 4}],
@@ -245,7 +246,47 @@ _prompt_conversational_srl_annotation_template = Template('''You will receive a 
                     }
                 ]
 
-    Example 3:
+    Example 3 (further continuation of the same conversation; turn 4 is an elliptical answer to turn 3's question and contains no word or phrase referring back to the activity itself, so the reference is bare — activity_id only, no value/offset/length/type):
+        Input: {
+            "chat": 6,
+            "human": "Jan",
+            "date": "2010,Dec,13",
+            "turns": [
+                {
+                    "turn": 1,
+                    "speaker": "Jan",
+                    "utterance": "I've been noticing tingling in my feet lately. Is this something common with Type 2 Diabetes?"
+                },
+                {
+                    "turn": 2,
+                    "speaker": "Jan",
+                    "utterance": "I think it has actually gotten worse over the past week, especially in my toes."
+                },
+                {
+                    "turn": 3,
+                    "speaker": "agent",
+                    "utterance": "Does it happen mostly at night?"
+                },
+                {
+                    "turn": 4,
+                    "speaker": "Jan",
+                    "utterance": "Mostly in the evenings, especially after standing a lot."
+                }
+                ]
+                }
+        Output: [
+                    {
+                        "perspective": {"emotion": "neutral", "factuality": "confirm", "certainty": "certain"},
+                        "activity": {"activity_id": "chat6.1"},
+                        "agent": [], "patient": [], "instrument": [],
+                        "manner": [{"value": "after standing a lot", "type": "other", "offset": 35, "length": 20}],
+                        "location": [], "result": [],
+                        "time": [{"value": "the evenings", "offset": 10, "length": 12}],
+                        "time_resolved": []
+                    }
+                ]
+
+    Example 4:
         Input: {
             "chat": 7,
             "human": "Fatima",
@@ -290,7 +331,7 @@ _prompt_conversational_srl_annotation_template = Template('''You will receive a 
                     }
                 ]
 
-    Example 4 (only the LAST turn is annotated; turn 2's food items are ignored because they belong to an earlier turn):
+    Example 5 (only the LAST turn is annotated; turn 2's food items are ignored because they belong to an earlier turn):
         Input: {
             "chat": 8,
             "human": "Fatima",

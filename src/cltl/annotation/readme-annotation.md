@@ -144,7 +144,9 @@ python src/cltl/annotation/generate_dropdown_values.py
 **Export JSON** saves a file named `annotations_<annotator>.json`. The structure is an array of conversations, each being an array of annotated turns.
 An example of the structure can be found in ```annotations.json```.
 
-Turns with no annotations are omitted from the export. A **reference entry** (second turn above) has `activity_id` but no `activity` or `activity_type` fields — it links additional role information to an activity defined in an earlier turn.
+Turns with no annotations are omitted from the export. A **reference entry** (second turn above) links additional role information to an activity defined in an earlier turn, reusing that activity's `activity_id` and (for display) its `activity_type`:
+- If the reference was made by selecting a phrase in the current turn (e.g. a pronoun like "it"), the entry's `activity` object carries that phrase's own `value`/`offset`/`length` — offsets relative to the *current* turn's utterance — plus the referenced activity's `type` and `activity_id`, exactly like a new-activity entry.
+- If no phrase was selected (the annotator picked "Reference previous activity" without selecting text), the entry's `activity` object has only `activity_id`, with no `value`, `offset`, `length`, or `type`.
 
 Every Output entry carries a `perspective` object with the turn's speaker-perspective annotations (see [Step 4](#step-4--annotate-the-speakers-perspective)):
 
