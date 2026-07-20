@@ -1,0 +1,455 @@
+{
+  "srl_strict": {
+    "activity": {
+      "tp": 1,
+      "fp": 9,
+      "fn": 7,
+      "precision": 0.1,
+      "recall": 0.125,
+      "f1": 0.11111111111111112
+    },
+    "agent": {
+      "tp": 0,
+      "fp": 1,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "patient": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "agent_patient": {
+      "tp": 0,
+      "fp": 8,
+      "fn": 2,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "experiencer": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "instrument": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "location": {
+      "tp": 0,
+      "fp": 1,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "result": {
+      "tp": 0,
+      "fp": 2,
+      "fn": 3,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "time": {
+      "tp": 1,
+      "fp": 7,
+      "fn": 3,
+      "precision": 0.125,
+      "recall": 0.25,
+      "f1": 0.16666666666666666
+    },
+    "overall": {
+      "tp": 2,
+      "fp": 28,
+      "fn": 17,
+      "precision": 0.06666666666666667,
+      "recall": 0.10526315789473684,
+      "f1": 0.0816326530612245
+    }
+  },
+  "srl_lenient": {
+    "activity": {
+      "tp": 4,
+      "fp": 6,
+      "fn": 4,
+      "precision": 0.4,
+      "recall": 0.5,
+      "f1": 0.4444444444444445
+    },
+    "agent": {
+      "tp": 0,
+      "fp": 1,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "patient": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "agent_patient": {
+      "tp": 0,
+      "fp": 8,
+      "fn": 2,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "experiencer": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "instrument": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "location": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "result": {
+      "tp": 0,
+      "fp": 2,
+      "fn": 3,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "time": {
+      "tp": 3,
+      "fp": 5,
+      "fn": 1,
+      "precision": 0.375,
+      "recall": 0.75,
+      "f1": 0.5
+    },
+    "participant": {
+      "tp": 0,
+      "fp": 9,
+      "fn": 2,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "overall": {
+      "tp": 8,
+      "fp": 22,
+      "fn": 11,
+      "precision": 0.26666666666666666,
+      "recall": 0.42105263157894735,
+      "f1": 0.326530612244898
+    }
+  },
+  "blanc_strict": {
+    "0": {
+      "blanc": null,
+      "precision_c": null,
+      "recall_c": null,
+      "f1_c": null,
+      "precision_n": null,
+      "recall_n": null,
+      "f1_n": null,
+      "rc": 0,
+      "ck": 0,
+      "cg": 0,
+      "rn": 0,
+      "nk": 0,
+      "ng": 0,
+      "mentions": 1
+    },
+    "overall": {
+      "blanc": null,
+      "precision_c": null,
+      "recall_c": null,
+      "f1_c": null,
+      "precision_n": null,
+      "recall_n": null,
+      "f1_n": null,
+      "rc": 0,
+      "ck": 0,
+      "cg": 0,
+      "rn": 0,
+      "nk": 0,
+      "ng": 0,
+      "mentions": 1
+    }
+  },
+  "blanc_lenient": {
+    "0": {
+      "blanc": 0.625,
+      "precision_c": 0.3333333333333333,
+      "recall_c": 1.0,
+      "f1_c": 0.5,
+      "precision_n": 1.0,
+      "recall_n": 0.6,
+      "f1_n": 0.7499999999999999,
+      "rc": 1,
+      "ck": 3,
+      "cg": 1,
+      "rn": 3,
+      "nk": 3,
+      "ng": 5,
+      "mentions": 4
+    },
+    "overall": {
+      "blanc": 0.625,
+      "precision_c": 0.3333333333333333,
+      "recall_c": 1.0,
+      "f1_c": 0.5,
+      "precision_n": 1.0,
+      "recall_n": 0.6,
+      "f1_n": 0.7499999999999999,
+      "rc": 1,
+      "ck": 3,
+      "cg": 1,
+      "rn": 3,
+      "nk": 3,
+      "ng": 5,
+      "mentions": 4
+    }
+  },
+  "types": {
+    "activity": {
+      "correct": 4,
+      "total": 4,
+      "accuracy": 1.0
+    },
+    "agent": {
+      "correct": 0,
+      "total": 0,
+      "accuracy": null
+    },
+    "patient": {
+      "correct": 0,
+      "total": 0,
+      "accuracy": null
+    },
+    "agent_patient": {
+      "correct": 0,
+      "total": 0,
+      "accuracy": null
+    },
+    "experiencer": {
+      "correct": 0,
+      "total": 0,
+      "accuracy": null
+    },
+    "instrument": {
+      "correct": 0,
+      "total": 0,
+      "accuracy": null
+    },
+    "location": {
+      "correct": 1,
+      "total": 1,
+      "accuracy": 1.0
+    },
+    "result": {
+      "correct": 0,
+      "total": 0,
+      "accuracy": null
+    },
+    "overall": {
+      "correct": 5,
+      "total": 5,
+      "accuracy": 1.0
+    }
+  },
+  "ngram": {
+    "0": {
+      "activity": {
+        "tp": 0,
+        "fp": 3,
+        "fn": 5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "agent": {
+        "tp": 0,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "patient": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "agent_patient": {
+        "tp": 1,
+        "fp": 7,
+        "fn": 1,
+        "precision": 0.125,
+        "recall": 0.5,
+        "f1": 0.2
+      },
+      "experiencer": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "instrument": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 1,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "location": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "result": {
+        "tp": 0,
+        "fp": 2,
+        "fn": 3,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "time": {
+        "tp": 3,
+        "fp": 5,
+        "fn": 1,
+        "precision": 0.375,
+        "recall": 0.75,
+        "f1": 0.5
+      },
+      "overall": {
+        "tp": 5,
+        "fp": 18,
+        "fn": 11,
+        "precision": 0.21739130434782608,
+        "recall": 0.3125,
+        "f1": 0.2564102564102564
+      }
+    },
+    "average": {
+      "activity": {
+        "tp": 0.0,
+        "fp": 3.0,
+        "fn": 5.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "agent": {
+        "tp": 0.0,
+        "fp": 1.0,
+        "fn": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "patient": {
+        "tp": 0.0,
+        "fp": 0.0,
+        "fn": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "agent_patient": {
+        "tp": 1.0,
+        "fp": 7.0,
+        "fn": 1.0,
+        "precision": 0.125,
+        "recall": 0.5,
+        "f1": 0.2
+      },
+      "experiencer": {
+        "tp": 0.0,
+        "fp": 0.0,
+        "fn": 0.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "instrument": {
+        "tp": 0.0,
+        "fp": 0.0,
+        "fn": 1.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "location": {
+        "tp": 1.0,
+        "fp": 0.0,
+        "fn": 0.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "result": {
+        "tp": 0.0,
+        "fp": 2.0,
+        "fn": 3.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "time": {
+        "tp": 3.0,
+        "fp": 5.0,
+        "fn": 1.0,
+        "precision": 0.375,
+        "recall": 0.75,
+        "f1": 0.5
+      },
+      "overall": {
+        "tp": 5.0,
+        "fp": 18.0,
+        "fn": 11.0,
+        "precision": 0.21739130434782608,
+        "recall": 0.3125,
+        "f1": 0.2564102564102564
+      }
+    }
+  }
+}
