@@ -37,12 +37,13 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
     - patient: the participant affected by the activity, undergoing a change of state caused by an agent.
     - agent_patient: use INSTEAD of agent and patient when a single participant both controls the activity and undergoes the change it causes (a self-affecting action), e.g. "John cycles" -> agent_patient: John, NOT agent: John plus patient: John.
     - experiencer: the participant that experiences a state or condition, with no change of state and no separate agent causing it, e.g. "John has a headache" -> experiencer: John. Use experiencer instead of patient for a participant merely experiencing a condition.
-    - agent, patient, agent_patient, experiencer, instrument, manner, location: arrays of {"value": <verbatim phrase>, "type": <role_type>, "offset": <int>, "length": <int>}, where role_type is one of $role_type_values.
+    - agent, patient, agent_patient, experiencer, instrument, location: arrays of {"value": <verbatim phrase>, "type": <role_type>, "offset": <int>, "length": <int>}, where role_type is one of $role_type_values.
     - result: array of {"value": <verbatim phrase>, "type": <result_type>, "offset": <int>, "length": <int>}, where result_type is one of $result_type_values.
     - time: array of {"value": <verbatim phrase>, "offset": <int>, "length": <int>}.
     - time_resolved: array of {"time_expression": <verbatim phrase matching a "time" entry>, "temporal_type": <temporal_type>, "absolute_date": <"YYYY-MM-DD" or null>, "date_range_start": <"YYYY-MM-DD" or null>, "date_range_end": <"YYYY-MM-DD" or null>, "recurrence_pattern": <recurrence_pattern or null>}, grounding each time expression to a calendar date using the conversation's date as the reference point. temporal_type is one of $temporal_type_values. recurrence_pattern is one of $recurrence_pattern_values when the time expression clearly recurs on one of those patterns, otherwise null (e.g. "twice daily" is best captured as recurrence_pattern "daily" plus the free-text time value "twice daily").
 
     Every "offset" and "length" MUST be computed against the "utterance" text of the MOST RECENT user message only (0-indexed character offset, length in characters) — never against an earlier turn's utterance, and never against the surrounding JSON of the message itself. Before including any span, verify it yourself: find "value" as an exact, case-sensitive substring of that utterance, set offset to the position of its first character (the utterance's own first character is position 0) and length to the number of characters in "value", then re-read utterance[offset : offset + length] and confirm it reproduces "value" character for character. Do not estimate or guess an offset — locate the exact substring first.
+    
     Do not output any other text than the JSON array.
 
     <start of examples>
@@ -54,7 +55,7 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
                         "activity": {"value": "tingling in my feet", "offset": 19, "length": 19, "type": "physical condition", "activity_id": "chat6.1"},
                         "agent": [], "patient": [], "agent_patient": [],
                         "experiencer": [{"value": "I", "type": "person", "offset": 0, "length": 1}],
-                        "instrument": [], "manner": [], 
+                        "instrument": [], 
                         "location": [{"value": "in my feet", "type": "other", "offset": 28, "length": 10}],
                         "result": [],
                         "time": [{"value": "lately", "offset": 39, "length": 6}],
@@ -71,7 +72,7 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
                         "activity": {"value": "it", "offset": 8, "length": 2, "type": "physical condition", "activity_id": "chat6.1"},
                         "agent": [], "patient": [], "agent_patient": [],
                         "experiencer": [{"value": "I", "type": "person", "offset": 0, "length": 1}],
-                        "instrument": [], "manner": [],
+                        "instrument": [], 
                         "location": [{"value": "toes", "type": "other", "offset": 74, "length": 4}],
                         "result": [],
                         "time": [{"value": "the past week", "offset": 42, "length": 13}],
@@ -89,7 +90,6 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
                         "perspective": {"emotion": "neutral", "factuality": "confirm", "certainty": "certain"},
                         "activity": {"activity_id": "chat6.1"},
                         "agent": [], "patient": [], "agent_patient": [], "experiencer": [], "instrument": [],
-                        "manner": [{"value": "after standing a lot", "type": "other", "offset": 35, "length": 20}],
                         "location": [], "result": [],
                         "time": [{"value": "the evenings", "offset": 10, "length": 12}],
                         "time_resolved": []
@@ -104,7 +104,7 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
                         "activity": {"value": "cycling", "offset": 5, "length": 7, "type": "exercise", "activity_id": "chat9.1"},
                         "agent": [], "patient": [],
                         "agent_patient": [{"value": "I", "type": "person", "offset": 0, "length": 1}],
-                        "experiencer": [], "instrument": [], "manner": [], "location": [], "result": [],
+                        "experiencer": [], "instrument": [], "location": [], "result": [],
                         "time": [{"value": "every morning", "offset": 13, "length": 13}],
                         "time_resolved": [{"time_expression": "every morning", "temporal_type": "recurring", "absolute_date": null, "date_range_start": null, "date_range_end": null, "recurrence_pattern": "daily"}]
                     }
@@ -119,7 +119,7 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
                         "activity": {"value": "take", "offset": 2, "length": 4, "type": "take_medicine", "activity_id": "chat7.1"},
                         "instrument": [{"value": "metformin tablets", "offset": 7, "length": 17, "type": "substance", "activity_id": "chat7.1"}],
                         "agent_patient": [{"value": "I", "type": "person", "offset": 0, "length": 1}],
-                        "patient": [], "agent": [], "experiencer": [], "manner": [], "location": [], "result": [],
+                        "patient": [], "agent": [], "experiencer": [], "location": [], "result": [],
                         "time": [{"value": "twice daily", "offset": 25, "length": 11}],
                         "time_resolved": [{"time_expression": "twice daily", "temporal_type": "recurring", "absolute_date": null, "date_range_start": null, "date_range_end": null, "recurrence_pattern": "daily"}]
                     },
@@ -128,7 +128,7 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
                         "activity": {"value": "insulin injection", "offset": 58, "length": 17, "type": "take_medicine", "activity_id": "chat7.2"},
                         "agent_patient": [{"value": "I", "type": "person", "offset": 0, "length": 1}],
                         "instrument": [{"value": "insulin", "offset": 58, "length": 7, "type": "substance"}],
-                        "agent": [], "patient": [], "experiencer": [], "manner": [], "location": [], "result": [],
+                        "agent": [], "patient": [], "experiencer": [], "location": [], "result": [],
                         "time": [{"value": "evening", "offset": 50, "length": 7}],
                         "time_resolved": []
                     },
@@ -137,7 +137,7 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
                         "activity": {"value": "take", "offset": 88, "length": 4, "type": "take_medicine", "activity_id": "chat7.3"},
                         "instrument": [{"value": "aspirin", "offset": 101, "length": 7, "type": "substance"}],
                         "agent_patient": [{"value": "I", "type": "person", "offset": 86, "length": 1}],
-                        "patient": [], "agent": [], "experiencer": [],"manner": [], "location": [],
+                        "patient": [], "agent": [], "experiencer": [],"location": [],
                         "result": [{"value": "heart health", "type": "goal", "offset": 113, "length": 12}],
                         "time": [{"value": "daily", "offset": 95, "length": 5}],
                         "time_resolved": []
@@ -155,7 +155,7 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
                         "activity": {"value": "weight gain", "offset": 128, "length": 11, "type": "physical condition", "activity_id": "chat8.1"},
                         "agent": [], "patient": [], "agent_patient": [],
                         "experiencer": [{"value": "I", "type": "person", "offset": 100, "length": 1}],
-                        "instrument": [], "manner": [], "location": [], "result": [], "time": [],
+                        "instrument": [], "location": [], "result": [], "time": [],
                         "time_resolved": []
                     },
                     {
@@ -163,7 +163,7 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
                         "activity": {"value": "dizziness", "offset": 155, "length": 9, "type": "physical condition", "activity_id": "chat8.2"},
                         "agent": [], "patient": [], "agent_patient": [],
                         "experiencer": [{"value": "I", "type": "person", "offset": 100, "length": 1}],
-                        "instrument": [], "manner": [], "location": [], "result": [],
+                        "instrument": [], "location": [], "result": [],
                         "time": [{"value": "occasional", "offset": 144, "length": 10}],
                         "time_resolved": []
                     }

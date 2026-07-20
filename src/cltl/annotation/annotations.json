@@ -36,7 +36,6 @@
           ],
           "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [
@@ -88,7 +87,6 @@
           "agent_patient": [],
           "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [
@@ -140,7 +138,6 @@
           "agent_patient": [],
           "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [
             {
@@ -190,7 +187,6 @@
           "agent_patient": [],
           "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [
             {
               "value": "Indoor",
@@ -222,7 +218,6 @@
           "agent_patient": [],
           "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [],
@@ -247,7 +242,6 @@
           "agent_patient": [],
           "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [],
@@ -275,7 +269,6 @@
               "length": 32
             }
           ],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [],
@@ -319,7 +312,6 @@
           ],
           "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [
@@ -371,7 +363,6 @@
           "agent_patient": [],
           "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [
             {

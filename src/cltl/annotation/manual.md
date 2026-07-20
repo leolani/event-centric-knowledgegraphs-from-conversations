@@ -16,7 +16,6 @@ The semantic roles are:
 - experiencer: the diabetes patient is experiencing a condition or state.
 - instrument: if something else is used during the activity, this can be a device or a substance or resource.
 - result: the result or goal that is the effect of an activity.
-- manner: the way in which this is done besides using an instrument.
 - location: where this is done.
 - time: when this is done.
 

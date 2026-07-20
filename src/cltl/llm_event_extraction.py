@@ -1,3 +1,4 @@
+import argparse
 from datetime import date, timedelta
 import random
 import json
@@ -67,10 +68,30 @@ def read_conversations_diabetes(path_to_data):
     return conversations
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Extract SRL annotations from data/conversations.json using an LLM.")
+    parser.add_argument("--input", "-i", type=str, default="../../data/conversations.json",
+                         help="Path to the input conversations JSON file (default: ../../data/conversations.json).")
+    parser.add_argument("--limit", "-n", type=int, default=None,
+                         help="Maximum number of chats to process from conversations.json (default: process all).")
+    return parser.parse_args()
+
+### Hpwto run:
+# All conversations
+## python llm_event_extraction.py --input ../../data/conversations.json > ../../compliance_20_7_2026.log
+# Limit to some.
+## python llm_event_extraction.py --limit 3 --input ../../data/conversations.json > ../../compliance_20_7_2026.log
 def main():
-    filepath = "../../data/conversations.json"
+    args = parse_args()
+
+    filepath = args.input
     f = open(filepath, "r")
     conversations = json.load(f)
+    f.close()
+
+    if args.limit is not None:
+        conversations = conversations[:args.limit]
+    print(f"Processing {len(conversations)} chat(s)")
 
     all_annotations = []
     llm_extractor = LLM_EventExtraction()
@@ -80,7 +101,6 @@ def main():
         ### Both human turns and agent turns are annotated
         annotations = llm_extractor.annotate_all_turns_in_conversation(conversation)
         all_annotations.append(annotations)
-        break
     # subclass JSONEncoder
     class EventEncoder(JSONEncoder):
         def default(self, o):

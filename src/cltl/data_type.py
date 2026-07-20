@@ -43,7 +43,6 @@ class SemanticRole(str, Enum):
         - experiencer: the participant that experiences a state or condition, with no change
           of state and no agent causing it (e.g. "John has a headache" -> experiencer: John).
         - instrument: a tool or means used to perform the activity.
-        - manner: how the activity is performed, other than via an instrument.
         - location: where the activity takes place.
         - result: the outcome or goal that is the effect of the activity.
         - time: when the activity occurs.
@@ -53,18 +52,17 @@ class SemanticRole(str, Enum):
         agent_patient = "agent_patient"
         experiencer = "experiencer"
         instrument = "instrument"
-        manner = "manner"
         location = "location"
         result = "result"
         time = "time"
 
 
-# Roles that behave like agent/patient/instrument/manner/location — i.e. everything except
+# Roles that behave like agent/patient/instrument/location — i.e. everything except
 # "result" (its own closed vocabulary, see ROLE_TYPES below) and "time" (free-text value with
 # no type at all).
 PARTICIPANT_ROLES = [
         SemanticRole.agent, SemanticRole.patient, SemanticRole.agent_patient, SemanticRole.experiencer,
-        SemanticRole.instrument, SemanticRole.manner, SemanticRole.location,
+        SemanticRole.instrument, SemanticRole.location,
 ]
 
 

@@ -22,7 +22,6 @@ class EventTripleExtraction(BaseModel):
     agent: list[str]
     patient: list[str]
     instrument: list[str]
-    manner: list[str]
     location: list[str]
     time: str
             

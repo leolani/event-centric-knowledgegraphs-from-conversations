@@ -10,7 +10,6 @@ def get_statistics(annotated_conversations, threshold=3):
     agent_patient_dict = {}
     experiencer_dict = {}
     instrument_dict = {}
-    manner_dict = {}
     location_dict = {}
     time_dict = {}
 
@@ -64,14 +63,6 @@ def get_statistics(annotated_conversations, threshold=3):
                                 instrument_dict[instrument] += 1
                             else:
                                 instrument_dict[instrument] = 1
-                    if 'manner' in event:
-                        if type(event['manner']) == str:
-                            event['manner'] = [event['manner']]
-                        for manner in event['manner']:
-                            if manner in manner_dict:
-                                manner_dict[manner] += 1
-                            else:
-                                manner_dict[manner] = 1
                     if 'location' in event:
                         if type(event['location']) == str:
                             event['location'] = [event['location']]
@@ -107,16 +98,13 @@ def get_statistics(annotated_conversations, threshold=3):
     instrument_dict = {k: v for k, v in instrument_dict.items() if v >= threshold}
     trimmed_instrument_dict = dict(sorted(instrument_dict.items(), key=lambda x: x[1], reverse=True))
 
-    manner_dict = {k: v for k, v in manner_dict.items() if v >= threshold}
-    trimmed_manner_dict = dict(sorted(manner_dict.items(), key=lambda x: x[1], reverse=True))
-
     location_dict = {k: v for k, v in location_dict.items() if v >= threshold}
     trimmed_location_dict = dict(sorted(location_dict.items(), key=lambda x: x[1], reverse=True))
 
     time_dict = {k: v for k, v in time_dict.items() if v >= threshold}
     trimmed_time_dict = dict(sorted(time_dict.items(), key=lambda x: x[1], reverse=True))
 
-    return trimmed_activity_dict, trimmed_agent_dict, trimmed_patient_dict, trimmed_agent_patient_dict, trimmed_experiencer_dict, trimmed_instrument_dict, trimmed_manner_dict, trimmed_location_dict, trimmed_time_dict
+    return trimmed_activity_dict, trimmed_agent_dict, trimmed_patient_dict, trimmed_agent_patient_dict, trimmed_experiencer_dict, trimmed_instrument_dict, trimmed_location_dict, trimmed_time_dict
 
 def get_analysis_for_srl_dict(srl_dict, name, output_dir, head_first = True):
     phrases = list(srl_dict.keys())
@@ -171,7 +159,7 @@ def main():
     f = open("/Users/piek/Desktop/Diabetes/load_datasets/diabetes/event_srl.json", "r")
     annotated_conversations = json.load(f)
     print(len(annotated_conversations))
-    activity_dict, agent_dict, patient_dict, agent_patient_dict, experiencer_dict, instrument_dict, manner_dict, location_dict, time_dict = get_statistics(annotated_conversations, threshold=threshold)
+    activity_dict, agent_dict, patient_dict, agent_patient_dict, experiencer_dict, instrument_dict, location_dict, time_dict = get_statistics(annotated_conversations, threshold=threshold)
     if len(activity_dict)>0:
         get_analysis_for_srl_dict(activity_dict, "activities_"+str(threshold), output_dir, head_first = True)
     if len(agent_dict)>0:
@@ -184,8 +172,6 @@ def main():
         get_analysis_for_srl_dict(experiencer_dict, "experiencers_"+str(threshold), output_dir, head_first = True)
     if len(instrument_dict)>0:
         get_analysis_for_srl_dict(instrument_dict, "instruments_"+str(threshold), output_dir, head_first = True)
-    if len(manner_dict)>0:
-        get_analysis_for_srl_dict(manner_dict, "manners_"+str(threshold), output_dir, head_first = True)
     if len(location_dict)>0:
         get_analysis_for_srl_dict(location_dict, "locations_"+str(threshold), output_dir, head_first = True)
     if len(time_dict)>0:
