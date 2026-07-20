@@ -58,12 +58,10 @@ There are two ways to add role values to an annotation entry.
 **By selecting text in the utterance (fastest)**
 
 1. Click and drag to select a word or phrase in the utterance text.
-2. A small popup appears with:
-   - **✦ Use as new activity name** — pre-fills the activity field and opens the new annotation modal.
-   - Annotation selector (which annotation entry to attach the role to).
-   - Role radio buttons.
-   - Type dropdown (options depend on the role chosen).
-3. Click **Assign Role**.
+2. A small popup appears with two choices:
+   - **Activity reference** — pre-fills the activity field and opens the new annotation modal (see Step 1 above: create a new activity, or reference an earlier one).
+   - **Assign role** — for when the selection is a role value (e.g. a time or location expression), not the activity's own name. This works even if the current turn has no annotation entry yet: it shows an **Activity** dropdown listing every activity introduced so far in the conversation — from this turn or any earlier one — and picking one, then a role and type, attaches the role to that activity. If this turn doesn't have an entry for the chosen activity yet, one is created automatically as a reference entry (see [Output format](#output-format)); if it already does, the role is added to the existing entry. This button is disabled until at least one activity exists anywhere in the conversation.
+3. If you picked **Assign role**: choose the role radio button and type, then click **Assign Role** (or **Back** to reconsider).
 
 **Via the + Role button**
 

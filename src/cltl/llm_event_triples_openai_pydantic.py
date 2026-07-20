@@ -23,6 +23,20 @@ key = _load_key()
 ACTIVITY_ID_PATTERN = re.compile(r"^chat(\d+)\.(\d+)$")
 
 
+def locate_phrase(utterance, phrase):
+    """Find `phrase` as a substring of `utterance`: exact match first, then
+    case-insensitive. Returns (offset, length), or (None, len(phrase)) if `phrase`
+    does not occur anywhere in `utterance`. Mirrors locatePhrase() in
+    src/cltl/annotation/annotation_tool.html, so LLM output and manual annotation
+    fall back to the same offset-recovery strategy."""
+    if not utterance or not phrase:
+        return None, len(phrase or "")
+    idx = utterance.find(phrase)
+    if idx == -1:
+        idx = utterance.lower().find(phrase.lower())
+    return (idx, len(phrase)) if idx != -1 else (None, len(phrase))
+
+
 class Perspective(BaseModel):
     model_config = {"json_schema_mode": "validation"}
 
@@ -85,6 +99,8 @@ class SRLAnnotation(BaseModel):
     activity: Activity
     agent: Optional[list[RoleSpan]] = []
     patient: Optional[list[RoleSpan]] = []
+    agent_patient: Optional[list[RoleSpan]] = []
+    experiencer: Optional[list[RoleSpan]] = []
     instrument: Optional[list[RoleSpan]] = []
     manner: Optional[list[RoleSpan]] = []
     location: Optional[list[RoleSpan]] = []
@@ -176,8 +192,17 @@ class LLM_EventExtraction:
           exactly (mirrors the annotation tool: reusing an id also reuses its type).
         - a bare (anchorless) reference: activity_id only, value/offset/length/type all None.
 
-        Also checks that every value's offset/length matches the turn's utterance text.
-        Returns a list of human-readable violation strings (empty if fully compliant)."""
+        Also checks that every value's offset/length matches the turn's utterance text. When
+        they don't, this re-locates the value via locate_phrase() (exact then case-insensitive
+        substring search, mirroring the annotation tool's own offset-recovery fallback) and
+        corrects the offset/length IN PLACE on the extraction, since the LLM is unreliable at
+        raw character counting even though it almost always gets the value text itself right.
+        A span whose value doesn't occur anywhere in the utterance can't be auto-corrected and
+        is reported as a genuine issue (typically because the model pulled it from a different
+        turn's utterance).
+        Returns a list of human-readable violation strings (empty if fully compliant); entries
+        describing an auto-correction are included too, so corrections stay visible in logs even
+        though the extraction itself has already been fixed by the time this returns."""
         issues = []
         for i, extraction in enumerate(extractions):
             prefix = f"extraction[{i}]"
@@ -194,7 +219,7 @@ class LLM_EventExtraction:
                 if activity.offset is None or activity.length is None or activity.type is None:
                     issues.append(f"{prefix}: activity '{activity.value}' is missing offset, length or type")
                 else:
-                    spans.append(("activity", activity.value, activity.offset, activity.length))
+                    spans.append(("activity", activity))
                     known_type = self._known_activities.get(activity.activity_id)
                     if known_type is None:
                         self._known_activities[activity.activity_id] = activity.type
@@ -206,15 +231,24 @@ class LLM_EventExtraction:
                 if activity.offset is not None or activity.length is not None or activity.type is not None:
                     issues.append(f"{prefix}: bare reference to '{activity.activity_id}' should not carry offset, length or type without a value")
 
-            for role_name in ("agent", "patient", "instrument", "manner", "location", "result", "time"):
+            for role_name in ("agent", "patient", "agent_patient", "experiencer", "instrument", "manner", "location", "result", "time"):
                 for role in getattr(extraction, role_name):
-                    spans.append((role_name, role.value, role.offset, role.length))
+                    spans.append((role_name, role))
 
-            for role_name, value, offset, length in spans:
-                if offset < 0 or length < 0 or offset + length > len(utterance):
-                    issues.append(f"{prefix}: {role_name} offset/length ({offset},{length}) out of bounds for utterance of length {len(utterance)}")
-                elif utterance[offset:offset + length] != value:
-                    issues.append(f"{prefix}: {role_name} value '{value}' does not match utterance[{offset}:{offset + length}]='{utterance[offset:offset + length]}'")
+            for role_name, span in spans:
+                offset, length, value = span.offset, span.length, span.value
+                valid = (
+                    offset is not None and length is not None
+                    and 0 <= offset and offset + length <= len(utterance)
+                    and utterance[offset:offset + length] == value
+                )
+                if not valid:
+                    new_offset, new_length = locate_phrase(utterance, value)
+                    if new_offset is not None:
+                        span.offset, span.length = new_offset, new_length
+                        issues.append(f"{prefix}: {role_name} offset auto-corrected for '{value}': ({offset},{length}) -> ({new_offset},{new_length})")
+                    else:
+                        issues.append(f"{prefix}: {role_name} value '{value}' not found anywhere in the utterance — cannot auto-correct (was ({offset},{length}))")
 
             time_values = {t.value for t in extraction.time}
             for resolved in extraction.time_resolved:
@@ -229,8 +263,16 @@ class LLM_EventExtraction:
         self._known_activities = {}
         print("Annotating a conversation with {} utterances".format(len(input['turns'])))
         for index, turn in enumerate(input['turns']):
-            print('turn', turn)
-            response = self.process_input(turn)
+            turn_with_context = {
+                "chat": input['chat'],
+                "human": input['human'],
+                "date": input['date'],
+                "turn": turn['turn'],
+                "speaker": turn['speaker'],
+                "utterance": turn['utterance'],
+            }
+            print('turn', turn_with_context)
+            response = self.process_input(turn_with_context)
             if response:
                 issues = self.check_compliance(input['chat'], turn['utterance'], response)
                 if issues:

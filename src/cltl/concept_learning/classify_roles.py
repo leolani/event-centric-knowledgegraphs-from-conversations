@@ -1,6 +1,7 @@
 """
-Classify agent/patient/instrument/location values in event_srl_time_resolved.json.zip
-using OpenAI, then write events_srl_typed.json with typed role entries.
+Classify agent/patient/agent_patient/experiencer/instrument/location values in
+event_srl_time_resolved.json.zip using OpenAI, then write events_srl_typed.json with
+typed role entries.
 
 Usage:
     export OPENAI_API_KEY=sk-...
@@ -15,7 +16,7 @@ from pathlib import Path
 from openai import OpenAI
 
 # ── Config ────────────────────────────────────────────────────────────────────
-ROLES       = ["agent", "patient", "instrument", "location"]
+ROLES       = ["agent", "patient", "agent_patient", "experiencer", "instrument", "location"]
 BATCH_SIZE  = 50          # values per API call
 MODEL       = "gpt-4o-mini"
 CACHE_FILE  = Path("data/role_type_cache.json")

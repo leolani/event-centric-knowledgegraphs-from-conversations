@@ -171,9 +171,9 @@ body { font-family: system-ui, sans-serif; font-size: 14px; background: #f0f2f5;
   </div>
 </div>
 
-<!-- Role popup -->
+<!-- Selection popup -->
 <div id="rpop">
-  <h4>Assign Role</h4>
+  <h4>Annotate Selection</h4>
   <span id="rpop-text" class="sel-text-preview"></span>
   <div id="rpop-body"></div>
 </div>
@@ -321,7 +321,7 @@ function importAnns(data) {
   status(`Loaded ${total} annotations`);
 }
 
-const ROLE_KEYS = ['agent','patient','instrument','manner','location','result'];
+const ROLE_KEYS = ['agent','patient','agent_patient','experiencer','instrument','manner','location','result'];
 
 // Normalize one raw Output entry (legacy flat format, new nested "activity" format,
 // or a previous export of this tool) into the tool's internal flat representation,
@@ -535,7 +535,7 @@ function buildAnnCard(chatId, tidx, ei, e) {
   }
   if (e.annotator) head += `<span class="annotator-label">by ${esc(e.annotator)}</span>`;
 
-  const ROLES = ['agent','patient','instrument','manner','location','result'];
+  const ROLES = ['agent','patient','agent_patient','experiencer','instrument','manner','location','result'];
 
   const roleBoxes = ROLES.map(role => {
     const vals = e[role] || [];
@@ -596,59 +596,10 @@ function handleSel(e, chatId, tidx) {
 }
 
 function showRolePopup(cx, cy, chatId, tidx, text) {
-  const entries = (anns[chatId] || {})[tidx] || [];
   const pop = document.getElementById('rpop');
   document.getElementById('rpop-text').textContent = '"' + text + '"';
 
-  const ROLES = ['agent','patient','instrument','manner','location','result','time'];
-  const rolePills = ROLES.map(r =>
-    `<label><input type="radio" name="pr" value="${r}"><span>${r}</span></label>`
-  ).join('');
-
-  const typeOpts = typeOptsForRole('agent'); // default; updated on role change
-
-  let annSel = '';
-  if (entries.length > 0) {
-    const opts = entries.map((e,i) =>
-      `<option value="${i}">${e.activity_id}${e.activity ? ': '+e.activity : ' (ref)'}</option>`
-    ).join('');
-    annSel = `<div class="fg" style="margin-bottom:8px">
-      <label style="font-size:12px;font-weight:600;color:#555">Annotation:</label>
-      <select id="pop-ann" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:12px">${opts}</select>
-    </div>`;
-  }
-
-  const newActBtn = `<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eee">
-    <button style="background:#27ae60;color:white;border:none;border-radius:4px;padding:4px 10px;font-size:12px;cursor:pointer;width:100%"
-      onclick="useSelAsActivity()">✦ Use as new activity name</button>
-  </div>`;
-
-  document.getElementById('rpop-body').innerHTML = entries.length === 0
-    ? `${newActBtn}
-       <div style="color:#aaa;font-size:11px;font-style:italic">No annotations yet — create an activity above, or add one below the turn first.</div>
-       <div class="rpop-btns" style="margin-top:8px"><button style="background:#eee;cursor:pointer" onclick="closePopup()">Close</button></div>`
-    : `${newActBtn}
-       ${annSel}
-       <div style="margin-bottom:6px">
-         <label style="font-size:12px;font-weight:600;color:#555">Role:</label>
-         <div class="radio-pills">${rolePills}</div>
-       </div>
-       <div id="pop-type-row" style="display:none;margin-bottom:6px">
-         <label style="font-size:12px;font-weight:600;color:#555">Type:</label>
-         <select id="pop-type" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:12px;margin-top:3px">${typeOpts}</select>
-       </div>
-       <div class="rpop-btns">
-         <button style="background:#2980b9;color:white;cursor:pointer" onclick="confirmRoleAssign()">Assign Role</button>
-         <button style="background:#eee;cursor:pointer" onclick="closePopup()">Cancel</button>
-       </div>`;
-
-  pop.querySelectorAll('input[name="pr"]').forEach(r => r.addEventListener('change', () => {
-    const tr = document.getElementById('pop-type-row');
-    const pt = document.getElementById('pop-type');
-    if (!tr) return;
-    tr.style.display = r.value === 'time' ? 'none' : 'block';
-    if (pt) pt.innerHTML = typeOptsForRole(r.value);
-  }));
+  renderRopStep1(chatId, tidx);
 
   // position
   const pw = 290;
@@ -660,6 +611,66 @@ function showRolePopup(cx, cy, chatId, tidx, text) {
   pop.style.display = 'block';
 
   setTimeout(() => document.addEventListener('mousedown', outsidePopup), 100);
+}
+
+// Step 1: choose whether the selection names/refers to an activity itself, or is a role
+// value (e.g. time, location) that belongs to an activity from this turn or an earlier one.
+function renderRopStep1(chatId, tidx) {
+  const prevActs = getActivitiesUpTo(chatId, tidx);
+  const assignDisabled = prevActs.length === 0;
+
+  document.getElementById('rpop-body').innerHTML = `
+    <div class="rpop-btns">
+      <button style="background:#27ae60;color:white;border:none;border-radius:4px;padding:6px 8px;font-size:12px;cursor:pointer;flex:1"
+        onclick="useSelAsActivity()">Activity reference</button>
+      <button style="background:#2980b9;color:white;border:none;border-radius:4px;padding:6px 8px;font-size:12px;cursor:${assignDisabled?'default':'pointer'};flex:1;opacity:${assignDisabled?'0.5':'1'}"
+        ${assignDisabled ? 'disabled' : `onclick="renderRopStep2('${chatId}',${tidx})"`}>Assign role</button>
+    </div>
+    ${assignDisabled
+      ? `<div style="color:#aaa;font-size:11px;font-style:italic;margin-top:8px">No activities annotated yet in this conversation — use "Activity reference" to create the first one.</div>`
+      : ''}
+  `;
+}
+
+// Step 2: assign the selection as a role value (agent/patient/.../time) on an activity
+// from this turn or any earlier turn — creating a bare reference entry for this turn if
+// that activity doesn't have one here yet.
+function renderRopStep2(chatId, tidx) {
+  const prevActs = getActivitiesUpTo(chatId, tidx);
+  const actOpts = prevActs.map(a => `<option value="${a.id}">${a.id}: ${a.activity}</option>`).join('');
+
+  const ROLES = ['agent','patient','agent_patient','experiencer','instrument','manner','location','result','time'];
+  const rolePills = ROLES.map(r =>
+    `<label><input type="radio" name="pr" value="${r}"><span>${r}</span></label>`
+  ).join('');
+  const typeOpts = typeOptsForRole('agent'); // default; updated on role change
+
+  document.getElementById('rpop-body').innerHTML = `
+    <div class="fg" style="margin-bottom:8px">
+      <label style="font-size:12px;font-weight:600;color:#555">Activity (this or an earlier turn):</label>
+      <select id="pop-act" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:12px">${actOpts}</select>
+    </div>
+    <div style="margin-bottom:6px">
+      <label style="font-size:12px;font-weight:600;color:#555">Role:</label>
+      <div class="radio-pills">${rolePills}</div>
+    </div>
+    <div id="pop-type-row" style="display:none;margin-bottom:6px">
+      <label style="font-size:12px;font-weight:600;color:#555">Type:</label>
+      <select id="pop-type" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:12px;margin-top:3px">${typeOpts}</select>
+    </div>
+    <div class="rpop-btns">
+      <button style="background:#2980b9;color:white;cursor:pointer" onclick="confirmRoleAssign()">Assign Role</button>
+      <button style="background:#eee;cursor:pointer" onclick="renderRopStep1('${chatId}',${tidx})">Back</button>
+    </div>
+  `;
+
+  document.querySelectorAll('#rpop input[name="pr"]').forEach(r => r.addEventListener('change', () => {
+    const tr = document.getElementById('pop-type-row');
+    const pt = document.getElementById('pop-type');
+    if (!tr) return;
+    tr.style.display = r.value === 'time' ? 'none' : 'block';
+    if (pt) pt.innerHTML = typeOptsForRole(r.value);
+  }));
 }
 
 function outsidePopup(e) {
@@ -682,15 +693,14 @@ function useSelAsActivity() {
 function confirmRoleAssign() {
   if (!pendingSel) return;
   const { text, chatId, tidx, offset, length } = pendingSel;
-  const annIdxEl = document.getElementById('pop-ann');
+  const actIdEl = document.getElementById('pop-act');
   const roleEl = document.querySelector('input[name="pr"]:checked');
-  if (!annIdxEl || !roleEl) { alert('Select a role'); return; }
-  const annIdx = parseInt(annIdxEl.value);
+  if (!actIdEl || !roleEl) { alert('Select a role'); return; }
+  const activityId = actIdEl.value;
   const role = roleEl.value;
   const type = (document.getElementById('pop-type') || {}).value || 'other';
 
-  const entry = (anns[chatId][tidx] || [])[annIdx];
-  if (!entry) return;
+  const entry = getOrCreateEntryForActivity(chatId, tidx, activityId);
   if (role === 'time') { entry.time.push({ value: text, offset, length }); }
   else { entry[role].push({ value: text, type, offset, length }); }
 
@@ -733,7 +743,7 @@ function openNewAnnModal(chatId, tidx, prefillActivity, prefillOffset, prefillLe
       <div class="fg">
         <label>Activity (word/phrase for this activity):</label>
         <input type="text" id="m-act"${actVal} placeholder="e.g. cycling">
-        <div class="hint-text">Select text in the utterance and click "Use as new activity name" to fill this automatically.</div>
+        <div class="hint-text">Select text in the utterance and click "Use as activity reference expression" to fill this automatically.</div>
       </div>
       <div class="fg" style="display:flex;gap:8px">
         <div style="flex:1">
@@ -786,7 +796,7 @@ function openNewAnnModal(chatId, tidx, prefillActivity, prefillOffset, prefillLe
 function confirmNewAnn(chatId, tidx) {
   const annType  = document.querySelector('input[name="at"]:checked')?.value || 'new';
   const annotator = document.getElementById('ann-name').value.trim() || 'unknown';
-  const base = { annotator, agent:[], patient:[], instrument:[], manner:[], location:[], result:[], time:[], time_resolved:[] };
+  const base = { annotator, agent:[], patient:[], agent_patient:[], experiencer:[], instrument:[], manner:[], location:[], result:[], time:[], time_resolved:[] };
 
   let entry;
   if (annType === 'new') {
@@ -804,7 +814,7 @@ function confirmNewAnn(chatId, tidx) {
     const refId = document.getElementById('m-ref')?.value;
     if (!refId) { alert('Select a reference activity'); return; }
     entry = { ...base, activity_id: refId };
-    // If a phrase was selected/entered (e.g. via "Use as new activity name" followed by
+    // If a phrase was selected/entered (e.g. via "Use as activity reference expression" followed by
     // switching to "Reference previous activity"), keep it: it's where in THIS turn the
     // activity is referred to. The activity_id and type are still reused from the origin.
     const phrase = document.getElementById('m-act').value.trim();
@@ -884,7 +894,7 @@ function openEditActivityModal(chatId, tidx, ei) {
 function openAddRoleModal(chatId, tidx, ei) {
   const conv = convs.find(c => c.chat === parseInt(chatId));
   const utt  = conv?.turns[tidx]?.utterance || '';
-  const ROLES = ['agent','patient','instrument','manner','location','result','time'];
+  const ROLES = ['agent','patient','agent_patient','experiencer','instrument','manner','location','result','time'];
   const rolePills = ROLES.map(r =>
     `<label><input type="radio" name="ar" value="${r}"><span>${r}</span></label>`
   ).join('');
@@ -1079,6 +1089,24 @@ function getActivitiesUpTo(chatId, tidx) {
   return result;
 }
 
+// Find this turn's entry for the given activity_id, or create a bare reference entry
+// for it (activity_id only — no value/offset/length/type) if this turn doesn't have one
+// yet. Used when assigning a role value to an activity that may have been introduced in
+// this turn or an earlier one.
+function getOrCreateEntryForActivity(chatId, tidx, activityId) {
+  if (!anns[chatId]) anns[chatId] = {};
+  if (!anns[chatId][tidx]) anns[chatId][tidx] = [];
+  let entry = anns[chatId][tidx].find(e => e.activity_id === activityId);
+  if (!entry) {
+    const annotator = document.getElementById('ann-name').value.trim() || 'unknown';
+    entry = { annotator, activity_id: activityId, time_resolved: [] };
+    ROLE_KEYS.forEach(role => { entry[role] = []; });
+    entry.time = [];
+    anns[chatId][tidx].push(entry);
+  }
+  return entry;
+}
+
 // The entry that first introduced an activity_id (the one that "owns" its activity
 // value/type). Any later entry using the same activity_id is a reference to it, even
 // if that later entry also captures its own referring phrase/offset/length.
@@ -1161,6 +1189,8 @@ function fmtEntry(e, chatId, speakerEmotion, speakerCertainty, speakerFactuality
     : { activity_id: e.activity_id };
   out.agent         = e.agent || [];
   out.patient       = e.patient || [];
+  out.agent_patient = e.agent_patient || [];
+  out.experiencer   = e.experiencer || [];
   out.instrument    = e.instrument || [];
   out.manner        = e.manner || [];
   out.location      = e.location || [];

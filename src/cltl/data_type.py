@@ -14,17 +14,58 @@ class ActivityType(str, Enum):
         measurement = "measurement"
         take_food = "take_food"
         take_drink = "take_drink"
+        take_medicine = "take_medicine"
         advise = "advise"
         social = "social"
         diet = "diet"
         treatment = "treatment"
-        medicine = "medicine"
         physical_condition = "physical condition"
         social_condition = "social condition"
         mental_condition = "mental condition"
         symptom = "symptom"
         disease = "disease"
         other = "other"
+
+
+class SemanticRole(str, Enum):
+        """The semantic roles an activity/condition annotation can carry (not to be confused
+        with RoleType below, which is the closed vocabulary of *values* a role can take,
+        e.g. person/object/tool).
+
+        - agent: the participant that controls/performs the activity, acting on someone or
+          something else (e.g. "John moves the box" -> agent: John).
+        - patient: the participant affected by the activity, undergoing a change of state
+          caused by an agent (e.g. "John moves the box" -> patient: box).
+        - agent_patient: a single participant that both controls the activity and undergoes
+          the change it causes (self-affecting action) — use instead of separate agent and
+          patient roles when they are the same participant (e.g. "John cycles" -> agent_patient:
+          John, not agent: John + patient: John).
+        - experiencer: the participant that experiences a state or condition, with no change
+          of state and no agent causing it (e.g. "John has a headache" -> experiencer: John).
+        - instrument: a tool or means used to perform the activity.
+        - manner: how the activity is performed, other than via an instrument.
+        - location: where the activity takes place.
+        - result: the outcome or goal that is the effect of the activity.
+        - time: when the activity occurs.
+        """
+        agent = "agent"
+        patient = "patient"
+        agent_patient = "agent_patient"
+        experiencer = "experiencer"
+        instrument = "instrument"
+        manner = "manner"
+        location = "location"
+        result = "result"
+        time = "time"
+
+
+# Roles that behave like agent/patient/instrument/manner/location — i.e. everything except
+# "result" (its own closed vocabulary, see ROLE_TYPES below) and "time" (free-text value with
+# no type at all).
+PARTICIPANT_ROLES = [
+        SemanticRole.agent, SemanticRole.patient, SemanticRole.agent_patient, SemanticRole.experiencer,
+        SemanticRole.instrument, SemanticRole.manner, SemanticRole.location,
+]
 
 
 class RoleType(str, Enum):

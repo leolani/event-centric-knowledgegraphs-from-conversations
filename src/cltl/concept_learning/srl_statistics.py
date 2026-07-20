@@ -7,6 +7,8 @@ def get_statistics(annotated_conversations, threshold=3):
     activity_dict = {}
     agent_dict = {}
     patient_dict = {}
+    agent_patient_dict = {}
+    experiencer_dict = {}
     instrument_dict = {}
     manner_dict = {}
     location_dict = {}
@@ -38,6 +40,22 @@ def get_statistics(annotated_conversations, threshold=3):
                                 patient_dict[patient] += 1
                             else:
                                 patient_dict[patient] = 1
+                    if 'agent_patient' in event:
+                        if type(event['agent_patient']) == str:
+                            event['agent_patient'] = [event['agent_patient']]
+                        for agent_patient in event['agent_patient']:
+                            if agent_patient in agent_patient_dict:
+                                agent_patient_dict[agent_patient] += 1
+                            else:
+                                agent_patient_dict[agent_patient] = 1
+                    if 'experiencer' in event:
+                        if type(event['experiencer']) == str:
+                            event['experiencer'] = [event['experiencer']]
+                        for experiencer in event['experiencer']:
+                            if experiencer in experiencer_dict:
+                                experiencer_dict[experiencer] += 1
+                            else:
+                                experiencer_dict[experiencer] = 1
                     if 'instrument' in event:
                         if type(event['instrument']) == str:
                             event['instrument'] = [event['instrument']]
@@ -80,6 +98,12 @@ def get_statistics(annotated_conversations, threshold=3):
     patient_dict = {k: v for k, v in patient_dict.items() if v >= threshold}
     trimmed_patient_dict = dict(sorted(patient_dict.items(), key=lambda x: x[1], reverse=True))
 
+    agent_patient_dict = {k: v for k, v in agent_patient_dict.items() if v >= threshold}
+    trimmed_agent_patient_dict = dict(sorted(agent_patient_dict.items(), key=lambda x: x[1], reverse=True))
+
+    experiencer_dict = {k: v for k, v in experiencer_dict.items() if v >= threshold}
+    trimmed_experiencer_dict = dict(sorted(experiencer_dict.items(), key=lambda x: x[1], reverse=True))
+
     instrument_dict = {k: v for k, v in instrument_dict.items() if v >= threshold}
     trimmed_instrument_dict = dict(sorted(instrument_dict.items(), key=lambda x: x[1], reverse=True))
 
@@ -92,7 +116,7 @@ def get_statistics(annotated_conversations, threshold=3):
     time_dict = {k: v for k, v in time_dict.items() if v >= threshold}
     trimmed_time_dict = dict(sorted(time_dict.items(), key=lambda x: x[1], reverse=True))
 
-    return trimmed_activity_dict, trimmed_agent_dict, trimmed_patient_dict, trimmed_instrument_dict, trimmed_manner_dict, trimmed_location_dict, trimmed_time_dict
+    return trimmed_activity_dict, trimmed_agent_dict, trimmed_patient_dict, trimmed_agent_patient_dict, trimmed_experiencer_dict, trimmed_instrument_dict, trimmed_manner_dict, trimmed_location_dict, trimmed_time_dict
 
 def get_analysis_for_srl_dict(srl_dict, name, output_dir, head_first = True):
     phrases = list(srl_dict.keys())
@@ -147,13 +171,17 @@ def main():
     f = open("/Users/piek/Desktop/Diabetes/load_datasets/diabetes/event_srl.json", "r")
     annotated_conversations = json.load(f)
     print(len(annotated_conversations))
-    activity_dict, agent_dict, patient_dict, instrument_dict, manner_dict, location_dict, time_dict = get_statistics(annotated_conversations, threshold=threshold)
+    activity_dict, agent_dict, patient_dict, agent_patient_dict, experiencer_dict, instrument_dict, manner_dict, location_dict, time_dict = get_statistics(annotated_conversations, threshold=threshold)
     if len(activity_dict)>0:
         get_analysis_for_srl_dict(activity_dict, "activities_"+str(threshold), output_dir, head_first = True)
     if len(agent_dict)>0:
         get_analysis_for_srl_dict(agent_dict, "agents_"+str(threshold), output_dir, head_first=True)
     if len(patient_dict)>0:
         get_analysis_for_srl_dict(patient_dict, "patients_"+str(threshold), output_dir, head_first = True)
+    if len(agent_patient_dict)>0:
+        get_analysis_for_srl_dict(agent_patient_dict, "agent_patients_"+str(threshold), output_dir, head_first = True)
+    if len(experiencer_dict)>0:
+        get_analysis_for_srl_dict(experiencer_dict, "experiencers_"+str(threshold), output_dir, head_first = True)
     if len(instrument_dict)>0:
         get_analysis_for_srl_dict(instrument_dict, "instruments_"+str(threshold), output_dir, head_first = True)
     if len(manner_dict)>0:
