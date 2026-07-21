@@ -1,0 +1,103 @@
+{
+  "overview": {
+    "conversations": 256,
+    "turns": 2003,
+    "annotated_turns": 2003,
+    "output_entries": 3506,
+    "unique_activities": 2656,
+    "patients": 16,
+    "annotators": 0,
+    "time_expressions": 1047,
+    "time_expressions_resolved": 842
+  },
+  "activity_types": {
+    "exercise": 440,
+    "treatment": 195,
+    "mental condition": 165,
+    "diet": 671,
+    "physical condition": 317,
+    "other": 203,
+    "measurement": 170,
+    "social": 108,
+    "take_drink": 41,
+    "take_food": 119,
+    "take_medicine": 39,
+    "disease": 47,
+    "symptom": 16,
+    "social condition": 17,
+    "advise": 108
+  },
+  "roles": {
+    "agent": 435,
+    "patient": 287,
+    "agent_patient": 1581,
+    "experiencer": 513,
+    "instrument": 401,
+    "location": 327,
+    "result": 951,
+    "time": 1047
+  },
+  "role_types": {
+    "person": 2349,
+    "indoor": 50,
+    "tool": 51,
+    "outdoor": 11,
+    "other": 617,
+    "group": 66,
+    "substance": 295,
+    "object": 49,
+    "place": 49,
+    "organization": 2,
+    "city": 5
+  },
+  "result_types": {
+    "goal": 435,
+    "impact": 516
+  },
+  "temporal_types": {
+    "range": 194,
+    "recurring": 295,
+    "vague": 312,
+    "duration": 33,
+    "point": 8
+  },
+  "recurrence_patterns": {
+    "often": 45,
+    "daily": 110,
+    "regularly": 69,
+    "sometimes": 82,
+    "now-and-then": 7,
+    "rarely": 1
+  },
+  "emotion": {
+    "neutral": 202,
+    "caring": 711,
+    "curiosity": 294,
+    "optimism": 102,
+    "approval": 167,
+    "gratitude": 188,
+    "fear": 4,
+    "remorse": 14,
+    "nervousness": 234,
+    "disappointment": 30,
+    "annoyance": 13,
+    "sadness": 3,
+    "confusion": 8,
+    "desire": 7,
+    "joy": 10,
+    "realization": 8,
+    "relief": 4,
+    "disapproval": 2,
+    "admiration": 2
+  },
+  "factuality": {
+    "expect": 644,
+    "confirm": 1352,
+    "deny": 7
+  },
+  "certainty": {
+    "neutral": 277,
+    "certain": 1369,
+    "uncertain": 357
+  }
+}
