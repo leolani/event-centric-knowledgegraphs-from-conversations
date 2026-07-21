@@ -1139,5 +1139,591 @@
         }
       ]
     }
+  ],
+  [
+    {
+      "chat": 2,
+      "date": "2011,Mar,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 1,
+        "speaker": "Jan",
+        "utterance": "I've noticed some blurry vision lately. Does this have something to do with my diabetes?"
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "fear",
+            "factuality": "confirm",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "some blurry vision",
+            "offset": 13,
+            "length": 18,
+            "type": "symptom",
+            "activity_id": "chat2.1"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [
+            {
+              "value": "I",
+              "type": "person",
+              "offset": 0,
+              "length": 1
+            }
+          ],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "lately",
+              "offset": 32,
+              "length": 6
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "lately",
+              "temporal_type": "range",
+              "absolute_date": null,
+              "date_range_start": "2011-02-13",
+              "date_range_end": null,
+              "recurrence_pattern": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chat": 2,
+      "date": "2011,Mar,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 2,
+        "speaker": "agent",
+        "utterance": "It might, Jan. Persistent high blood sugar from diabetes could cause fluid to enter and swell the lens in your eye, which might affect your ability to focus clearly. Have you been monitoring your blood sugar levels consistently?"
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "Persistent high blood sugar",
+            "offset": 15,
+            "length": 27,
+            "type": "physical condition",
+            "activity_id": "chat2.2"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [
+            {
+              "value": "fluid to enter and swell the lens in your eye",
+              "type": "impact",
+              "offset": 69,
+              "length": 45
+            }
+          ],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "monitoring",
+            "offset": 180,
+            "length": 10,
+            "type": "measurement",
+            "activity_id": "chat2.3"
+          },
+          "agent": [
+            {
+              "value": "you",
+              "type": "person",
+              "offset": 171,
+              "length": 3
+            }
+          ],
+          "patient": [
+            {
+              "value": "blood sugar levels",
+              "type": "other",
+              "offset": 196,
+              "length": 18
+            }
+          ],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "consistently",
+              "offset": 215,
+              "length": 12
+            }
+          ],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "your ability to focus clearly",
+            "offset": 135,
+            "length": 29,
+            "type": "symptom",
+            "activity_id": "chat2.1"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 2,
+      "date": "2011,Mar,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 3,
+        "speaker": "Jan",
+        "utterance": "Yes, I have been, and they've been a bit higher than normal lately."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "certain"
+          },
+          "activity": {
+            "activity_id": "chat2.3"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "certain"
+          },
+          "activity": {
+            "value": "a bit higher",
+            "offset": 35,
+            "length": 12,
+            "type": "measurement",
+            "activity_id": "chat2.4"
+          },
+          "agent": [],
+          "patient": [
+            {
+              "value": "they",
+              "type": "other",
+              "offset": 22,
+              "length": 4
+            }
+          ],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "lately",
+              "offset": 60,
+              "length": 6
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "lately",
+              "temporal_type": "range",
+              "absolute_date": null,
+              "date_range_start": "2011-03-06",
+              "date_range_end": "2011-03-13",
+              "recurrence_pattern": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chat": 2,
+      "date": "2011,Mar,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 4,
+        "speaker": "agent",
+        "utterance": "Elevated blood sugar levels could indeed be causing the blurry vision. You should contact your healthcare provider and discuss this. In the meantime, it is advisable to maintain a balanced diet and regular exercise to help control blood sugar levels."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "Elevated blood sugar levels",
+            "offset": 0,
+            "length": 27,
+            "type": "measurement",
+            "activity_id": "chat2.4"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [
+            {
+              "value": "the blurry vision",
+              "type": "impact",
+              "offset": 52,
+              "length": 17
+            }
+          ],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "maintain a balanced diet",
+            "offset": 169,
+            "length": 24,
+            "type": "diet",
+            "activity_id": "chat2.5"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "regular exercise",
+            "offset": 198,
+            "length": 16,
+            "type": "exercise",
+            "activity_id": "chat2.6"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "regular",
+              "offset": 198,
+              "length": 7
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "regular",
+              "temporal_type": "recurring",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": "regularly"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chat": 2,
+      "date": "2011,Mar,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 5,
+        "speaker": "Jan",
+        "utterance": "Ok, I will get in touch with my doctor. Should I be worried about this leading to more serious eye problems?"
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "fear",
+            "factuality": "expect",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "more serious eye problems",
+            "offset": 82,
+            "length": 25,
+            "type": "physical condition",
+            "activity_id": "chat2.7"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 2,
+      "date": "2011,Mar,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 6,
+        "speaker": "agent",
+        "utterance": "Uncontrolled diabetes can cause several eye complications over time like diabetic retinopathy, glaucoma, or cataracts. Well-managed diabetes, however, significantly reduces the risk of such complications. Regular eye check-ups are also essential."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "eye complications",
+            "offset": 40,
+            "length": 17,
+            "type": "physical condition",
+            "activity_id": "chat2.7"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "diabetic retinopathy",
+            "offset": 73,
+            "length": 20,
+            "type": "physical condition",
+            "activity_id": "chat2.7"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "glaucoma",
+            "offset": 95,
+            "length": 8,
+            "type": "physical condition",
+            "activity_id": "chat2.7"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "cataracts",
+            "offset": 108,
+            "length": 9,
+            "type": "physical condition",
+            "activity_id": "chat2.7"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "Uncontrolled diabetes",
+            "offset": 0,
+            "length": 21,
+            "type": "disease",
+            "activity_id": "chat2.8"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "Well-managed diabetes",
+            "offset": 119,
+            "length": 21,
+            "type": "disease",
+            "activity_id": "chat2.8"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "eye check-ups",
+            "offset": 213,
+            "length": 13,
+            "type": "measurement",
+            "activity_id": "chat2.9"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "Regular",
+              "offset": 205,
+              "length": 7
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "Regular",
+              "temporal_type": "recurring",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": "regularly"
+            }
+          ]
+        }
+      ]
+    }
   ]
 ]

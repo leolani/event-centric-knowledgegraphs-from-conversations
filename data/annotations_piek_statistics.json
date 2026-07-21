@@ -1,0 +1,73 @@
+{
+  "overview": {
+    "conversations": 3,
+    "turns": 21,
+    "annotated_turns": 21,
+    "output_entries": 45,
+    "unique_activities": 26,
+    "patients": 1,
+    "annotators": 1,
+    "time_expressions": 15,
+    "time_expressions_resolved": 14
+  },
+  "activity_types": {
+    "exercise": 9,
+    "mental condition": 1,
+    "symptom": 4,
+    "disease": 2,
+    "diet": 2,
+    "physical condition": 3,
+    "take_medicine": 1,
+    "measurement": 4
+  },
+  "roles": {
+    "agent": 3,
+    "patient": 4,
+    "agent_patient": 7,
+    "experiencer": 2,
+    "instrument": 1,
+    "location": 2,
+    "result": 7,
+    "time": 15
+  },
+  "role_types": {
+    "person": 12,
+    "indoor": 2,
+    "tool": 1,
+    "other": 4
+  },
+  "result_types": {
+    "impact": 5,
+    "goal": 2
+  },
+  "temporal_types": {
+    "range": 3,
+    "recurring": 10,
+    "vague": 1
+  },
+  "recurrence_patterns": {
+    "often": 2,
+    "daily": 2,
+    "regularly": 5,
+    "now-and-then": 1
+  },
+  "emotion": {
+    "curiosity": 3,
+    "disappointment": 2,
+    "caring": 4,
+    "neutral": 7,
+    "fear": 3,
+    "desire": 1,
+    "approval": 1
+  },
+  "factuality": {
+    "expect": 4,
+    "deny": 1,
+    "confirm": 16
+  },
+  "certainty": {
+    "uncertain": 8,
+    "neutral": 9,
+    "certain": 4
+  }
+}
