@@ -285,6 +285,86 @@ def get_triples_with_types(event, event_id, utterence_time:date):
                 triples.append(triple)
     return triples
 
+# The roles carried by the current SRL schema (data/event_srl.json.zip) that behave like
+# agent/patient/instrument/location above: a list of {"value", "type", "offset", "length"}
+# dicts. "result" is handled separately below (its own ResultType vocabulary, not RoleType);
+# "time" is handled via time_resolved only, matching get_triples_with_types; there is no
+# "manner" role in this schema.
+ROLE_FIELDS_WITH_TYPE = ["agent", "patient", "agent_patient", "experiencer", "instrument", "location"]
+
+
+def get_triples_with_types_and_activity_id(event, utterance_time: date):
+    """Like get_triples_with_types, but for the current SRL schema, where 'activity' is a dict
+    that carries its own activity_id (e.g. "chat0.1") -- assigned once per real-world activity
+    and reused on every later mention, including a bare reference entry with no phrase of its
+    own -- instead of the activity phrase text being combined with a random/context-tracked
+    event_id to build the subject URI. Using activity_id directly means the same real-world
+    activity always gets the same subject URI, with no need to track phrases across turns.
+
+    Also covers the full current role set (agent, patient, agent_patient, experiencer,
+    instrument, location, result, time) instead of the old agent/patient/manner/instrument/
+    location/time set -- "manner" no longer exists in this schema.
+    """
+    triples = []
+    activity = event.get('activity') or {}
+    activity_id = activity.get('activity_id')
+    if not activity_id:
+        return triples
+
+    # A bare reference entry (a later mention with no phrase of its own, just attaching more
+    # role info to an activity introduced earlier) has no "value" here; fall back to the
+    # activity_id itself as the subject label since this function has no cross-turn state to
+    # look up the phrase that originally introduced it.
+    subject = activity.get('value') or activity_id
+    subject_uri = "http://cltl.nl/leolani/n2mu/" + activity_id
+    activity_type = ["activity"]
+    if activity.get('type'):
+        activity_type.append(activity['type'])
+    for time in (event.get('time_resolved') or []):
+        if time.get('temporal_type') in ("recurring", "vague"):
+            activity_type.append("<https://cltl.nl/eckg/EventSeries")
+            break
+
+    for role in ROLE_FIELDS_WITH_TYPE:
+        for filler in (event.get(role) or []):
+            triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
+                      "predicate": {"label": role, "uri": "http://cltl.nl/leolani/n2mu/" + role},
+                      "object": {"label": filler.get('value'), "type": [filler.get('type')], "uri": ""}}
+            triples.append(triple)
+
+    for result in (event.get('result') or []):
+        triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
+                  "predicate": {"label": "result", "uri": "http://cltl.nl/leolani/n2mu/result"},
+                  "object": {"label": result.get('value'), "type": [result.get('type')], "uri": ""}}
+        triples.append(triple)
+
+    for time in (event.get('time_resolved') or []):
+        a_label = time.get('time_expression')
+        a_type = time.get('temporal_type')
+        uri = ""
+        time_type = "dateTime"
+        if time.get('date_range_start'):
+            time_type = "rangeTime"
+            uri = "http://cltl.nl/leolani/n2mu/time/" + parser.parse(time['date_range_start']).date().isoformat()
+        elif time.get('absolute_date'):
+            time_type = "dateTime"
+            uri = "http://cltl.nl/leolani/n2mu/time/" + parser.parse(time['absolute_date']).date().isoformat()
+        elif a_type == "recurring":
+            ## We define a date 2 months ago as a baseline proxy for a series of recurring events
+            time_type = "recurringTime"
+            uri = "http://cltl.nl/leolani/n2mu/time/" + (utterance_time - relativedelta(months=2)).isoformat()
+        elif a_type == "vague":
+            ## We define a date 1 month ago as a proxy for a vaguely defined series of events
+            time_type = "vagueTime"
+            uri = "http://cltl.nl/leolani/n2mu/time/" + (utterance_time - relativedelta(months=1)).isoformat()
+        triple = {"subject": {"label": subject, "type": activity_type, "uri": subject_uri},
+                  "predicate": {"label": "time", "uri": "http://cltl.nl/leolani/n2mu/time/" + time_type},
+                  "object": {"label": a_label, "type": [a_type], "uri": uri}}
+        triples.append(triple)
+
+    return triples
+
+
 def get_capsules_from_turn (turn_data):
     capsules = []
     turn = turn_data['Input']
@@ -394,7 +474,7 @@ def get_capsule_with_event_details_from_turn_with_conversationa_context (convers
 # If the activity phrase is similar to an event in dict in the dict,
 # and there is not time clash
 # the identifier is re-used
-def get_capsule_with_event_details_from_turn_with_conversationa_context_similarity_match_and_time (conversational_context: {}, turn_data, emotion_detector):
+def get_capsule_with_event_details_from_turn_with_conversational_context_similarity_match_and_time (conversational_context: {}, turn_data, emotion_detector):
     turn = turn_data['Input']
     event_data_list = turn_data['Output']
     chat_id = turn_data['chat']
@@ -435,6 +515,55 @@ def get_capsule_with_event_details_from_turn_with_conversationa_context_similari
                 "object" : triple["object"]})
         capsule["event_details"] = event_details_list
     return capsule
+
+
+## Activity-id-based approach for the current SRL output (data/event_srl.json.zip): each
+## Output entry's activity already carries its own activity_id, assigned once per real-world
+## activity and reused on every later mention -- including a bare reference entry with no
+## phrase of its own. That makes activity_id itself a stable, ready-made coreference key, so
+## there is no conversational_context dict to thread across turns: the subject URI is built
+## directly from activity_id (see get_triples_with_types_and_activity_id), and two mentions of
+## the same activity_id -- in this turn or any other -- automatically resolve to the same URI.
+##
+## Perspective is taken directly from the entry's own "perspective" field (emotion, factuality,
+## certainty -- already annotated by the SRL extraction) instead of being recomputed from the
+## utterance text via get_utterance_perspective/emotion_detector: it's the same annotation the
+## rest of the entry's triples come from, and there is no emotion_detector parameter here
+## because nothing in this function calls into it anymore.
+def get_capsule_with_event_details_from_turn_with_activity_id (turn_data):
+    turn = turn_data['Input']
+    event_data_list = turn_data['Output']
+    chat_id = turn_data['chat']
+    chat_date = parser.parse(turn_data['date'])
+    turn_id = turn['turn']
+    capsules = []
+    for event_data in event_data_list:
+        activity = event_data.get('activity') or {}
+        activity_id = activity.get('activity_id')
+        if not activity_id:
+            continue
+        triples = get_triples_with_types_and_activity_id(event_data, chat_date)
+        offset = "0-"+str(len(turn["utterance"]))
+        perspective_value = event_data.get('perspective')
+        capsule = { "chat": chat_id,
+            "turn": turn_id,
+            "author": {"label":turn['speaker'], "type": ["agent"], "uri":"http://cltl.nl/leolani/friends/"+turn['speaker']},
+            "utterance": turn["utterance"],
+            "utterance_type": UtteranceType.STATEMENT,
+            "position": offset,
+            "perspective":  perspective_value,
+             "timestamp": datetime.combine(chat_date, datetime.now().time()),
+             "context_id": activity_id
+        }
+        event_details_list = []
+        for triple in triples:
+            event_details_list.append({
+                "subject" : triple["subject"],
+                "predicate" : triple["predicate"],
+                "object" : triple["object"]})
+        capsule["event_details"] = event_details_list
+        capsules.append(capsule)
+    return capsules
 
 def get_triples_from_turn(turn_data):
     event_data = turn_data['Output']
