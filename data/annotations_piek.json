@@ -12,24 +12,49 @@
       "Output": [
         {
           "annotator": "piek",
-          "activity": "cycling",
-          "activity_type": "exercise",
-          "activity_id": "chat0.1",
-          "agent": [
+          "perspective": {
+            "emotion": "curiosity",
+            "factuality": "expect",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "cycling",
+            "offset": 36,
+            "length": 7,
+            "type": "exercise",
+            "activity_id": "chat0.1"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [
             {
               "value": "Jan",
-              "type": "person"
+              "type": "person",
+              "offset": 4,
+              "length": 3
             }
           ],
-          "patient": [],
+          "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [
-            "lately"
+            {
+              "value": "lately",
+              "offset": 89,
+              "length": 6
+            }
           ],
-          "time_resolved": []
+          "time_resolved": [
+            {
+              "time_expression": "lately",
+              "temporal_type": "range",
+              "absolute_date": null,
+              "date_range_start": "2013-03-13",
+              "date_range_end": "2013-04-13",
+              "recurrence_pattern": null
+            }
+          ]
         }
       ]
     },
@@ -45,22 +70,49 @@
       "Output": [
         {
           "annotator": "piek",
-          "activity_id": "chat0.1",
-          "agent": [
+          "perspective": {
+            "emotion": "disappointment",
+            "factuality": "deny",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "been out",
+            "offset": 53,
+            "length": 8,
+            "type": "exercise",
+            "activity_id": "chat0.1"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [
             {
               "value": "I",
-              "type": "person"
+              "type": "person",
+              "offset": 43,
+              "length": 1
             }
           ],
-          "patient": [],
+          "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [
-            "haven't been out as often"
+            {
+              "value": "as often as I'd like",
+              "offset": 62,
+              "length": 20
+            }
           ],
-          "time_resolved": []
+          "time_resolved": [
+            {
+              "time_expression": "as often as I'd like",
+              "temporal_type": "recurring",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": "often"
+            }
+          ]
         }
       ]
     },
@@ -76,16 +128,36 @@
       "Output": [
         {
           "annotator": "piek",
-          "activity_id": "chat0.1",
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "certain"
+          },
+          "activity": {
+            "value": "cycling",
+            "offset": 24,
+            "length": 7,
+            "type": "exercise",
+            "activity_id": "chat0.1"
+          },
           "agent": [],
           "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [
             {
+              "value": "crucial in managing your diabetes",
+              "type": "impact",
+              "offset": 36,
+              "length": 33
+            },
+            {
               "value": "helps your body use insulin better and can lower your blood sugar levels",
-              "type": "goal"
+              "type": "impact",
+              "offset": 74,
+              "length": 72
             }
           ],
           "time": [],
@@ -93,25 +165,39 @@
         },
         {
           "annotator": "piek",
-          "activity": "indoor exercises",
-          "activity_type": "exercise",
-          "activity_id": "chat0.2",
-          "agent": [
-            {
-              "value": "you",
-              "type": "person"
-            }
-          ],
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "certain"
+          },
+          "activity": {
+            "value": "indoor exercises",
+            "offset": 232,
+            "length": 16,
+            "type": "exercise",
+            "activity_id": "chat0.6"
+          },
+          "agent": [],
           "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [
             {
               "value": "indoor",
-              "type": "indoor"
+              "type": "indoor",
+              "offset": 232,
+              "length": 6
             }
           ],
-          "result": [],
+          "result": [
+            {
+              "value": "stay active",
+              "type": "goal",
+              "offset": 252,
+              "length": 11
+            }
+          ],
           "time": [],
           "time_resolved": []
         }
@@ -129,16 +215,30 @@
       "Output": [
         {
           "annotator": "piek",
-          "activity_id": "chat0.2",
-          "agent": [
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "indoor exercises",
+            "offset": 20,
+            "length": 16,
+            "type": "exercise",
+            "activity_id": "chat0.6"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [
             {
               "value": "me",
-              "type": "person"
+              "type": "person",
+              "offset": 53,
+              "length": 2
             }
           ],
-          "patient": [],
+          "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [],
@@ -158,18 +258,54 @@
       "Output": [
         {
           "annotator": "piek",
-          "activity": "Indoor walking or marching in place",
-          "activity_type": "exercise",
-          "activity_id": "chat0.3",
-          "agent": [
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "certain"
+          },
+          "activity": {
+            "value": "Indoor walking or marching in place",
+            "offset": 17,
+            "length": 35,
+            "type": "exercise",
+            "activity_id": "chat0.2"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [
             {
-              "value": "Jan",
-              "type": "person"
+              "value": "Indoor",
+              "type": "indoor",
+              "offset": 17,
+              "length": 6
             }
           ],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "certain"
+          },
+          "activity": {
+            "value": "stationary exercise bike",
+            "offset": 127,
+            "length": 24,
+            "type": "exercise",
+            "activity_id": "chat0.3"
+          },
+          "agent": [],
           "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [],
@@ -177,13 +313,30 @@
         },
         {
           "annotator": "piek",
-          "activity": "stationary exercise bike",
-          "activity_type": "exercise",
-          "activity_id": "chat0.4",
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "certain"
+          },
+          "activity": {
+            "value": "Strength training exercises",
+            "offset": 201,
+            "length": 27,
+            "type": "exercise",
+            "activity_id": "chat0.5"
+          },
           "agent": [],
           "patient": [],
-          "instrument": [],
-          "manner": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [
+            {
+              "value": "light weights or resistance bands",
+              "type": "tool",
+              "offset": 235,
+              "length": 33
+            }
+          ],
           "location": [],
           "result": [],
           "time": [],
@@ -191,13 +344,23 @@
         },
         {
           "annotator": "piek",
-          "activity": "Strength training exercises using light weights or resistance bands",
-          "activity_type": "",
-          "activity_id": "chat0.5",
+          "perspective": {
+            "emotion": "caring",
+            "factuality": "confirm",
+            "certainty": "certain"
+          },
+          "activity": {
+            "value": "outdoor cycling",
+            "offset": 184,
+            "length": 15,
+            "type": "exercise",
+            "activity_id": "chat0.1"
+          },
           "agent": [],
           "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [],
@@ -217,24 +380,49 @@
       "Output": [
         {
           "annotator": "piek",
-          "activity": "my daily walks",
-          "activity_type": "",
-          "activity_id": "chat0.6",
-          "agent": [
+          "perspective": {
+            "emotion": "curiosity",
+            "factuality": "confirm",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "walks",
+            "offset": 61,
+            "length": 5,
+            "type": "exercise",
+            "activity_id": "chat0.4"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [
             {
               "value": "my",
-              "type": "person"
+              "type": "person",
+              "offset": 52,
+              "length": 2
             }
           ],
-          "patient": [],
+          "experiencer": [],
           "instrument": [],
-          "manner": [],
           "location": [],
           "result": [],
           "time": [
-            "daily"
+            {
+              "value": "daily",
+              "offset": 55,
+              "length": 5
+            }
           ],
-          "time_resolved": []
+          "time_resolved": [
+            {
+              "time_expression": "daily",
+              "temporal_type": "recurring",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": "daily"
+            }
+          ]
         }
       ]
     },
@@ -250,25 +438,704 @@
       "Output": [
         {
           "annotator": "piek",
-          "activity_id": "chat0.6",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "walking",
+            "offset": 25,
+            "length": 7,
+            "type": "exercise",
+            "activity_id": "chat0.4"
+          },
           "agent": [],
           "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
           "instrument": [],
-          "manner": [
-            {
-              "value": "the intensity and duration to your abilities",
-              "type": "person"
-            }
-          ],
           "location": [],
           "result": [
             {
-              "value": "efficient and effective way to improve insulin sensitivity and manage your diabetes",
-              "type": "impact"
+              "value": "improve insulin sensitivity and manage your diabetes",
+              "type": "goal",
+              "offset": 70,
+              "length": 52
+            }
+          ],
+          "time": [
+            {
+              "value": "Regular",
+              "offset": 17,
+              "length": 7
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "Regular",
+              "temporal_type": "recurring",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": "regularly"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chat": 0,
+      "date": "2013,Apr,13",
+      "human": "Jan",
+      "Input": {
+        "turn": 8,
+        "speaker": "Jan",
+        "utterance": "I got it. Thanks for your advice. I will try to keep active, rain or shine."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "active",
+            "offset": 53,
+            "length": 6,
+            "type": "exercise",
+            "activity_id": "chat0.7"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [
+            {
+              "value": "I",
+              "type": "person",
+              "offset": 34,
+              "length": 1
+            }
+          ],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "rain or shine",
+              "offset": 61,
+              "length": 13
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "rain or shine",
+              "temporal_type": "vague",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "chat": 1,
+      "date": "2013,Aug,24",
+      "human": "Jan",
+      "Input": {
+        "turn": 1,
+        "speaker": "agent",
+        "utterance": "I noticed that you've been experiencing some anxiety about your health condition, Jan. Do you mind telling me more about what's causing this anxiety?"
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "anxiety",
+            "offset": 45,
+            "length": 7,
+            "type": "mental condition",
+            "activity_id": "chat1.1"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [
+            {
+              "value": "you",
+              "type": "person",
+              "offset": 15,
+              "length": 3
+            }
+          ],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 1,
+      "date": "2013,Aug,24",
+      "human": "Jan",
+      "Input": {
+        "turn": 2,
+        "speaker": "Jan",
+        "utterance": "Well, I worry about complications that can arise from Type 2 Diabetes. I've heard about heart disease and kidney failure. It's a bit overwhelming."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "fear",
+            "factuality": "expect",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "complications",
+            "offset": 20,
+            "length": 13,
+            "type": "symptom",
+            "activity_id": "chat1.2"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "fear",
+            "factuality": "expect",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "heart disease",
+            "offset": 88,
+            "length": 13,
+            "type": "symptom",
+            "activity_id": "chat1.3"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "fear",
+            "factuality": "expect",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "kidney failure",
+            "offset": 106,
+            "length": 14,
+            "type": "symptom",
+            "activity_id": "chat1.4"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 1,
+      "date": "2013,Aug,24",
+      "human": "Jan",
+      "Input": {
+        "turn": 3,
+        "speaker": "agent",
+        "utterance": "It's understandable to have fears, Jan. Diabetes can indeed lead to heart disease and kidney issues, but with good management, these risks can be significantly reduced. Besides medications, lifestyle changes such as eating a balanced diet, keeping active, and maintaining a healthy weight also play a crucial role."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "Diabetes",
+            "offset": 40,
+            "length": 8,
+            "type": "disease",
+            "activity_id": "chat1.5"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "activity_id": "chat1.1"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [
+            {
+              "value": "heart disease and kidney issues",
+              "type": "impact",
+              "offset": 68,
+              "length": 31
             }
           ],
           "time": [],
           "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "balanced diet",
+            "offset": 225,
+            "length": 13,
+            "type": "diet",
+            "activity_id": "chat1.6"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "keeping active",
+            "offset": 240,
+            "length": 14,
+            "type": "exercise",
+            "activity_id": "chat1.7"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "maintaining a healthy weight",
+            "offset": 260,
+            "length": 28,
+            "type": "physical condition",
+            "activity_id": "chat1.8"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "neutral",
+            "factuality": "confirm",
+            "certainty": "neutral"
+          },
+          "activity": {
+            "value": "medications",
+            "offset": 177,
+            "length": 11,
+            "type": "take_medicine",
+            "activity_id": "chat1.9"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        }
+      ]
+    },
+    {
+      "chat": 1,
+      "date": "2013,Aug,24",
+      "human": "Jan",
+      "Input": {
+        "turn": 4,
+        "speaker": "Jan",
+        "utterance": "I try to eat healthily and take walks daily. But I'm not sure if that's enough."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "desire",
+            "factuality": "confirm",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "eat healthily",
+            "offset": 9,
+            "length": 13,
+            "type": "diet",
+            "activity_id": "chat1.6"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [
+            {
+              "value": "I",
+              "type": "person",
+              "offset": 0,
+              "length": 1
+            }
+          ],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [],
+          "time_resolved": []
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "desire",
+            "factuality": "confirm",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "walks",
+            "offset": 32,
+            "length": 5,
+            "type": "exercise",
+            "activity_id": "chat1.7"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [
+            {
+              "value": "I",
+              "type": "person",
+              "offset": 0,
+              "length": 1
+            }
+          ],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "daily",
+              "offset": 38,
+              "length": 5
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "daily",
+              "temporal_type": "recurring",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": "daily"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chat": 1,
+      "date": "2013,Aug,24",
+      "human": "Jan",
+      "Input": {
+        "turn": 5,
+        "speaker": "agent",
+        "utterance": "Regular physical activity is an excellent step towards managing your diabetes. How about your blood sugar levels? Are you monitoring them regularly?"
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "curiosity",
+            "factuality": "expect",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "monitoring",
+            "offset": 122,
+            "length": 10,
+            "type": "measurement",
+            "activity_id": "chat1.10"
+          },
+          "agent": [
+            {
+              "value": "you",
+              "type": "person",
+              "offset": 118,
+              "length": 3
+            }
+          ],
+          "patient": [
+            {
+              "value": "blood sugar levels",
+              "type": "other",
+              "offset": 94,
+              "length": 18
+            }
+          ],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "regularly",
+              "offset": 138,
+              "length": 9
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "regularly",
+              "temporal_type": "recurring",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": "regularly"
+            }
+          ]
+        },
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "curiosity",
+            "factuality": "expect",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "physical activity",
+            "offset": 8,
+            "length": 17,
+            "type": "exercise",
+            "activity_id": "chat1.7"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "Regular",
+              "offset": 0,
+              "length": 7
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "Regular",
+              "temporal_type": "recurring",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": "regularly"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chat": 1,
+      "date": "2013,Aug,24",
+      "human": "Jan",
+      "Input": {
+        "turn": 6,
+        "speaker": "Jan",
+        "utterance": "I do, but it sometimes slips my mind. I try to keep track though."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "disappointment",
+            "factuality": "confirm",
+            "certainty": "uncertain"
+          },
+          "activity": {
+            "value": "it",
+            "offset": 10,
+            "length": 2,
+            "type": "measurement",
+            "activity_id": "chat1.10"
+          },
+          "agent": [],
+          "patient": [],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "sometimes slips my mind",
+              "offset": 13,
+              "length": 23
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "sometimes slips my mind",
+              "temporal_type": "recurring",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": "now-and-then"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chat": 1,
+      "date": "2013,Aug,24",
+      "human": "Jan",
+      "Input": {
+        "turn": 7,
+        "speaker": "agent",
+        "utterance": "It's great that you're monitoring your blood sugar, but try to make it more consistent. It can give you a clearer picture of how your food and activity levels affect your blood sugar. Remember, understanding your diabetes is the first step to feeling less anxious about it."
+      },
+      "Output": [
+        {
+          "annotator": "piek",
+          "perspective": {
+            "emotion": "approval",
+            "factuality": "confirm",
+            "certainty": "certain"
+          },
+          "activity": {
+            "value": "monitoring",
+            "offset": 23,
+            "length": 10,
+            "type": "measurement",
+            "activity_id": "chat1.10"
+          },
+          "agent": [
+            {
+              "value": "you",
+              "type": "person",
+              "offset": 16,
+              "length": 3
+            }
+          ],
+          "patient": [
+            {
+              "value": "blood sugar",
+              "type": "other",
+              "offset": 39,
+              "length": 11
+            }
+          ],
+          "agent_patient": [],
+          "experiencer": [],
+          "instrument": [],
+          "location": [],
+          "result": [],
+          "time": [
+            {
+              "value": "more consistent",
+              "offset": 71,
+              "length": 15
+            }
+          ],
+          "time_resolved": [
+            {
+              "time_expression": "more consistent",
+              "temporal_type": "recurring",
+              "absolute_date": null,
+              "date_range_start": null,
+              "date_range_end": null,
+              "recurrence_pattern": "often"
+            }
+          ]
         }
       ]
     }
