@@ -31,11 +31,25 @@
                             "length": 1
                         }
                     ],
-                    "patient": [],
+                    "patient": [
+                        {
+                            "value": "Jan",
+                            "type": "person",
+                            "offset": 4,
+                            "length": 3
+                        }
+                    ],
                     "agent_patient": [],
                     "experiencer": [],
                     "instrument": [],
-                    "location": [],
+                    "location": [
+                        {
+                            "value": "Dutch",
+                            "type": "country",
+                            "offset": 53,
+                            "length": 5
+                        }
+                    ],
                     "result": [],
                     "time": [
                         {
@@ -69,15 +83,15 @@
             "Output": [
                 {
                     "perspective": {
-                        "emotion": "annoyance",
+                        "emotion": "neutral",
                         "factuality": "confirm",
                         "certainty": "certain"
                     },
                     "activity": {
                         "activity_id": "chat0.1",
-                        "value": "been out",
-                        "offset": 53,
-                        "length": 8,
+                        "value": "out",
+                        "offset": 58,
+                        "length": 3,
                         "type": "exercise"
                     },
                     "agent": [],
@@ -113,7 +127,7 @@
                             "time_expression": "recently",
                             "temporal_type": "range",
                             "absolute_date": null,
-                            "date_range_start": "2013-03-30",
+                            "date_range_start": "2013-04-06",
                             "date_range_end": "2013-04-13",
                             "recurrence_pattern": null
                         }
@@ -138,84 +152,19 @@
                         "certainty": "certain"
                     },
                     "activity": {
-                        "activity_id": "chat0.2",
-                        "value": "managing",
-                        "offset": 47,
-                        "length": 8,
-                        "type": "treatment"
-                    },
-                    "agent": [
-                        {
-                            "value": "Physical activity, like cycling,",
-                            "type": "other",
-                            "offset": 0,
-                            "length": 32
-                        }
-                    ],
-                    "patient": [
-                        {
-                            "value": "your diabetes",
-                            "type": "other",
-                            "offset": 56,
-                            "length": 13
-                        }
-                    ],
-                    "agent_patient": [],
-                    "experiencer": [],
-                    "instrument": [],
-                    "location": [],
-                    "result": [
-                        {
-                            "value": "crucial",
-                            "type": "impact",
-                            "offset": 36,
-                            "length": 7
-                        }
-                    ],
-                    "time": [],
-                    "time_resolved": []
-                },
-                {
-                    "perspective": {
-                        "emotion": "caring",
-                        "factuality": "confirm",
-                        "certainty": "certain"
-                    },
-                    "activity": {
                         "activity_id": "chat0.1",
-                        "value": "look for",
-                        "offset": 223,
-                        "length": 8,
+                        "value": "cycling",
+                        "offset": 24,
+                        "length": 7,
                         "type": "exercise"
                     },
                     "agent": [],
                     "patient": [],
-                    "agent_patient": [
-                        {
-                            "value": "you",
-                            "type": "person",
-                            "offset": 56,
-                            "length": 3
-                        }
-                    ],
+                    "agent_patient": [],
                     "experiencer": [],
                     "instrument": [],
-                    "location": [
-                        {
-                            "value": "indoor",
-                            "type": "indoor",
-                            "offset": 232,
-                            "length": 6
-                        }
-                    ],
-                    "result": [
-                        {
-                            "value": "to stay active",
-                            "type": "goal",
-                            "offset": 249,
-                            "length": 14
-                        }
-                    ],
+                    "location": [],
+                    "result": [],
                     "time": [],
                     "time_resolved": []
                 }
@@ -235,13 +184,13 @@
                     "perspective": {
                         "emotion": "curiosity",
                         "factuality": "expect",
-                        "certainty": "uncertain"
+                        "certainty": "certain"
                     },
                     "activity": {
-                        "activity_id": "chat0.1",
-                        "value": "exercises",
-                        "offset": 27,
-                        "length": 9,
+                        "activity_id": "chat0.2",
+                        "value": "indoor exercises",
+                        "offset": 20,
+                        "length": 16,
                         "type": "exercise"
                     },
                     "agent": [],
@@ -288,106 +237,25 @@
                     },
                     "activity": {
                         "activity_id": "chat0.1",
-                        "value": "walking",
-                        "offset": 24,
-                        "length": 7,
-                        "type": "exercise"
-                    },
-                    "agent": [],
-                    "patient": [],
-                    "agent_patient": [
-                        {
-                            "value": "Indoor",
-                            "type": "other",
-                            "offset": 17,
-                            "length": 6
-                        }
-                    ],
-                    "experiencer": [],
-                    "instrument": [],
-                    "location": [],
-                    "result": [
-                        {
-                            "value": "an excellent start",
-                            "type": "goal",
-                            "offset": 60,
-                            "length": 18
-                        }
-                    ],
-                    "time": [],
-                    "time_resolved": []
-                },
-                {
-                    "perspective": {
-                        "emotion": "caring",
-                        "factuality": "confirm",
-                        "certainty": "certain"
-                    },
-                    "activity": {
-                        "activity_id": "chat0.1",
-                        "value": "investing in a stationary exercise bike",
-                        "offset": 112,
-                        "length": 39,
-                        "type": "exercise"
-                    },
-                    "agent": [],
-                    "patient": [],
-                    "agent_patient": [
-                        {
-                            "value": "you",
-                            "type": "person",
-                            "offset": 93,
-                            "length": 3
-                        }
-                    ],
-                    "experiencer": [],
-                    "instrument": [
-                        {
-                            "value": "a stationary exercise bike",
-                            "type": "object",
-                            "offset": 125,
-                            "length": 26
-                        }
-                    ],
-                    "location": [],
-                    "result": [],
-                    "time": [],
-                    "time_resolved": []
-                },
-                {
-                    "perspective": {
-                        "emotion": "caring",
-                        "factuality": "confirm",
-                        "certainty": "certain"
-                    },
-                    "activity": {
-                        "activity_id": "chat0.1",
-                        "value": "Strength training exercises",
-                        "offset": 201,
-                        "length": 27,
+                        "value": "outdoor cycling",
+                        "offset": 184,
+                        "length": 15,
                         "type": "exercise"
                     },
                     "agent": [],
                     "patient": [],
                     "agent_patient": [],
                     "experiencer": [],
-                    "instrument": [
+                    "instrument": [],
+                    "location": [
                         {
-                            "value": "light weights or resistance bands",
-                            "type": "object",
-                            "offset": 235,
-                            "length": 33
+                            "value": "outdoor",
+                            "type": "outdoor",
+                            "offset": 184,
+                            "length": 7
                         }
                     ],
-                    "location": [],
-                    "result": [
-                        {
-                            "value": "beneficial",
-                            "type": "impact",
-                            "offset": 278,
-                            "length": 10
-                        }
-                    ],
+                    "result": [],
                     "time": [],
                     "time_resolved": []
                 }
@@ -410,7 +278,7 @@
                         "certainty": "certain"
                     },
                     "activity": {
-                        "activity_id": "chat0.1",
+                        "activity_id": "chat0.3",
                         "value": "daily walks",
                         "offset": 55,
                         "length": 11,
@@ -474,10 +342,10 @@
                         "certainty": "certain"
                     },
                     "activity": {
-                        "activity_id": "chat0.1",
-                        "value": "walking",
-                        "offset": 25,
-                        "length": 7,
+                        "activity_id": "chat0.3",
+                        "value": "Regular walking",
+                        "offset": 17,
+                        "length": 15,
                         "type": "exercise"
                     },
                     "agent": [],
@@ -488,16 +356,10 @@
                     "location": [],
                     "result": [
                         {
-                            "value": "efficient",
-                            "type": "impact",
-                            "offset": 39,
-                            "length": 9
-                        },
-                        {
-                            "value": "effective",
-                            "type": "impact",
-                            "offset": 53,
-                            "length": 9
+                            "value": "to improve insulin sensitivity and manage your diabetes",
+                            "type": "goal",
+                            "offset": 67,
+                            "length": 55
                         }
                     ],
                     "time": [],
@@ -522,7 +384,7 @@
                         "certainty": "certain"
                     },
                     "activity": {
-                        "activity_id": "chat0.1",
+                        "activity_id": "chat0.4",
                         "value": "keep active",
                         "offset": 48,
                         "length": 11,
@@ -564,21 +426,14 @@
                         "certainty": "certain"
                     },
                     "activity": {
-                        "activity_id": "chat0.2",
-                        "value": "managing",
+                        "activity_id": "chat0.5",
+                        "value": "managing diabetes",
                         "offset": 53,
-                        "length": 8,
+                        "length": 17,
                         "type": "treatment"
                     },
                     "agent": [],
-                    "patient": [
-                        {
-                            "value": "diabetes",
-                            "type": "other",
-                            "offset": 62,
-                            "length": 8
-                        }
-                    ],
+                    "patient": [],
                     "agent_patient": [],
                     "experiencer": [],
                     "instrument": [],
@@ -586,11 +441,755 @@
                     "result": [
                         {
                             "value": "consistency is key",
-                            "type": "impact",
+                            "type": "goal",
                             "offset": 31,
                             "length": 18
                         }
                     ],
+                    "time": [],
+                    "time_resolved": []
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "chat": 1,
+            "date": "2013,Aug,24",
+            "human": "Jan",
+            "Input": {
+                "turn": 1,
+                "speaker": "agent",
+                "utterance": "I noticed that you've been experiencing some anxiety about your health condition, Jan. Do you mind telling me more about what's causing this anxiety?"
+            },
+            "Output": [
+                {
+                    "perspective": {
+                        "emotion": "caring",
+                        "factuality": "expect",
+                        "certainty": "neutral"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.1",
+                        "value": "experiencing some anxiety about your health condition",
+                        "offset": 27,
+                        "length": 53,
+                        "type": "mental condition"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [
+                        {
+                            "value": "you",
+                            "type": "person",
+                            "offset": 15,
+                            "length": 3
+                        }
+                    ],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                }
+            ]
+        },
+        {
+            "chat": 1,
+            "date": "2013,Aug,24",
+            "human": "Jan",
+            "Input": {
+                "turn": 2,
+                "speaker": "Jan",
+                "utterance": "Well, I worry about complications that can arise from Type 2 Diabetes. I've heard about heart disease and kidney failure. It's a bit overwhelming."
+            },
+            "Output": [
+                {
+                    "perspective": {
+                        "emotion": "nervousness",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.2",
+                        "value": "worry",
+                        "offset": 8,
+                        "length": 5,
+                        "type": "mental condition"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [
+                        {
+                            "value": "I",
+                            "type": "person",
+                            "offset": 6,
+                            "length": 1
+                        }
+                    ],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                },
+                {
+                    "perspective": {
+                        "emotion": "nervousness",
+                        "factuality": "expect",
+                        "certainty": "neutral"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.3",
+                        "value": "complications",
+                        "offset": 20,
+                        "length": 13,
+                        "type": "physical condition"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [
+                        {
+                            "value": "can arise from Type 2 Diabetes",
+                            "type": "impact",
+                            "offset": 39,
+                            "length": 30
+                        }
+                    ],
+                    "time": [],
+                    "time_resolved": []
+                },
+                {
+                    "perspective": {
+                        "emotion": "nervousness",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.4",
+                        "value": "heart disease",
+                        "offset": 88,
+                        "length": 13,
+                        "type": "disease"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                },
+                {
+                    "perspective": {
+                        "emotion": "nervousness",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.5",
+                        "value": "kidney failure",
+                        "offset": 106,
+                        "length": 14,
+                        "type": "disease"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                },
+                {
+                    "perspective": {
+                        "emotion": "nervousness",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.6",
+                        "value": "overwhelming",
+                        "offset": 133,
+                        "length": 12,
+                        "type": "mental condition"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [
+                        {
+                            "value": "It",
+                            "type": "other",
+                            "offset": 122,
+                            "length": 2
+                        }
+                    ],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                }
+            ]
+        },
+        {
+            "chat": 1,
+            "date": "2013,Aug,24",
+            "human": "Jan",
+            "Input": {
+                "turn": 3,
+                "speaker": "agent",
+                "utterance": "It's understandable to have fears, Jan. Diabetes can indeed lead to heart disease and kidney issues, but with good management, these risks can be significantly reduced. Besides medications, lifestyle changes such as eating a balanced diet, keeping active, and maintaining a healthy weight also play a crucial role."
+            },
+            "Output": [
+                {
+                    "perspective": {
+                        "emotion": "caring",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.7",
+                        "value": "have fears",
+                        "offset": 23,
+                        "length": 10,
+                        "type": "mental condition"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [
+                        {
+                            "value": "Diabetes",
+                            "type": "other",
+                            "offset": 40,
+                            "length": 8
+                        }
+                    ],
+                    "experiencer": [
+                        {
+                            "value": "Jan",
+                            "type": "person",
+                            "offset": 35,
+                            "length": 3
+                        }
+                    ],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                },
+                {
+                    "perspective": {
+                        "emotion": "caring",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.4",
+                        "value": "heart disease",
+                        "offset": 68,
+                        "length": 13,
+                        "type": "disease"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                },
+                {
+                    "perspective": {
+                        "emotion": "caring",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.8",
+                        "value": "kidney issues",
+                        "offset": 86,
+                        "length": 13,
+                        "type": "disease"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                },
+                {
+                    "perspective": {
+                        "emotion": "caring",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.9",
+                        "value": "eating a balanced diet",
+                        "offset": 216,
+                        "length": 22,
+                        "type": "diet"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                },
+                {
+                    "perspective": {
+                        "emotion": "caring",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.10",
+                        "value": "keeping active",
+                        "offset": 240,
+                        "length": 14,
+                        "type": "exercise"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                },
+                {
+                    "perspective": {
+                        "emotion": "caring",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.11",
+                        "value": "maintaining a healthy weight",
+                        "offset": 260,
+                        "length": 28,
+                        "type": "physical condition"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                }
+            ]
+        },
+        {
+            "chat": 1,
+            "date": "2013,Aug,24",
+            "human": "Jan",
+            "Input": {
+                "turn": 4,
+                "speaker": "Jan",
+                "utterance": "I try to eat healthily and take walks daily. But I'm not sure if that's enough."
+            },
+            "Output": [
+                {
+                    "perspective": {
+                        "emotion": "optimism",
+                        "factuality": "confirm",
+                        "certainty": "uncertain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.12",
+                        "value": "eat healthily",
+                        "offset": 9,
+                        "length": 13,
+                        "type": "diet"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [
+                        {
+                            "value": "I",
+                            "type": "person",
+                            "offset": 0,
+                            "length": 1
+                        }
+                    ],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [
+                        {
+                            "value": "daily",
+                            "offset": 38,
+                            "length": 5
+                        }
+                    ],
+                    "time_resolved": [
+                        {
+                            "time_expression": "daily",
+                            "temporal_type": "recurring",
+                            "absolute_date": null,
+                            "date_range_start": null,
+                            "date_range_end": null,
+                            "recurrence_pattern": "daily"
+                        }
+                    ]
+                },
+                {
+                    "perspective": {
+                        "emotion": "optimism",
+                        "factuality": "confirm",
+                        "certainty": "uncertain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.13",
+                        "value": "take walks",
+                        "offset": 27,
+                        "length": 10,
+                        "type": "exercise"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [
+                        {
+                            "value": "I",
+                            "type": "person",
+                            "offset": 0,
+                            "length": 1
+                        }
+                    ],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [
+                        {
+                            "value": "daily",
+                            "offset": 38,
+                            "length": 5
+                        }
+                    ],
+                    "time_resolved": [
+                        {
+                            "time_expression": "daily",
+                            "temporal_type": "recurring",
+                            "absolute_date": null,
+                            "date_range_start": null,
+                            "date_range_end": null,
+                            "recurrence_pattern": "daily"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "chat": 1,
+            "date": "2013,Aug,24",
+            "human": "Jan",
+            "Input": {
+                "turn": 5,
+                "speaker": "agent",
+                "utterance": "Regular physical activity is an excellent step towards managing your diabetes. How about your blood sugar levels? Are you monitoring them regularly?"
+            },
+            "Output": [
+                {
+                    "perspective": {
+                        "emotion": "caring",
+                        "factuality": "expect",
+                        "certainty": "neutral"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.14",
+                        "value": "monitoring",
+                        "offset": 122,
+                        "length": 10,
+                        "type": "measurement"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [
+                        {
+                            "value": "you",
+                            "type": "person",
+                            "offset": 64,
+                            "length": 3
+                        }
+                    ],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [
+                        {
+                            "value": "Regular",
+                            "offset": 0,
+                            "length": 7
+                        },
+                        {
+                            "value": "regularly",
+                            "offset": 138,
+                            "length": 9
+                        }
+                    ],
+                    "time_resolved": [
+                        {
+                            "time_expression": "Regular",
+                            "temporal_type": "vague",
+                            "absolute_date": null,
+                            "date_range_start": null,
+                            "date_range_end": null,
+                            "recurrence_pattern": null
+                        },
+                        {
+                            "time_expression": "regularly",
+                            "temporal_type": "recurring",
+                            "absolute_date": null,
+                            "date_range_start": null,
+                            "date_range_end": null,
+                            "recurrence_pattern": "regularly"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "chat": 1,
+            "date": "2013,Aug,24",
+            "human": "Jan",
+            "Input": {
+                "turn": 6,
+                "speaker": "Jan",
+                "utterance": "I do, but it sometimes slips my mind. I try to keep track though."
+            },
+            "Output": [
+                {
+                    "perspective": {
+                        "emotion": "neutral",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.14",
+                        "value": "it",
+                        "offset": 10,
+                        "length": 2,
+                        "type": "measurement"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [
+                        {
+                            "value": "sometimes",
+                            "offset": 13,
+                            "length": 9
+                        }
+                    ],
+                    "time_resolved": [
+                        {
+                            "time_expression": "sometimes",
+                            "temporal_type": "recurring",
+                            "absolute_date": null,
+                            "date_range_start": null,
+                            "date_range_end": null,
+                            "recurrence_pattern": "sometimes"
+                        }
+                    ]
+                },
+                {
+                    "perspective": {
+                        "emotion": "neutral",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.15",
+                        "value": "slips my mind",
+                        "offset": 23,
+                        "length": 13,
+                        "type": "mental condition"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [
+                        {
+                            "value": "I",
+                            "type": "person",
+                            "offset": 0,
+                            "length": 1
+                        }
+                    ],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [
+                        {
+                            "value": "sometimes",
+                            "offset": 13,
+                            "length": 9
+                        }
+                    ],
+                    "time_resolved": [
+                        {
+                            "time_expression": "sometimes",
+                            "temporal_type": "recurring",
+                            "absolute_date": null,
+                            "date_range_start": null,
+                            "date_range_end": null,
+                            "recurrence_pattern": "sometimes"
+                        }
+                    ]
+                },
+                {
+                    "perspective": {
+                        "emotion": "neutral",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.16",
+                        "value": "keep track",
+                        "offset": 47,
+                        "length": 10,
+                        "type": "measurement"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [
+                        {
+                            "value": "I",
+                            "type": "person",
+                            "offset": 0,
+                            "length": 1
+                        }
+                    ],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
+                    "time": [],
+                    "time_resolved": []
+                }
+            ]
+        },
+        {
+            "chat": 1,
+            "date": "2013,Aug,24",
+            "human": "Jan",
+            "Input": {
+                "turn": 7,
+                "speaker": "agent",
+                "utterance": "It's great that you're monitoring your blood sugar, but try to make it more consistent. It can give you a clearer picture of how your food and activity levels affect your blood sugar. Remember, understanding your diabetes is the first step to feeling less anxious about it."
+            },
+            "Output": [
+                {
+                    "perspective": {
+                        "emotion": "approval",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.14",
+                        "value": "monitoring your blood sugar",
+                        "offset": 23,
+                        "length": 27,
+                        "type": "measurement"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [
+                        {
+                            "value": "you",
+                            "type": "person",
+                            "offset": 16,
+                            "length": 3
+                        }
+                    ],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [
+                        {
+                            "value": "give you a clearer picture of how your food and activity levels affect your blood sugar",
+                            "type": "impact",
+                            "offset": 95,
+                            "length": 87
+                        }
+                    ],
+                    "time": [],
+                    "time_resolved": []
+                }
+            ]
+        },
+        {
+            "chat": 1,
+            "date": "2013,Aug,24",
+            "human": "Jan",
+            "Input": {
+                "turn": 8,
+                "speaker": "Jan",
+                "utterance": "I suppose that's true. I will try to be more consistent with monitoring my blood sugar. Thanks for your advice."
+            },
+            "Output": [
+                {
+                    "perspective": {
+                        "emotion": "gratitude",
+                        "factuality": "confirm",
+                        "certainty": "certain"
+                    },
+                    "activity": {
+                        "activity_id": "chat1.17",
+                        "value": "be more consistent with monitoring my blood sugar",
+                        "offset": 37,
+                        "length": 49,
+                        "type": "measurement"
+                    },
+                    "agent": [],
+                    "patient": [],
+                    "agent_patient": [
+                        {
+                            "value": "I",
+                            "type": "person",
+                            "offset": 0,
+                            "length": 1
+                        }
+                    ],
+                    "experiencer": [],
+                    "instrument": [],
+                    "location": [],
+                    "result": [],
                     "time": [],
                     "time_resolved": []
                 }
