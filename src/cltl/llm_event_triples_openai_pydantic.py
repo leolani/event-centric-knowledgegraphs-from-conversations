@@ -158,28 +158,50 @@ class LLM_EventExtraction:
 
         tool_calls = response_message.tool_calls
 
+        # Append the model's own reply to history too, not just our per-turn inputs. Without
+        # this, every call sent a run of consecutive "user" messages with no assistant replies
+        # in between, which gives the model no clear signal for which message is the CURRENT
+        # turn -- it increasingly pulled content from earlier turns into the latest extraction
+        # as the conversation grew (visible as HALLUCINATION: N tags in evaluate.py's mismatch
+        # log, almost always pointing at an earlier turn).
+        assistant_message = {"role": "assistant", "content": response_message.content}
         if tool_calls:
-            # The model invoked the function
-            available_functions = {
-                "extract_events": SRLAnnotations,
-            }
-            for tool_call in tool_calls:
-                function_name = tool_call.function.name
-                function_to_call = available_functions[function_name]
-                function_args = json.loads(tool_call.function.arguments)
-                # Parse the response into a Pydantic model
-                try:
-                    structured_output = function_to_call(**function_args)
-                except Exception as e:
-                    print("Error parsing function output:", e)
-                    structured_output = None
-                if structured_output is not None:
-                    return structured_output.extractions
-                else:
-                    return None
-        else:
+            assistant_message["tool_calls"] = [
+                {"id": tc.id, "type": tc.type,
+                 "function": {"name": tc.function.name, "arguments": tc.function.arguments}}
+                for tc in tool_calls
+            ]
+        self._history.append(assistant_message)
+
+        if not tool_calls:
             # Fallback if the model didn't call the function
             return response_message.content
+
+        # Every tool_call on an assistant message must be answered by a matching "tool"
+        # message before the next API call, or the request is rejected -- we're not actually
+        # executing a tool, just using function-calling for structured output, so the content
+        # is a placeholder acknowledgment rather than a real result.
+        for tool_call in tool_calls:
+            self._history.append({"role": "tool", "tool_call_id": tool_call.id, "content": "Extraction recorded."})
+
+        # The model invoked the function
+        available_functions = {
+            "extract_events": SRLAnnotations,
+        }
+        for tool_call in tool_calls:
+            function_name = tool_call.function.name
+            function_to_call = available_functions[function_name]
+            function_args = json.loads(tool_call.function.arguments)
+            # Parse the response into a Pydantic model
+            try:
+                structured_output = function_to_call(**function_args)
+            except Exception as e:
+                print("Error parsing function output:", e)
+                structured_output = None
+            if structured_output is not None:
+                return structured_output.extractions
+            else:
+                return None
 
     def check_compliance(self, chat_number, utterance, extractions):
         """Validate a turn's extractions against the annotations.json Output-entry schema.

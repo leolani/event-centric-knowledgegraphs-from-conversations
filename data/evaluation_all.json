@@ -1,16 +1,16 @@
 {
   "srl_strict": {
     "activity": {
-      "tp": 1,
-      "fp": 9,
-      "fn": 7,
-      "precision": 0.1,
-      "recall": 0.125,
-      "f1": 0.11111111111111112
+      "tp": 4,
+      "fp": 8,
+      "fn": 4,
+      "precision": 0.3333333333333333,
+      "recall": 0.5,
+      "f1": 0.4
     },
     "agent": {
       "tp": 0,
-      "fp": 1,
+      "fp": 2,
       "fn": 0,
       "precision": 0.0,
       "recall": 0.0,
@@ -18,7 +18,7 @@
     },
     "patient": {
       "tp": 0,
-      "fp": 0,
+      "fp": 2,
       "fn": 0,
       "precision": 0.0,
       "recall": 0.0,
@@ -26,7 +26,7 @@
     },
     "agent_patient": {
       "tp": 0,
-      "fp": 8,
+      "fp": 6,
       "fn": 2,
       "precision": 0.0,
       "recall": 0.0,
@@ -42,7 +42,7 @@
     },
     "instrument": {
       "tp": 0,
-      "fp": 0,
+      "fp": 2,
       "fn": 1,
       "precision": 0.0,
       "recall": 0.0,
@@ -50,7 +50,7 @@
     },
     "location": {
       "tp": 0,
-      "fp": 1,
+      "fp": 2,
       "fn": 1,
       "precision": 0.0,
       "recall": 0.0,
@@ -58,7 +58,7 @@
     },
     "result": {
       "tp": 0,
-      "fp": 2,
+      "fp": 10,
       "fn": 3,
       "precision": 0.0,
       "recall": 0.0,
@@ -66,33 +66,33 @@
     },
     "time": {
       "tp": 1,
-      "fp": 7,
+      "fp": 2,
       "fn": 3,
-      "precision": 0.125,
+      "precision": 0.3333333333333333,
       "recall": 0.25,
-      "f1": 0.16666666666666666
+      "f1": 0.28571428571428575
     },
     "overall": {
-      "tp": 2,
-      "fp": 28,
-      "fn": 17,
-      "precision": 0.06666666666666667,
-      "recall": 0.10526315789473684,
-      "f1": 0.0816326530612245
+      "tp": 5,
+      "fp": 34,
+      "fn": 14,
+      "precision": 0.1282051282051282,
+      "recall": 0.2631578947368421,
+      "f1": 0.17241379310344826
     }
   },
   "srl_lenient": {
     "activity": {
-      "tp": 4,
-      "fp": 6,
-      "fn": 4,
-      "precision": 0.4,
-      "recall": 0.5,
-      "f1": 0.4444444444444445
+      "tp": 7,
+      "fp": 5,
+      "fn": 1,
+      "precision": 0.5833333333333334,
+      "recall": 0.875,
+      "f1": 0.7000000000000001
     },
     "agent": {
       "tp": 0,
-      "fp": 1,
+      "fp": 2,
       "fn": 0,
       "precision": 0.0,
       "recall": 0.0,
@@ -100,7 +100,7 @@
     },
     "patient": {
       "tp": 0,
-      "fp": 0,
+      "fp": 2,
       "fn": 0,
       "precision": 0.0,
       "recall": 0.0,
@@ -108,7 +108,7 @@
     },
     "agent_patient": {
       "tp": 0,
-      "fp": 8,
+      "fp": 6,
       "fn": 2,
       "precision": 0.0,
       "recall": 0.0,
@@ -124,125 +124,125 @@
     },
     "instrument": {
       "tp": 0,
-      "fp": 0,
+      "fp": 2,
       "fn": 1,
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0
     },
     "location": {
-      "tp": 1,
-      "fp": 0,
-      "fn": 0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0
+      "tp": 0,
+      "fp": 2,
+      "fn": 1,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
     },
     "result": {
       "tp": 0,
-      "fp": 2,
+      "fp": 10,
       "fn": 3,
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0
     },
     "time": {
-      "tp": 3,
-      "fp": 5,
-      "fn": 1,
-      "precision": 0.375,
-      "recall": 0.75,
-      "f1": 0.5
+      "tp": 2,
+      "fp": 1,
+      "fn": 2,
+      "precision": 0.6666666666666666,
+      "recall": 0.5,
+      "f1": 0.5714285714285715
     },
     "participant": {
       "tp": 0,
-      "fp": 9,
+      "fp": 10,
       "fn": 2,
       "precision": 0.0,
       "recall": 0.0,
       "f1": 0.0
     },
     "overall": {
-      "tp": 8,
-      "fp": 22,
-      "fn": 11,
-      "precision": 0.26666666666666666,
-      "recall": 0.42105263157894735,
-      "f1": 0.326530612244898
+      "tp": 9,
+      "fp": 30,
+      "fn": 10,
+      "precision": 0.23076923076923078,
+      "recall": 0.47368421052631576,
+      "f1": 0.3103448275862069
     }
   },
   "blanc_strict": {
     "0": {
-      "blanc": null,
-      "precision_c": null,
-      "recall_c": null,
-      "f1_c": null,
+      "blanc": 0.2857142857142857,
+      "precision_c": 0.16666666666666666,
+      "recall_c": 1.0,
+      "f1_c": 0.2857142857142857,
       "precision_n": null,
-      "recall_n": null,
+      "recall_n": 0.0,
       "f1_n": null,
-      "rc": 0,
-      "ck": 0,
-      "cg": 0,
+      "rc": 1,
+      "ck": 6,
+      "cg": 1,
       "rn": 0,
       "nk": 0,
-      "ng": 0,
-      "mentions": 1
+      "ng": 5,
+      "mentions": 4
     },
     "overall": {
-      "blanc": null,
-      "precision_c": null,
-      "recall_c": null,
-      "f1_c": null,
+      "blanc": 0.2857142857142857,
+      "precision_c": 0.16666666666666666,
+      "recall_c": 1.0,
+      "f1_c": 0.2857142857142857,
       "precision_n": null,
-      "recall_n": null,
+      "recall_n": 0.0,
       "f1_n": null,
-      "rc": 0,
-      "ck": 0,
-      "cg": 0,
+      "rc": 1,
+      "ck": 6,
+      "cg": 1,
       "rn": 0,
       "nk": 0,
-      "ng": 0,
-      "mentions": 1
+      "ng": 5,
+      "mentions": 4
     }
   },
   "blanc_lenient": {
     "0": {
-      "blanc": 0.625,
-      "precision_c": 0.3333333333333333,
+      "blanc": 0.17391304347826084,
+      "precision_c": 0.09523809523809523,
       "recall_c": 1.0,
-      "f1_c": 0.5,
-      "precision_n": 1.0,
-      "recall_n": 0.6,
-      "f1_n": 0.7499999999999999,
-      "rc": 1,
-      "ck": 3,
-      "cg": 1,
-      "rn": 3,
-      "nk": 3,
-      "ng": 5,
-      "mentions": 4
+      "f1_c": 0.17391304347826084,
+      "precision_n": null,
+      "recall_n": 0.0,
+      "f1_n": null,
+      "rc": 2,
+      "ck": 21,
+      "cg": 2,
+      "rn": 0,
+      "nk": 0,
+      "ng": 19,
+      "mentions": 7
     },
     "overall": {
-      "blanc": 0.625,
-      "precision_c": 0.3333333333333333,
+      "blanc": 0.17391304347826084,
+      "precision_c": 0.09523809523809523,
       "recall_c": 1.0,
-      "f1_c": 0.5,
-      "precision_n": 1.0,
-      "recall_n": 0.6,
-      "f1_n": 0.7499999999999999,
-      "rc": 1,
-      "ck": 3,
-      "cg": 1,
-      "rn": 3,
-      "nk": 3,
-      "ng": 5,
-      "mentions": 4
+      "f1_c": 0.17391304347826084,
+      "precision_n": null,
+      "recall_n": 0.0,
+      "f1_n": null,
+      "rc": 2,
+      "ck": 21,
+      "cg": 2,
+      "rn": 0,
+      "nk": 0,
+      "ng": 19,
+      "mentions": 7
     }
   },
   "types": {
     "activity": {
-      "correct": 4,
-      "total": 4,
+      "correct": 7,
+      "total": 7,
       "accuracy": 1.0
     },
     "agent": {
@@ -271,9 +271,9 @@
       "accuracy": null
     },
     "location": {
-      "correct": 1,
-      "total": 1,
-      "accuracy": 1.0
+      "correct": 0,
+      "total": 0,
+      "accuracy": null
     },
     "result": {
       "correct": 0,
@@ -281,24 +281,78 @@
       "accuracy": null
     },
     "overall": {
-      "correct": 5,
-      "total": 5,
+      "correct": 7,
+      "total": 7,
       "accuracy": 1.0
+    }
+  },
+  "perspective": {
+    "emotion": {
+      "correct": 2,
+      "total": 6,
+      "accuracy": 0.3333333333333333
+    },
+    "factuality": {
+      "correct": 5,
+      "total": 6,
+      "accuracy": 0.8333333333333334
+    },
+    "certainty": {
+      "correct": 2,
+      "total": 6,
+      "accuracy": 0.3333333333333333
+    },
+    "overall": {
+      "correct": 9,
+      "total": 18,
+      "accuracy": 0.5
+    }
+  },
+  "time_resolved": {
+    "temporal_type": {
+      "correct": 2,
+      "total": 2,
+      "accuracy": 1.0
+    },
+    "absolute_date": {
+      "correct": 0,
+      "total": 0,
+      "accuracy": null
+    },
+    "date_range_start": {
+      "correct": 0,
+      "total": 1,
+      "accuracy": 0.0
+    },
+    "date_range_end": {
+      "correct": 1,
+      "total": 1,
+      "accuracy": 1.0
+    },
+    "recurrence_pattern": {
+      "correct": 1,
+      "total": 1,
+      "accuracy": 1.0
+    },
+    "overall": {
+      "correct": 4,
+      "total": 5,
+      "accuracy": 0.8
     }
   },
   "ngram": {
     "0": {
       "activity": {
-        "tp": 2,
+        "tp": 1,
         "fp": 1,
-        "fn": 3,
-        "precision": 0.6666666666666666,
-        "recall": 0.4,
-        "f1": 0.5
+        "fn": 4,
+        "precision": 0.5,
+        "recall": 0.2,
+        "f1": 0.28571428571428575
       },
       "agent": {
         "tp": 0,
-        "fp": 1,
+        "fp": 2,
         "fn": 0,
         "precision": 0.0,
         "recall": 0.0,
@@ -306,19 +360,19 @@
       },
       "patient": {
         "tp": 0,
-        "fp": 0,
+        "fp": 2,
         "fn": 0,
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0
       },
       "agent_patient": {
-        "tp": 1,
-        "fp": 7,
-        "fn": 1,
-        "precision": 0.125,
-        "recall": 0.5,
-        "f1": 0.2
+        "tp": 0,
+        "fp": 6,
+        "fn": 2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "experiencer": {
         "tp": 0,
@@ -329,58 +383,58 @@
         "f1": 0.0
       },
       "instrument": {
-        "tp": 0,
-        "fp": 0,
-        "fn": 1,
-        "precision": 0.0,
-        "recall": 0.0,
-        "f1": 0.0
+        "tp": 1,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666
       },
       "location": {
         "tp": 1,
-        "fp": 0,
+        "fp": 1,
         "fn": 0,
-        "precision": 1.0,
+        "precision": 0.5,
         "recall": 1.0,
-        "f1": 1.0
+        "f1": 0.6666666666666666
       },
       "result": {
         "tp": 0,
-        "fp": 2,
+        "fp": 10,
         "fn": 3,
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0
       },
       "time": {
-        "tp": 3,
-        "fp": 5,
-        "fn": 1,
-        "precision": 0.375,
-        "recall": 0.75,
-        "f1": 0.5
+        "tp": 2,
+        "fp": 1,
+        "fn": 2,
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
       },
       "overall": {
-        "tp": 7,
-        "fp": 16,
-        "fn": 9,
-        "precision": 0.30434782608695654,
-        "recall": 0.4375,
-        "f1": 0.358974358974359
+        "tp": 5,
+        "fp": 24,
+        "fn": 11,
+        "precision": 0.1724137931034483,
+        "recall": 0.3125,
+        "f1": 0.22222222222222224
       }
     },
     "average": {
       "activity": {
-        "tp": 2.0,
+        "tp": 1.0,
         "fp": 1.0,
-        "fn": 3.0,
-        "precision": 0.6666666666666666,
-        "recall": 0.4,
-        "f1": 0.5
+        "fn": 4.0,
+        "precision": 0.5,
+        "recall": 0.2,
+        "f1": 0.28571428571428575
       },
       "agent": {
         "tp": 0.0,
-        "fp": 1.0,
+        "fp": 2.0,
         "fn": 0.0,
         "precision": 0.0,
         "recall": 0.0,
@@ -388,19 +442,19 @@
       },
       "patient": {
         "tp": 0.0,
-        "fp": 0.0,
+        "fp": 2.0,
         "fn": 0.0,
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0
       },
       "agent_patient": {
-        "tp": 1.0,
-        "fp": 7.0,
-        "fn": 1.0,
-        "precision": 0.125,
-        "recall": 0.5,
-        "f1": 0.2
+        "tp": 0.0,
+        "fp": 6.0,
+        "fn": 2.0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
       },
       "experiencer": {
         "tp": 0.0,
@@ -411,45 +465,108 @@
         "f1": 0.0
       },
       "instrument": {
-        "tp": 0.0,
-        "fp": 0.0,
-        "fn": 1.0,
-        "precision": 0.0,
-        "recall": 0.0,
-        "f1": 0.0
+        "tp": 1.0,
+        "fp": 1.0,
+        "fn": 0.0,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666
       },
       "location": {
         "tp": 1.0,
-        "fp": 0.0,
+        "fp": 1.0,
         "fn": 0.0,
-        "precision": 1.0,
+        "precision": 0.5,
         "recall": 1.0,
-        "f1": 1.0
+        "f1": 0.6666666666666666
       },
       "result": {
         "tp": 0.0,
-        "fp": 2.0,
+        "fp": 10.0,
         "fn": 3.0,
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0
       },
       "time": {
-        "tp": 3.0,
-        "fp": 5.0,
-        "fn": 1.0,
-        "precision": 0.375,
-        "recall": 0.75,
-        "f1": 0.5
+        "tp": 2.0,
+        "fp": 1.0,
+        "fn": 2.0,
+        "precision": 0.6666666666666666,
+        "recall": 0.5,
+        "f1": 0.5714285714285715
       },
       "overall": {
-        "tp": 7.0,
-        "fp": 16.0,
-        "fn": 9.0,
-        "precision": 0.30434782608695654,
-        "recall": 0.4375,
-        "f1": 0.358974358974359
+        "tp": 5.0,
+        "fp": 24.0,
+        "fn": 11.0,
+        "precision": 0.1724137931034483,
+        "recall": 0.3125,
+        "f1": 0.22222222222222224
       }
     }
+  },
+  "hallucinations": {
+    "activity": {
+      "with_ref": 0,
+      "without_ref": 0,
+      "with_ref_score": 0.0,
+      "without_ref_score": 0.0
+    },
+    "agent": {
+      "with_ref": 0,
+      "without_ref": 0,
+      "with_ref_score": 0.0,
+      "without_ref_score": 0.0
+    },
+    "patient": {
+      "with_ref": 0,
+      "without_ref": 0,
+      "with_ref_score": 0.0,
+      "without_ref_score": 0.0
+    },
+    "agent_patient": {
+      "with_ref": 0,
+      "without_ref": 0,
+      "with_ref_score": 0.0,
+      "without_ref_score": 0.0
+    },
+    "experiencer": {
+      "with_ref": 0,
+      "without_ref": 0,
+      "with_ref_score": 0.0,
+      "without_ref_score": 0.0
+    },
+    "instrument": {
+      "with_ref": 0,
+      "without_ref": 0,
+      "with_ref_score": 0.0,
+      "without_ref_score": 0.0
+    },
+    "location": {
+      "with_ref": 0,
+      "without_ref": 0,
+      "with_ref_score": 0.0,
+      "without_ref_score": 0.0
+    },
+    "result": {
+      "with_ref": 0,
+      "without_ref": 0,
+      "with_ref_score": 0.0,
+      "without_ref_score": 0.0
+    },
+    "time": {
+      "with_ref": 0,
+      "without_ref": 0,
+      "with_ref_score": 0.0,
+      "without_ref_score": 0.0
+    },
+    "overall": {
+      "with_ref": 0,
+      "without_ref": 0,
+      "with_ref_score": 0.0,
+      "without_ref_score": 0.0
+    },
+    "total_turns": 9
   }
 }

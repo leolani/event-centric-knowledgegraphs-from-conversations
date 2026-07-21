@@ -17,6 +17,8 @@ Usage:
     python evaluate.py srl [--mode strict|lenient|both]
     python evaluate.py blanc [--mode strict|lenient|both]
     python evaluate.py types
+    python evaluate.py perspective
+    python evaluate.py time-resolved
     python evaluate.py ngram [--threshold 0.5] [--ngram-size 3]
     python evaluate.py mismatches
     python evaluate.py all
@@ -429,6 +431,113 @@ def score_types(gold_conversations, sys_conversations):
     return report
 
 
+# ═══ Perspective accuracy (per turn) ═══════════════════════════════════════════
+
+PERSPECTIVE_FIELDS = ["emotion", "factuality", "certainty"]
+
+
+def turn_perspectives(conversations):
+    """(chat_id, turn_num) -> perspective dict {emotion, factuality, certainty}, taken from the
+    first Output entry of that turn. Every Output entry for a turn carries the same perspective
+    (it's a whole-turn annotation, replicated per entry on export -- see readme-annotation.md),
+    so the first entry's value stands for the turn. Turns with no Output entries at all are
+    absent from the result."""
+    result = {}
+    for chat_id, turn_num, _utt, outputs in flatten_turns(conversations):
+        if outputs and outputs[0].get("perspective"):
+            result[(chat_id, turn_num)] = outputs[0]["perspective"]
+    return result
+
+
+def score_perspective(gold_conversations, sys_conversations):
+    """Accuracy of the speaker-perspective values (emotion/factuality/certainty) per turn,
+    over turns annotated on BOTH sides -- a turn only gold or only system annotated has no
+    counterpart perspective to compare against, so it's excluded rather than counted as wrong.
+
+    Only chats present in gold are evaluated (see filter_to_gold_chats).
+    """
+    sys_conversations = filter_to_gold_chats(sys_conversations, gold_conversations)
+    gold_persp = turn_perspectives(gold_conversations)
+    sys_persp = turn_perspectives(sys_conversations)
+    common_keys = sorted(set(gold_persp) & set(sys_persp))
+
+    report = {}
+    correct_total = total_total = 0
+    for field in PERSPECTIVE_FIELDS:
+        correct = sum(1 for k in common_keys if gold_persp[k].get(field) == sys_persp[k].get(field))
+        total = len(common_keys)
+        report[field] = {"correct": correct, "total": total, "accuracy": (correct / total) if total else None}
+        correct_total += correct
+        total_total += total
+    report["overall"] = {"correct": correct_total, "total": total_total,
+                          "accuracy": (correct_total / total_total) if total_total else None}
+    return report
+
+
+# ═══ Time resolution accuracy ══════════════════════════════════════════════════
+
+TIME_RESOLVED_FIELDS = ["temporal_type", "absolute_date", "date_range_start", "date_range_end", "recurrence_pattern"]
+
+
+def find_time_resolved(entry, time_value):
+    """The time_resolved dict on `entry` whose time_expression matches `time_value` (a "time"
+    role span's value), or None if that expression was never grounded."""
+    for tr in (entry.get("time_resolved") or []):
+        if tr.get("time_expression") == time_value:
+            return tr
+    return None
+
+
+def score_time_resolved(gold_conversations, sys_conversations, mode="lenient"):
+    """For every "time" span that matches between gold and system (same turn/entry/span
+    alignment as score_srl), is the linked time_resolved grounding also correct: same
+    temporal_type, and -- wherever gold actually populates it -- the same absolute_date,
+    date_range_start, date_range_end, or recurrence_pattern? A field is only counted (added to
+    "total") when gold has a value for it, since e.g. absolute_date is only meaningful for a
+    "point" expression; system missing the linked time_resolved entry entirely counts as
+    incorrect for every field gold populated.
+
+    Only chats present in gold are evaluated (see filter_to_gold_chats).
+    """
+    sys_conversations = filter_to_gold_chats(sys_conversations, gold_conversations)
+    gold_origins = build_origin_lookups(gold_conversations)
+    sys_origins = build_origin_lookups(sys_conversations)
+    gold_by_key = {(c, t): out for c, t, _u, out in flatten_turns(gold_conversations)}
+    sys_by_key = {(c, t): out for c, t, _u, out in flatten_turns(sys_conversations)}
+    all_keys = sorted(set(gold_by_key) | set(sys_by_key))
+
+    counts = {field: {"correct": 0, "total": 0} for field in TIME_RESOLVED_FIELDS}
+
+    for chat_id, turn_num in all_keys:
+        gold_outputs = gold_by_key.get((chat_id, turn_num), [])
+        sys_outputs = sys_by_key.get((chat_id, turn_num), [])
+        entry_matches, _, _ = match_entries_for_turn(gold_outputs, sys_outputs, chat_id, gold_origins, sys_origins, mode)
+        for g, s in entry_matches:
+            time_matched, _, _ = match_role_spans(g, s, "time", mode)
+            for g_span, s_span in time_matched:
+                g_tr = find_time_resolved(g, g_span.get("value"))
+                if g_tr is None:
+                    continue
+                s_tr = find_time_resolved(s, s_span.get("value"))
+                for field in TIME_RESOLVED_FIELDS:
+                    if field != "temporal_type" and g_tr.get(field) is None:
+                        continue
+                    counts[field]["total"] += 1
+                    if s_tr is not None and g_tr.get(field) == s_tr.get(field):
+                        counts[field]["correct"] += 1
+
+    report = {}
+    correct_total = total_total = 0
+    for field, c in counts.items():
+        report[field] = {"correct": c["correct"], "total": c["total"],
+                          "accuracy": (c["correct"] / c["total"]) if c["total"] else None}
+        correct_total += c["correct"]
+        total_total += c["total"]
+    report["overall"] = {"correct": correct_total, "total": total_total,
+                          "accuracy": (correct_total / total_total) if total_total else None}
+    return report
+
+
 # ═══ Chat-level character n-gram matching (offset-free) ═══════════════════════
 
 NGRAM_SIZE = 3
@@ -680,6 +789,19 @@ def classify_system_mismatch(value, category, utterance, gold_has_speaker_refere
     return None
 
 
+def find_hallucination_source_turn(value, prior_turns):
+    """If a hallucinated system value actually occurs in an EARLIER turn's utterance (same
+    chat), return that turn's number -- the likely explanation: the model carried over content
+    from a turn it had already seen earlier in its context window, rather than inventing it
+    outright. prior_turns is [(turn_num, utterance), ...] for turns strictly before the current
+    one, in ascending turn order; the closest (most recent) matching turn wins. None if no
+    earlier turn contains it."""
+    for turn_num, utterance in reversed(prior_turns):
+        if value_occurs_in_utterance(value, utterance):
+            return turn_num
+    return None
+
+
 def _span_summary(d):
     if d is None:
         return None
@@ -687,15 +809,18 @@ def _span_summary(d):
 
 
 def _mismatch_record(chat_id, turn_num, utterance, category, gold_span, sys_span,
-                      gold_has_speaker_reference=False, human_name=None):
+                      gold_has_speaker_reference=False, human_name=None, prior_turns=None):
     gold_summary = _span_summary(gold_span)
     sys_summary = _span_summary(sys_span)
     flag = None
+    detail = None
     if sys_summary is not None and sys_summary.get("value"):
         flag = classify_system_mismatch(sys_summary["value"], category, utterance,
                                          gold_has_speaker_reference, human_name)
+        if flag == "hallucination" and prior_turns:
+            detail = find_hallucination_source_turn(sys_summary["value"], prior_turns)
     return {"chat": chat_id, "turn": turn_num, "utterance": utterance, "category": category,
-            "gold": gold_summary, "system": sys_summary, "flag": flag}
+            "gold": gold_summary, "system": sys_summary, "flag": flag, "detail": detail}
 
 
 def _participant_match_record(chat_id, turn_num, utterance, gold_role, gold_span, sys_role, sys_span):
@@ -706,7 +831,8 @@ def _participant_match_record(chat_id, turn_num, utterance, gold_role, gold_span
     value is grounded in the utterance and matches gold, so it can be neither a hallucination
     nor an ordinary mismatch."""
     return {"chat": chat_id, "turn": turn_num, "utterance": utterance, "category": f"{gold_role}/{sys_role}",
-            "gold": _span_summary(gold_span), "system": _span_summary(sys_span), "flag": "participant_match"}
+            "gold": _span_summary(gold_span), "system": _span_summary(sys_span), "flag": "participant_match",
+            "detail": None}
 
 
 def collect_mismatches(gold_conversations, sys_conversations):
@@ -719,10 +845,15 @@ def collect_mismatches(gold_conversations, sys_conversations):
     Each record's "flag" is either "participant_match" (a gold item and a system item in
     different participant roles -- agent/patient/agent_patient/experiencer -- whose spans
     overlap; see match_participant_roles), or, for other system-only records, whatever
-    classify_system_mismatch() returns: "hallucination", "speaker_match", or None.
+    classify_system_mismatch() returns: "hallucination", "speaker_match", or None. A
+    "hallucination" record's "detail" additionally carries the number of an EARLIER turn in the
+    same chat whose utterance actually contains the value, if one is found (see
+    find_hallucination_source_turn) -- otherwise None.
 
-    Returns (records, total_turns) -- total_turns is the number of (chat, turn) pairs
-    considered, i.e. the denominator for the hallucination score in write_mismatch_log().
+    Returns (records, turns) -- turns is [(chat_id, turn_num, utterance), ...] for EVERY (chat,
+    turn) pair considered, in order, including turns with no mismatches at all; len(turns) is
+    the denominator for the hallucination score, and write_mismatch_log() walks it to show
+    every turn, not just the ones with something to report.
     """
     mode = "lenient"
     sys_conversations = filter_to_gold_chats(sys_conversations, gold_conversations)
@@ -734,10 +865,16 @@ def collect_mismatches(gold_conversations, sys_conversations):
     all_keys = sorted(set(gold_by_key) | set(sys_by_key))
 
     records = []
+    turns = []
+    chat_turns = defaultdict(list)  # chat_id -> [(turn_num, utterance), ...] for turns already
+    # processed in this chat -- since all_keys is sorted by (chat_id, turn_num), this is exactly
+    # the set of EARLIER turns by the time we reach a given turn (see find_hallucination_source_turn).
     for chat_id, turn_num in all_keys:
         gold_u, gold_outputs = gold_by_key.get((chat_id, turn_num), (None, []))
         sys_u, sys_outputs = sys_by_key.get((chat_id, turn_num), (None, []))
         utterance = gold_u if gold_u is not None else sys_u
+        turns.append((chat_id, turn_num, utterance))
+        prior_turns = chat_turns[chat_id]
         human_name = human_by_chat.get(chat_id)
 
         entry_matches, unmatched_gold, unmatched_sys = match_entries_for_turn(
@@ -755,7 +892,8 @@ def collect_mismatches(gold_conversations, sys_conversations):
             if g_act.get("value") is not None and s_act.get("value") is None:
                 records.append(_mismatch_record(chat_id, turn_num, utterance, "activity", g_act, None))
             elif s_act.get("value") is not None and g_act.get("value") is None:
-                records.append(_mismatch_record(chat_id, turn_num, utterance, "activity", None, s_act))
+                records.append(_mismatch_record(chat_id, turn_num, utterance, "activity", None, s_act,
+                                                 prior_turns=prior_turns))
         for g in unmatched_gold:
             g_act = g.get("activity") or {}
             if g_act.get("value") is not None:
@@ -763,7 +901,8 @@ def collect_mismatches(gold_conversations, sys_conversations):
         for s in unmatched_sys:
             s_act = s.get("activity") or {}
             if s_act.get("value") is not None:
-                records.append(_mismatch_record(chat_id, turn_num, utterance, "activity", None, s_act))
+                records.append(_mismatch_record(chat_id, turn_num, utterance, "activity", None, s_act,
+                                                 prior_turns=prior_turns))
 
         non_participant_roles = [r for r in ROLE_FIELDS if r not in PARTICIPANT_ROLES]
         for role in non_participant_roles:
@@ -772,7 +911,8 @@ def collect_mismatches(gold_conversations, sys_conversations):
                 for d in role_fn:
                     records.append(_mismatch_record(chat_id, turn_num, utterance, role, d, None))
                 for d in role_fp:
-                    records.append(_mismatch_record(chat_id, turn_num, utterance, role, None, d))
+                    records.append(_mismatch_record(chat_id, turn_num, utterance, role, None, d,
+                                                     prior_turns=prior_turns))
             for g in unmatched_gold:
                 for d in (g.get(role) or []):
                     if span_of(d) is not None:
@@ -780,7 +920,8 @@ def collect_mismatches(gold_conversations, sys_conversations):
             for s in unmatched_sys:
                 for d in (s.get(role) or []):
                     if span_of(d) is not None:
-                        records.append(_mismatch_record(chat_id, turn_num, utterance, role, None, d))
+                        records.append(_mismatch_record(chat_id, turn_num, utterance, role, None, d,
+                                                         prior_turns=prior_turns))
 
         # Participant roles (agent/patient/agent_patient/experiencer): within each matched
         # entry pair, first match same-role as usual, then pool whatever's left across all
@@ -794,7 +935,8 @@ def collect_mismatches(gold_conversations, sys_conversations):
             for role, d in remaining_gold:
                 records.append(_mismatch_record(chat_id, turn_num, utterance, role, d, None))
             for role, d in remaining_sys:
-                records.append(_mismatch_record(chat_id, turn_num, utterance, role, None, d, gold_speaker_by_role[role], human_name))
+                records.append(_mismatch_record(chat_id, turn_num, utterance, role, None, d,
+                                                 gold_speaker_by_role[role], human_name, prior_turns))
         for role in PARTICIPANT_ROLE_ORDER:
             for g in unmatched_gold:
                 for d in (g.get(role) or []):
@@ -803,9 +945,52 @@ def collect_mismatches(gold_conversations, sys_conversations):
             for s in unmatched_sys:
                 for d in (s.get(role) or []):
                     if span_of(d) is not None:
-                        records.append(_mismatch_record(chat_id, turn_num, utterance, role, None, d, gold_speaker_by_role[role], human_name))
+                        records.append(_mismatch_record(chat_id, turn_num, utterance, role, None, d,
+                                                         gold_speaker_by_role[role], human_name, prior_turns))
 
-    return records, len(all_keys)
+        chat_turns[chat_id].append((turn_num, utterance))
+
+    return records, turns
+
+
+def hallucination_report(records, turns):
+    """Per-category (activity + each role) and overall hallucination rates, split into "with
+    reference" (the value occurs in an EARLIER turn of the same chat -- likely carried over
+    from context; see find_hallucination_source_turn) and "without reference" (occurs nowhere
+    in the chat at all -- fully fabricated). Each rate is count / total turns evaluated -- the
+    same two hallucination scores write_mismatch_log() reports as a single pooled total, here
+    broken down per category.
+
+    Returns {category: {with_ref, without_ref, with_ref_score, without_ref_score}, ...,
+    "overall": {...}, "total_turns": int}.
+    """
+    total_turns = len(turns)
+
+    def rate(n):
+        return (n / total_turns) if total_turns else None
+
+    cats = ["activity"] + ROLE_FIELDS
+    counts = {cat: {"with_ref": 0, "without_ref": 0} for cat in cats}
+    for r in records:
+        if r["flag"] != "hallucination":
+            continue
+        c = counts[r["category"]]
+        if r.get("detail") is not None:
+            c["with_ref"] += 1
+        else:
+            c["without_ref"] += 1
+
+    report = {}
+    total_with = total_without = 0
+    for cat, c in counts.items():
+        report[cat] = {"with_ref": c["with_ref"], "without_ref": c["without_ref"],
+                        "with_ref_score": rate(c["with_ref"]), "without_ref_score": rate(c["without_ref"])}
+        total_with += c["with_ref"]
+        total_without += c["without_ref"]
+    report["overall"] = {"with_ref": total_with, "without_ref": total_without,
+                          "with_ref_score": rate(total_with), "without_ref_score": rate(total_without)}
+    report["total_turns"] = total_turns
+    return report
 
 
 def _format_side(span):
@@ -817,35 +1002,60 @@ def _format_side(span):
     return f"{span.get('value')!r} {loc}{type_part}".strip()
 
 
-def write_mismatch_log(records, total_turns, path):
-    hallucinations = sum(1 for r in records if r["flag"] == "hallucination")
+def write_mismatch_log(records, turns, path):
+    hreport = hallucination_report(records, turns)
+    total_turns = hreport["total_turns"]
+    hallucinations_with_ref = hreport["overall"]["with_ref"]
+    hallucinations_without_ref = hreport["overall"]["without_ref"]
+    hallucinations = hallucinations_with_ref + hallucinations_without_ref
     speaker_matches = sum(1 for r in records if r["flag"] == "speaker_match")
     participant_matches = sum(1 for r in records if r["flag"] == "participant_match")
-    hallucination_score = (hallucinations / total_turns) if total_turns else None
-    score_str = f"{hallucination_score:.3f}" if hallucination_score is not None else "n/a"
+
+    def rate_str(n):
+        r = (n / total_turns) if total_turns else None
+        return f"{r:.3f}" if r is not None else "n/a"
+
+    records_by_turn = defaultdict(list)
+    for rec in records:
+        records_by_turn[(rec["chat"], rec["turn"])].append(rec)
 
     with open(path, "w") as f:
         f.write("# Auto-generated by evaluate.py -- side-by-side gold/system mismatches (lenient matching)\n")
-        f.write(f"# {len(records)} mismatches (false negatives = gold-only, false positives = system-only)\n")
-        f.write(f"# {hallucinations} HALLUCINATION(s): system value not found anywhere in the turn's utterance\n")
+        f.write(f"# {total_turns} turns evaluated, {len(records)} mismatches "
+                "(false negatives = gold-only, false positives = system-only)\n")
+        f.write(f"# {hallucinations} HALLUCINATION(s): system value not found anywhere in the turn's utterance --\n")
+        f.write(f"#   {hallucinations_with_ref} tagged [HALLUCINATION: N], occurring in an earlier turn N of the\n")
+        f.write(f"#   same chat (likely carried over from context); {hallucinations_without_ref} plain\n")
+        f.write("#   [HALLUCINATION], occurring nowhere in the chat at all (fully fabricated)\n")
         f.write(f"# {speaker_matches} SPEAKER MATCH(es): system value refers to a speaker (a pronoun or the\n")
         f.write("#   patient's own name) for a role where gold ALSO makes a speaker reference (pronoun or\n")
         f.write("#   name, not necessarily the same kind), just not aligned with the specific span gold chose\n")
         f.write(f"# {participant_matches} PARTICIPANT MATCH(es): gold and system found the same participant span but\n")
         f.write("#   filed it under different roles among agent/patient/agent_patient/experiencer\n")
-        f.write(f"# Hallucination score: {hallucinations}/{total_turns} = {score_str}\n")
-        current_key = None
-        for rec in records:
-            key = (rec["chat"], rec["turn"])
-            if key != current_key:
-                current_key = key
-                f.write(f"\nchat {rec['chat']} turn {rec['turn']}: \"{rec['utterance']}\"\n")
-            gold_str = _format_side(rec["gold"])
-            sys_str = _format_side(rec["system"])
-            tag = f" [{rec['flag'].upper().replace('_', ' ')}]" if rec["flag"] else ""
-            f.write(f"  {rec['category']:<14} GOLD: {gold_str:<45} | SYSTEM: {sys_str}{tag}\n")
-    print(f"Wrote {path} ({hallucinations} hallucinations, {speaker_matches} speaker matches, "
-          f"{participant_matches} participant matches, hallucination score {score_str})")
+        f.write(f"# Hallucination score (with reference to a previous turn): "
+                f"{hallucinations_with_ref}/{total_turns} = {rate_str(hallucinations_with_ref)}\n")
+        f.write(f"# Hallucination score (without reference): "
+                f"{hallucinations_without_ref}/{total_turns} = {rate_str(hallucinations_without_ref)}\n")
+        for chat_id, turn_num, utterance in turns:
+            f.write(f"\nchat {chat_id} turn {turn_num}: \"{utterance}\"\n")
+            turn_records = records_by_turn.get((chat_id, turn_num), [])
+            if not turn_records:
+                f.write("  (no mismatches)\n")
+                continue
+            for rec in turn_records:
+                gold_str = _format_side(rec["gold"])
+                sys_str = _format_side(rec["system"])
+                if rec["flag"] == "hallucination" and rec.get("detail") is not None:
+                    tag = f" [HALLUCINATION: {rec['detail']}]"
+                elif rec["flag"]:
+                    tag = f" [{rec['flag'].upper().replace('_', ' ')}]"
+                else:
+                    tag = ""
+                f.write(f"  {rec['category']:<14} GOLD: {gold_str:<45} | SYSTEM: {sys_str}{tag}\n")
+    print(f"Wrote {path} ({total_turns} turns, {hallucinations} hallucinations "
+          f"[{hallucinations_with_ref} with ref: {rate_str(hallucinations_with_ref)}, "
+          f"{hallucinations_without_ref} without: {rate_str(hallucinations_without_ref)}], "
+          f"{speaker_matches} speaker matches, {participant_matches} participant matches)")
 
 
 # ═══ Report output: JSON + LaTeX ═══════════════════════════════════════════════
@@ -859,7 +1069,7 @@ def esc_tex(s):
     return s
 
 
-def fmt_tex(x, spec=".3f"):
+def fmt_tex(x, spec=".2f"):
     return format(x, spec) if x is not None else "--"
 
 
@@ -919,9 +1129,44 @@ def types_table_tex(report):
     )
 
 
+def perspective_table_tex(report):
+    rows = "\n".join(
+        f"{esc_tex(field)} & {report[field]['correct']} & {report[field]['total']} & {fmt_tex(report[field]['accuracy'])} \\\\"
+        for field in PERSPECTIVE_FIELDS + ["overall"]
+    )
+    return (
+        "\\begin{table}[htbp]\n\\centering\n"
+        "\\begin{tabular}{lrrr}\n\\toprule\n"
+        "Field & Correct & Total & Accuracy \\\\\n\\midrule\n"
+        f"{rows}\n"
+        "\\bottomrule\n\\end{tabular}\n"
+        "\\caption{Perspective accuracy (emotion/factuality/certainty, per turn)}\n"
+        "\\label{tab:perspective}\n"
+        "\\end{table}\n"
+    )
+
+
+def time_resolved_table_tex(report):
+    rows = "\n".join(
+        f"{esc_tex(field)} & {report[field]['correct']} & {report[field]['total']} & {fmt_tex(report[field]['accuracy'])} \\\\"
+        for field in TIME_RESOLVED_FIELDS + ["overall"]
+    )
+    return (
+        "\\begin{table}[htbp]\n\\centering\n"
+        "\\begin{tabular}{lrrr}\n\\toprule\n"
+        "Field & Correct & Total & Accuracy \\\\\n\\midrule\n"
+        f"{rows}\n"
+        "\\bottomrule\n\\end{tabular}\n"
+        "\\caption{Time resolution accuracy (over leniently matched time expressions)}\n"
+        "\\label{tab:time-resolved}\n"
+        "\\end{table}\n"
+    )
+
+
 def fmt_count(x):
-    """tp/fp/fn are integers per chat but (possibly fractional) means in the "average" row."""
-    return str(x) if isinstance(x, int) else f"{x:.2f}"
+    """tp/fp/fn are integers per chat but (possibly fractional) means in the "average" row --
+    rounded to the nearest integer for a compact table rather than shown with decimals."""
+    return str(x) if isinstance(x, int) else str(round(x))
 
 
 def chat_ngram_table_tex(report, caption, label):
@@ -942,6 +1187,96 @@ def chat_ngram_table_tex(report, caption, label):
     )
 
 
+def hallucination_table_tex(report):
+    cats = ["activity"] + ROLE_FIELDS + ["overall"]
+    rows = "\n".join(
+        f"{esc_tex(cat)} & {report[cat]['with_ref']} & {fmt_tex(report[cat]['with_ref_score'])} & "
+        f"{report[cat]['without_ref']} & {fmt_tex(report[cat]['without_ref_score'])} \\\\"
+        for cat in cats
+    )
+    return (
+        "\\begin{table}[htbp]\n\\centering\n"
+        "\\begin{tabular}{lrrrr}\n\\toprule\n"
+        "Category & With-Ref & With-Ref Score & Without-Ref & Without-Ref Score \\\\\n\\midrule\n"
+        f"{rows}\n"
+        "\\bottomrule\n\\end{tabular}\n"
+        f"\\caption{{Hallucination scores by category ({report['total_turns']} turns evaluated)}}\n"
+        "\\label{tab:hallucinations}\n"
+        "\\end{table}\n"
+    )
+
+
+METRIC_LABELS = {
+    "srl": "SRL", "blanc": "BLANC", "types": "Types", "perspective": "Perspective",
+    "time_resolved": "Time Resolved", "ngram": "N-gram", "hallucinations": "Hallucinations",
+}
+
+# Static, hand-written LaTeX prose (already escaped where needed) describing each metric in
+# general -- NOT run through esc_tex, unlike the per-run settings values below, which come from
+# CLI args/paths and could contain LaTeX-special characters.
+METRIC_DESCRIPTIONS = {
+    "srl": ("Precision/recall/F1 for the activity span and each semantic role (agent, patient, "
+            "agent\\_patient, experiencer, instrument, location, result, time). Strict mode "
+            "requires gold and system spans to share the exact same offset and length; lenient "
+            "mode only requires the spans to overlap. In lenient mode, an additional "
+            "\\textit{participant} row pools agent/patient/agent\\_patient/experiencer into one "
+            "category, scoring whether the participant span was found at all regardless of "
+            "which of those four roles it was assigned to (excluded from the lenient overall "
+            "row to avoid double-counting)."),
+    "blanc": ("BLANC activity-coreference score (Recasens \\& Hovy, 2011): does the system "
+              "group turn mentions of the same real-world activity under one activity\\_id the "
+              "same way gold does? Reported per chat plus an aggregate; mention alignment uses "
+              "the same strict/lenient span criterion as SRL."),
+    "types": ("For every span that leniently matches between gold and system (activity plus "
+              "every typed role except time, which has no type), is the assigned type also "
+              "correct?"),
+    "perspective": ("Agreement on the speaker-perspective values (emotion, factuality, "
+                     "certainty) per turn, compared directly for turns both gold and system "
+                     "annotated -- perspective is a whole-turn attribute, not tied to a "
+                     "specific span."),
+    "time_resolved": ("For every leniently matched time expression, is the linked "
+                       "time\\_resolved grounding also correct (temporal\\_type, and -- "
+                       "wherever gold populates it -- absolute\\_date, date\\_range\\_start, "
+                       "date\\_range\\_end, or recurrence\\_pattern)?"),
+    "ngram": ("Per-chat, offset-free precision/recall/F1 (plus an unweighted average across "
+              "chats), matching activities and role fillers by character n-gram (Dice "
+              "coefficient) overlap of their text instead of by offset, ignoring which turn or "
+              "exact span they came from. Activities are matched by the single best mention "
+              "pairing within their coreference chain; roles are matched value-by-value, "
+              "pooled across the whole chat."),
+    "hallucinations": ("System-only values that don't occur anywhere in their turn's "
+                        "utterance, split into \\textit{with reference} (the value occurs in "
+                        "an earlier turn of the same chat -- likely carried over from context) "
+                        "and \\textit{without reference} (occurs nowhere in the chat -- fully "
+                        "fabricated), each reported as a rate over total turns evaluated."),
+}
+
+
+def metrics_description_tex(gold_path, system_path, metrics_used, settings_notes):
+    """A LaTeX text section (not a table) describing which metrics this report contains, what
+    they mean, and what settings this specific run used -- so the .tex file is self-explanatory
+    to a reader who doesn't have the CLI invocation that produced it. Only describes metrics
+    actually present in metrics_used, in the order they were run."""
+    lines = [
+        "\\subsection*{Evaluation Metrics and Settings}",
+        "",
+        "\\begin{description}",
+        f"\\item[Gold standard] \\texttt{{{esc_tex(gold_path)}}}",
+        f"\\item[System output] \\texttt{{{esc_tex(system_path)}}}",
+    ]
+    for label, value in settings_notes:
+        lines.append(f"\\item[{esc_tex(label)}] {esc_tex(value)}")
+    lines.append("\\end{description}")
+    lines.append("")
+    lines.append("\\begin{description}")
+    for key in metrics_used:
+        if key in METRIC_DESCRIPTIONS:
+            lines.append(f"\\item[{esc_tex(METRIC_LABELS.get(key, key))}] {METRIC_DESCRIPTIONS[key]}")
+    lines.append("\\end{description}")
+    lines.append("")
+    return "\n".join(lines) + "\n"
+
+
 def write_outputs(results, tex_sections, json_path, tex_path):
     with open(json_path, "w") as f:
         json.dump(results, f, indent=2)
@@ -953,6 +1288,89 @@ def write_outputs(results, tex_sections, json_path, tex_path):
 
 
 # ═══ CLI ═══════════════════════════════════════════════════════════════════════
+
+# Shown after the usage/options list by "python evaluate.py --help" (RawDescriptionHelpFormatter
+# preserves its line breaks/paragraphs as written, rather than argparse re-wrapping them).
+HELP_EPILOG = '''This function evaluates a system SRL output against the GOLD annotation: activity spans and
+semantic roles (srl), activity coreference (blanc), types, speaker perspective, time resolution, and
+character-level content overlap (ngram).
+
+Run evaluate as follows:
+
+python evaluate.py all --gold annotation/annotations.json --system ../../data/event_srl.json --output ../../data
+
+The parameter "all" scores everything (srl strict + lenient, blanc strict + lenient, types, perspective,
+time-resolved, ngram):
+
+-gold: annotation/annotations.json,
+-system: ../../data/event_srl.json
+
+The evaluation results are written to evaluation_all.json, evaluation_all.tex and evaluation_all_mismatches.log (lenient
+side-by-side gold/system mismatches for activities and roles) in the output directory.
+
+To run just one evaluation with explicit paths, e.g. lenient-only SRL scoring:
+
+python evaluate.py srl --mode lenient --gold annotation/annotations.json --system ../../data/event_srl.json --output ../../data
+
+To get just the side-by-side mismatch log (lenient matching only; does not write JSON/LaTeX):
+
+python evaluate.py mismatches --output ../../data
+
+Each system-only mismatch in the log is tagged where applicable: [HALLUCINATION] if the
+system's value doesn't occur anywhere in the turn's utterance at all -- tagged
+[HALLUCINATION: N] instead if it occurs in an earlier turn N of the same chat (likely carried
+over from context), plain [HALLUCINATION] if it occurs nowhere in the chat at all (fully
+fabricated); [SPEAKER MATCH] if it's a speaker reference (a pronoun or the patient's own name)
+in a person role AND gold ALSO makes a speaker reference for that same role in that turn --
+just not the exact span or kind of expression gold chose; or [PARTICIPANT MATCH] if gold and
+system found the same participant span but filed it under different roles among
+agent/patient/agent_patient/experiencer (e.g. gold said agent_patient, system said patient).
+The log header reports two separate hallucination scores -- with a reference to a previous
+turn, and without -- each as a count / total turns evaluated.
+
+The "srl" command additionally reports a lenient-only "participant" row: agent, patient,
+agent_patient, and experiencer pooled into one category, scoring whether the participant span
+was found at all regardless of which of those four specific roles gold and system each used.
+It is a supplementary view alongside the per-role rows, not included in "overall".
+
+python evaluate.py perspective --gold annotation/annotations.json --system ../../data/event_srl.json --output ../../data
+
+The "perspective" command scores accuracy of the speaker-perspective values (emotion,
+factuality, certainty) per turn -- a whole-turn annotation, so gold and system are compared
+directly per (chat, turn), not via activity/span alignment. Only turns annotated on BOTH sides
+are counted; a turn only one side annotated has no counterpart perspective to compare.
+
+python evaluate.py time-resolved --gold annotation/annotations.json --system ../../data/event_srl.json --output ../../data
+
+The "time-resolved" command scores accuracy of the time-resolution grounding (temporal_type,
+absolute_date, date_range_start, date_range_end, recurrence_pattern) linked to every "time"
+span that leniently matches between gold and system (same span alignment as score_srl). A
+field is only counted where gold actually populates it (e.g. absolute_date only for a "point"
+expression); system missing the linked time_resolved entry counts as incorrect for every field
+gold populated.
+
+python evaluate.py ngram --gold annotation/annotations.json --system ../../data/event_srl.json --output ../../data
+
+The "ngram" command scores activities and roles per CHAT, ignoring offsets entirely, matching
+by character n-gram overlap of the expression text (Dice coefficient over character trigrams
+by default; tune with --threshold and --ngram-size) instead of by offset. Activities are
+matched as coreference chains, one gold chain to one system chain, but by their single BEST
+mention pairing rather than by concatenating each chain into one blob first: every expression
+sharing an activity_id is a mention of that chain, and a gold chain matches a system chain if
+the highest n-gram overlap between any one of its mentions and any one of the system chain's
+mentions clears the threshold -- crediting the chain if at least one phrasing lines up. Roles
+are matched value-by-value, pooling every individual value anywhere in the chat. It writes one
+table per chat plus one "average" table (the unweighted mean across chats) into
+evaluation_ngram.json / evaluation_ngram.tex (or evaluation_all.json / evaluation_all.tex as
+part of "all").
+
+Remember: --gold / --system / --output must come after the subcommand
+(srl/blanc/types/perspective/time-resolved/ngram/mismatches/all), not before.
+
+Evaluation (srl/blanc/types/perspective/time-resolved/ngram/mismatches) only considers chats
+present in the gold file -- any chat in --system that gold doesn't cover is ignored entirely.
+'''
+
 
 def parse_args():
     # Shared flags, attached ONLY to each subparser (not the top-level parser): argparse
@@ -971,7 +1389,9 @@ def parse_args():
                               "(mismatches) or evaluation_all_mismatches.log (all).")
 
     parser = argparse.ArgumentParser(
-        description="Evaluate LLM-generated SRL annotations against the manually annotated gold standard."
+        description="Evaluate LLM-generated SRL annotations against the manually annotated gold standard.",
+        epilog=HELP_EPILOG,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -985,6 +1405,13 @@ def parse_args():
 
     sub.add_parser("types", parents=[common], help="Type accuracy for activity/role types, over leniently matched spans.")
 
+    sub.add_parser("perspective", parents=[common],
+                    help="Accuracy of speaker-perspective values (emotion/factuality/certainty) per turn.")
+
+    sub.add_parser("time-resolved", parents=[common],
+                    help="Accuracy of time-resolution grounding (temporal_type/absolute_date/date_range_start/"
+                         "date_range_end/recurrence_pattern) for leniently matched time expressions.")
+
     ngram_p = sub.add_parser("ngram", parents=[common],
                               help="Per-chat, offset-free precision/recall/F1 via character n-gram overlap of "
                                    "activity/role text (activities matched by best mention within their activity_id "
@@ -997,79 +1424,13 @@ def parse_args():
 
     sub.add_parser("mismatches", parents=[common],
                     help="Side-by-side log of gold-only and system-only activity/role spans (lenient matching), "
-                         "flagging hallucinations, speaker matches, and participant-role matches, with a "
-                         "hallucination score.")
+                         "flagging hallucinations, speaker matches, and participant-role matches, with separate "
+                         "hallucination scores for referenced vs. unreferenced hallucinations.")
 
     sub.add_parser("all", parents=[common],
                     help="Run srl (strict+lenient), blanc (strict+lenient), types, ngram, and a lenient mismatch log.")
 
     return parser.parse_args()
-
-# Howto:
-#CLI: python evaluate.py {srl,blanc,types,mismatches,all} [--mode strict|lenient|both] [--gold PATH] [--system PATH]
-# [--output DIR], defaults pointing at annotation/annotations.json and ../../data/event_srl.json,
-# and writing evaluation_<command>.json / .tex / _mismatches.log into DIR (default: cwd) under
-# their default names.
-#python evaluate.py all --output ../../data
-
-
-help = '''Run evaluate as follows:
-
-- python evaluate.py all
-
-That scores everything (srl strict + lenient, blanc strict + lenient, types, ngram) using the default files:
--gold: annotation/annotations.json,
--system: ../../data/event_srl.json
-
-It writes evaluation_all.json, evaluation_all.tex and evaluation_all_mismatches.log (lenient
-side-by-side gold/system mismatches for activities and roles) in the current directory.
-
-python evaluate.py all --gold annotation/annotations.json --system ../../data/event_srl.json --output ../../data
-
-To run just one evaluation with explicit paths, e.g. lenient-only SRL scoring with a custom output folder:
-
-python evaluate.py srl --mode lenient --gold annotation/annotations.json --system ../../data/event_srl.json --output ../../data
-
-To get just the side-by-side mismatch log (lenient matching only; does not write JSON/LaTeX):
-
-python evaluate.py mismatches --output ../../data
-
-Each system-only mismatch in the log is tagged where applicable: [HALLUCINATION] if the
-system's value doesn't occur anywhere in the turn's utterance at all (fabricated -- often
-actually the text of a different turn), [SPEAKER MATCH] if it's a speaker reference (a
-pronoun or the patient's own name) in a person role AND gold ALSO makes a speaker reference
-for that same role in that turn -- just not the exact span or kind of expression gold chose,
-or [PARTICIPANT MATCH] if gold and system found the same participant span but filed it under
-different roles among agent/patient/agent_patient/experiencer (e.g. gold said agent_patient,
-system said patient). The log header reports the hallucination score
-(hallucinations / total turns evaluated).
-
-The "srl" command additionally reports a lenient-only "participant" row: agent, patient,
-agent_patient, and experiencer pooled into one category, scoring whether the participant span
-was found at all regardless of which of those four specific roles gold and system each used.
-It is a supplementary view alongside the per-role rows, not included in "overall".
-
-python evaluate.py ngram --gold annotation/annotations.json --system ../../data/event_srl.json --output ../../data
-
-The "ngram" command scores activities and roles per CHAT, ignoring offsets entirely, matching
-by character n-gram overlap of the expression text (Dice coefficient over character trigrams
-by default; tune with --threshold and --ngram-size) instead of by offset. Activities are
-matched as coreference chains, one gold chain to one system chain, but by their single BEST
-mention pairing rather than by concatenating each chain into one blob first: every expression
-sharing an activity_id is a mention of that chain, and a gold chain matches a system chain if
-the highest n-gram overlap between any one of its mentions and any one of the system chain's
-mentions clears the threshold -- crediting the chain if at least one phrasing lines up. Roles
-are matched value-by-value, pooling every individual value anywhere in the chat. It writes one
-table per chat plus one "average" table (the unweighted mean across chats) into
-evaluation_ngram.json / evaluation_ngram.tex (or evaluation_all.json / evaluation_all.tex as
-part of "all").
-
-Remember: --gold / --system / --output must come after the subcommand
-(srl/blanc/types/ngram/mismatches/all), not before.
-
-Evaluation (srl/blanc/types/ngram/mismatches) only considers chats present in the gold file --
-any chat in --system that gold doesn't cover is ignored entirely.
-'''
 
 
 def main():
@@ -1080,29 +1441,56 @@ def main():
 
     # "mismatches" produces only a log, not a JSON/LaTeX report.
     if args.command == "mismatches":
-        records, total_turns = collect_mismatches(gold, system)
-        write_mismatch_log(records, total_turns, os.path.join(args.output, "evaluation_mismatches.log"))
+        records, turns = collect_mismatches(gold, system)
+        write_mismatch_log(records, turns, os.path.join(args.output, "evaluation_mismatches.log"))
         return
 
     results = {}
     tex_sections = []
+    metrics_used = []  # ordered, deduped keys of metrics actually run -- drives the
+    # "Evaluation Metrics and Settings" section (see metrics_description_tex).
+    srl_modes = []
+    blanc_modes = []
+    ngram_settings = None
+
+    def note_metric(key):
+        if key not in metrics_used:
+            metrics_used.append(key)
 
     def add_srl(mode):
         report, _ = score_srl(gold, system, mode)
         results[f"srl_{mode}"] = report
         tex_sections.append(srl_table_tex(report, mode))
+        note_metric("srl")
+        srl_modes.append(mode)
 
     def add_blanc(mode):
         report = score_blanc(gold, system, mode)
         results[f"blanc_{mode}"] = report
         tex_sections.append(blanc_table_tex(report, mode))
+        note_metric("blanc")
+        blanc_modes.append(mode)
 
     def add_types():
         report = score_types(gold, system)
         results["types"] = report
         tex_sections.append(types_table_tex(report))
+        note_metric("types")
+
+    def add_perspective():
+        report = score_perspective(gold, system)
+        results["perspective"] = report
+        tex_sections.append(perspective_table_tex(report))
+        note_metric("perspective")
+
+    def add_time_resolved():
+        report = score_time_resolved(gold, system)
+        results["time_resolved"] = report
+        tex_sections.append(time_resolved_table_tex(report))
+        note_metric("time_resolved")
 
     def add_ngram(threshold, ngram_size):
+        nonlocal ngram_settings
         report = score_chat_ngram(gold, system, threshold=threshold, n=ngram_size)
         results["ngram"] = report
         for chat_id, chat_report in report.items():
@@ -1112,6 +1500,16 @@ def main():
             else:
                 tex_sections.append(chat_ngram_table_tex(
                     chat_report, f"SRL n-gram overlap scores (chat {chat_id})", f"tab:ngram-chat{chat_id}"))
+        note_metric("ngram")
+        ngram_settings = (threshold, ngram_size)
+
+    def add_hallucinations():
+        mismatch_records, mismatch_turns = collect_mismatches(gold, system)
+        report = hallucination_report(mismatch_records, mismatch_turns)
+        results["hallucinations"] = report
+        tex_sections.append(hallucination_table_tex(report))
+        note_metric("hallucinations")
+        return mismatch_records, mismatch_turns
 
     if args.command == "srl":
         for mode in (["strict", "lenient"] if args.mode == "both" else [args.mode]):
@@ -1121,6 +1519,10 @@ def main():
             add_blanc(mode)
     elif args.command == "types":
         add_types()
+    elif args.command == "perspective":
+        add_perspective()
+    elif args.command == "time-resolved":
+        add_time_resolved()
     elif args.command == "ngram":
         add_ngram(args.threshold, args.ngram_size)
     elif args.command == "all":
@@ -1129,15 +1531,27 @@ def main():
         for mode in ["strict", "lenient"]:
             add_blanc(mode)
         add_types()
+        add_perspective()
+        add_time_resolved()
         add_ngram(NGRAM_THRESHOLD, NGRAM_SIZE)
+        records, turns = add_hallucinations()
+
+    settings_notes = []
+    if srl_modes:
+        settings_notes.append(("SRL mode(s)", ", ".join(dict.fromkeys(srl_modes))))
+    if blanc_modes:
+        settings_notes.append(("BLANC mode(s)", ", ".join(dict.fromkeys(blanc_modes))))
+    if ngram_settings:
+        settings_notes.append(("N-gram threshold", str(ngram_settings[0])))
+        settings_notes.append(("N-gram size", str(ngram_settings[1])))
+    tex_sections.insert(0, metrics_description_tex(args.gold, args.system, metrics_used, settings_notes))
 
     json_path = os.path.join(args.output, f"evaluation_{args.command}.json")
     tex_path = os.path.join(args.output, f"evaluation_{args.command}.tex")
     write_outputs(results, tex_sections, json_path, tex_path)
 
     if args.command == "all":
-        records, total_turns = collect_mismatches(gold, system)
-        write_mismatch_log(records, total_turns, os.path.join(args.output, "evaluation_all_mismatches.log"))
+        write_mismatch_log(records, turns, os.path.join(args.output, "evaluation_all_mismatches.log"))
 
 
 if __name__ == "__main__":

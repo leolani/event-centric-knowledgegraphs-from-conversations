@@ -2,7 +2,8 @@
 
 `evaluate.py` scores the LLM-generated SRL output against the manually annotated gold
 standard: how well does the automatic pipeline (`llm_event_extraction.py`) find the same
-activities, semantic roles, and types a human annotator did with `annotation_tool.html`?
+activities, semantic roles, types, time resolutions, and speaker perspective a human annotator
+did with `annotation_tool.html`?
 
 ## Requirements
 
@@ -18,7 +19,7 @@ a list of turn entries:
 { "chat": 0, "date": "...", "human": "Jan", "Input": {"turn": 1, "speaker": "...", "utterance": "..."},
   "Output": [ { "activity": {...}, "agent": [...], "patient": [...], "agent_patient": [...],
                 "experiencer": [...], "instrument": [...], "location": [...], "result": [...],
-                "time": [...], "perspective": {...} } ] }
+                "time": [...], "time_resolved": [...], "perspective": {...} } ] }
 ```
 
 - **Gold** (default `annotation/annotations.json`): exported from `annotation_tool.html` —
@@ -37,14 +38,15 @@ pronouns (see [Mismatch log](#mismatch-log-mismatches)).
 python evaluate.py all --output ../../data
 ```
 
-Runs everything (SRL strict + lenient, BLANC strict + lenient, type accuracy, n-gram, and the
-mismatch log) with the default gold/system paths, writing `evaluation_all.json`,
-`evaluation_all.tex`, and `evaluation_all_mismatches.log` into `../../data`.
+Runs everything (SRL strict + lenient, BLANC strict + lenient, type accuracy, perspective
+accuracy, time-resolution accuracy, n-gram, and the mismatch log) with the default gold/system
+paths, writing `evaluation_all.json`, `evaluation_all.tex`, and
+`evaluation_all_mismatches.log` into `../../data`.
 
 ## CLI options
 
 ```
-python evaluate.py {srl,blanc,types,ngram,mismatches,all} [--gold PATH] [--system PATH] [--output DIR] [subcommand options]
+python evaluate.py {srl,blanc,types,perspective,time-resolved,ngram,mismatches,all} [--gold PATH] [--system PATH] [--output DIR] [subcommand options]
 ```
 
 `--gold`, `--system`, and `--output` must come **after** the subcommand, not before (an
@@ -74,6 +76,10 @@ python evaluate.py mismatches --output ../../data
 
 # Chat-level n-gram scoring with a looser threshold
 python evaluate.py ngram --threshold 0.3 --output ../../data
+
+# Perspective and time-resolution accuracy
+python evaluate.py perspective --output ../../data
+python evaluate.py time-resolved --output ../../data
 ```
 
 ## Methods
@@ -135,6 +141,29 @@ For every span that **leniently** matches between gold and system — activity p
 role except `time` (which has no type) — is the assigned type also correct (e.g. both say
 `exercise`, not one `exercise` and one `treatment`)? Reuses the lenient SRL alignment.
 
+### Perspective accuracy (`perspective`)
+
+Each Output entry carries a `perspective` object — `{emotion, factuality, certainty}` — but
+it's a **whole-turn** annotation, not per-entry: every entry for the same turn is exported with
+identical perspective values (see `readme-annotation.md`). So `perspective` compares gold and
+system directly per `(chat, turn)` — no activity/span alignment involved — using the first
+entry's perspective as that turn's value. Only turns **both** sides annotated are counted; a
+turn only one side annotated has no counterpart to compare against. Reports per-field accuracy
+(`emotion`, `factuality`, `certainty`) plus `overall`.
+
+### Time resolution accuracy (`time-resolved`)
+
+An Output entry's `time_resolved` list grounds one of its `time` expressions to a calendar
+date: `{time_expression, temporal_type, absolute_date, date_range_start, date_range_end,
+recurrence_pattern}`, linked to a `time` span by matching `time_expression` against that span's
+`value`. For every `time` span that **leniently** matches between gold and system (same
+alignment as `srl`), `time-resolved` looks up each side's linked `time_resolved` entry and
+compares `temporal_type` plus whichever of `absolute_date` / `date_range_start` /
+`date_range_end` / `recurrence_pattern` gold actually populated (e.g. `absolute_date` is only
+meaningful when `temporal_type` is `point`, so it's only counted then). If system has no linked
+`time_resolved` entry at all, every field gold populated counts as incorrect. Reports per-field
+accuracy plus `overall`.
+
 ### Chat-level n-gram matching (`ngram`)
 
 The three commands above all anchor matching to a specific turn and offset. `ngram` instead
@@ -185,13 +214,22 @@ usually means the content is right but attributed to the wrong turn or span.
 
 A side-by-side, human-readable log of every gold-only (false negative) and system-only (false
 positive) item, under **lenient** matching only — everything `srl --mode lenient` would count
-as FN/FP, but as full records grouped by turn instead of a tally, for inspection.
+as FN/FP, but as full records grouped by turn instead of a tally, for inspection. **Every**
+turn considered is listed, in order, even ones with no mismatches at all (shown as
+`(no mismatches)`), so the log doubles as a complete turn-by-turn walkthrough of the
+gold-covered conversations, not just a list of problems.
 
 Each system-only record is flagged where applicable:
 
 - **`[HALLUCINATION]`** — the value doesn't occur anywhere in the turn's utterance at all.
-  Usually the model confused this turn with a different one. The log header reports a
-  **hallucination score** = hallucinations / total turns evaluated.
+  If it *does* occur in an **earlier** turn of the same chat (the likely explanation: the model
+  carried over content from a turn it had already seen in context), the tag instead names that
+  turn, e.g. `[HALLUCINATION: 2]` — the closest preceding turn that contains it. Plain
+  `[HALLUCINATION]` (no number) means the value occurs nowhere in the chat at all, i.e. fully
+  fabricated. The log header reports two separate **hallucination scores** (each / total turns
+  evaluated): one for hallucinations **with** a reference to a previous turn, one **without**
+  — distinguishing "confused this turn with an earlier one" from "invented content that isn't
+  in the conversation anywhere".
 - **`[SPEAKER MATCH]`** — the value refers to a conversation participant (a first/second-person
   pronoun, *or* the patient's own name from the `"human"` field — e.g. gold says `"Jan"`,
   system says `"you"`) in a person role, **and** gold independently makes its own speaker
@@ -201,21 +239,34 @@ Each system-only record is flagged where applicable:
   under different roles among `agent`/`patient`/`agent_patient`/`experiencer` (e.g. gold said
   `agent_patient`, system said `patient`). Category is shown as `gold_role/sys_role`.
 
+As part of `all` (not standalone `mismatches`, which writes only the log), the two
+hallucination scores are also broken down **per category** (activity + each role) and written
+to `evaluation_all.json`/`evaluation_all.tex` as a `"hallucinations"` report — see
+[Results](#results-output-files) below.
+
 Example:
 
 ```
-# 9 HALLUCINATION(s): system value not found anywhere in the turn's utterance
-# 1 SPEAKER MATCH(es): system value refers to a speaker (a pronoun or the
+# 9 turns evaluated, 28 mismatches (false negatives = gold-only, false positives = system-only)
+# 8 HALLUCINATION(s): system value not found anywhere in the turn's utterance --
+#   8 tagged [HALLUCINATION: N], occurring in an earlier turn N of the
+#   same chat (likely carried over from context); 0 plain
+#   [HALLUCINATION], occurring nowhere in the chat at all (fully fabricated)
+# 0 SPEAKER MATCH(es): system value refers to a speaker (a pronoun or the
 #   patient's own name) for a role where gold ALSO makes a speaker reference (pronoun or
 #   name, not necessarily the same kind), just not aligned with the specific span gold chose
 # 0 PARTICIPANT MATCH(es): gold and system found the same participant span but
 #   filed it under different roles among agent/patient/agent_patient/experiencer
-# Hallucination score: 9/9 = 1.000
+# Hallucination score (with reference to a previous turn): 8/9 = 0.889
+# Hallucination score (without reference): 0/9 = 0.000
 
 chat 0 turn 3: "Physical activity, like cycling, is crucial in managing your diabetes. ..."
   activity       GOLD: 'cycling' [24:31] type=exercise               | SYSTEM: --
-  activity       GOLD: --                                            | SYSTEM: 'been out' [43:51] type=exercise [HALLUCINATION]
+  activity       GOLD: --                                            | SYSTEM: 'been out' [47:55] type=exercise [HALLUCINATION: 2]
   result         GOLD: 'crucial in managing your diabetes' [36:69] type=impact | SYSTEM: --
+
+chat 0 turn 6: "I'll look into these options. I suppose sticking to my daily walks is also helpful?"
+  (no mismatches)
 ```
 
 ## Results (output files)
@@ -229,22 +280,34 @@ chat 0 turn 3: "Physical activity, like cycling, is crucial in managing your dia
 | `srl` | `srl_strict`, `srl_lenient` (each `{category: {tp, fp, fn, precision, recall, f1}, ..., "overall": ...}`; `srl_lenient` also has `"participant"`) |
 | `blanc` | `blanc_strict`, `blanc_lenient` (each `{chat_id: {blanc, precision_c, recall_c, f1_c, precision_n, recall_n, f1_n, rc, ck, cg, rn, nk, ng, mentions}, ..., "overall": ...}`) |
 | `types` | `types` (`{category: {correct, total, accuracy}, ..., "overall": ...}`) |
+| `perspective` | `perspective` (`{field: {correct, total, accuracy}, ..., "overall": ...}` for `emotion`/`factuality`/`certainty`) |
+| `time-resolved` | `time_resolved` (`{field: {correct, total, accuracy}, ..., "overall": ...}` for `temporal_type`/`absolute_date`/`date_range_start`/`date_range_end`/`recurrence_pattern`) |
 | `ngram` | `ngram` (`{chat_id: {category: {tp, fp, fn, precision, recall, f1}, ..., "overall": ...}, ..., "average": {...}}`) |
-| `all` | all of the above, plus a separate `evaluation_all_mismatches.log` |
+| `all` | all of the above, plus `hallucinations` (`{category: {with_ref, without_ref, with_ref_score, without_ref_score}, ..., "overall": ..., "total_turns": N}`, one row per activity/role category — see [Mismatch log](#mismatch-log-mismatches)), plus a separate `evaluation_all_mismatches.log` |
 
-`mismatches` writes no JSON — only the `.log` file.
+`mismatches` writes no JSON — only the `.log` file; the per-category hallucination breakdown is
+only computed as part of `all`.
 
 ### LaTeX
 
-`evaluation_<command>.tex` contains one `\begin{table}...\end{table}` per report section (e.g.
-`all` produces two SRL tables, two BLANC tables, one type-accuracy table, and one n-gram table
-per chat plus one average — see the examples above). Underscores in category/role names (e.g.
-`agent_patient`) are escaped for LaTeX. `\include` or copy-paste the tables directly into a
-paper or report.
+`evaluation_<command>.tex` opens with an "Evaluation Metrics and Settings" section (not a
+table) before any results: the `--gold`/`--system` file paths, the settings actually used for
+this run (SRL/BLANC mode(s), n-gram threshold/size — only the ones relevant to the command that
+ran), and a plain-language description of each metric present in the file. This makes the
+`.tex` file self-explanatory to a reader who doesn't have the CLI invocation that produced it —
+useful since these tables usually end up copy-pasted into a paper or report on their own.
+
+After that, the file contains one `\begin{table}...\end{table}` per report section (e.g. `all`
+produces two SRL tables, two BLANC tables, one type-accuracy table, one perspective-accuracy
+table, one time-resolution-accuracy table, one n-gram table per chat plus one average, and one
+hallucination-scores-by-category table — see the examples above). Underscores in category/role
+names (e.g. `agent_patient`) are escaped for LaTeX. `\include` or copy-paste the tables (and the
+settings section) directly into a paper or report.
 
 ### Mismatch log
 
 `evaluation_mismatches.log` / `evaluation_all_mismatches.log` is a plain-text file, grouped by
-`chat N turn M: "utterance"`, with one line per mismatch showing gold and system side by side
+`chat N turn M: "utterance"` for every turn evaluated (including turns with no mismatches,
+shown as `(no mismatches)`), with one line per mismatch showing gold and system side by side
 (see the [Mismatch log](#mismatch-log-mismatches) example above). Not machine-readable JSON —
 intended for a human to scan and spot systematic error patterns.

@@ -42,7 +42,11 @@ _prompt_conversational_srl_annotation_template = Template('''You are annotating 
     - time: array of {"value": <verbatim phrase>, "offset": <int>, "length": <int>}.
     - time_resolved: array of {"time_expression": <verbatim phrase matching a "time" entry>, "temporal_type": <temporal_type>, "absolute_date": <"YYYY-MM-DD" or null>, "date_range_start": <"YYYY-MM-DD" or null>, "date_range_end": <"YYYY-MM-DD" or null>, "recurrence_pattern": <recurrence_pattern or null>}, grounding each time expression to a calendar date using the conversation's date as the reference point. temporal_type is one of $temporal_type_values. recurrence_pattern is one of $recurrence_pattern_values when the time expression clearly recurs on one of those patterns, otherwise null (e.g. "twice daily" is best captured as recurrence_pattern "daily" plus the free-text time value "twice daily").
 
-    Every "offset" and "length" MUST be computed against the "utterance" text of the MOST RECENT user message only (0-indexed character offset, length in characters) — never against an earlier turn's utterance, and never against the surrounding JSON of the message itself. Before including any span, verify it yourself: find "value" as an exact, case-sensitive substring of that utterance, set offset to the position of its first character (the utterance's own first character is position 0) and length to the number of characters in "value", then re-read utterance[offset : offset + length] and confirm it reproduces "value" character for character. Do not estimate or guess an offset — locate the exact substring first.
+    Every "offset" and "length" MUST be computed against the "utterance" text of the MOST RECENT user message only (0-indexed character offset, length in characters) — never against an earlier turn's utterance, and never against the surrounding JSON of the message itself. 
+    Before including any span, verify it yourself: find "value" as an exact, case-sensitive substring of that utterance, set offset to the position of its first character (the utterance's own first character is position 0) and length to the number of characters in "value", 
+    then re-read utterance[offset : offset + length] and confirm it reproduces "value" character for character. Do not estimate or guess an offset — locate the exact substring first.
+    
+    If there is no match of "value" with the "utterance" text of the MOST RECENT user message, DO NOT output the activity or role.
     
     Do not output any other text than the JSON array.
 
