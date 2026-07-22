@@ -105,17 +105,19 @@ Select the values that best describe the speaker's emotion, certainty, and factu
 
 ## Semantic roles
 
-Each annotation entry can carry the following roles. All roles except `time` take a **value** (the phrase) and a **type** (from the dropdown). The `agent`/`patient`/`agent_patient`/`experiencer`/`instrument`/`location` types come from `RoleType`, and `result` types from `ResultType`, both in `src/cltl/data_type.py` (`ROLE_TYPES["default"]` and `ROLE_TYPES["result"]`).
+Each annotation entry can carry the following roles. All roles except `time` take a **value** (the phrase) and a **type** (from the dropdown). The `agent`/`patient`/`agent_patient`/`experiencer`/`participant`/`qualification`/`instrument`/`location` types come from `RoleType`, and `result` types from `ResultType`, both in `src/cltl/data_type.py` (`ROLE_TYPES["default"]` and `ROLE_TYPES["result"]`).
 
 | Role | Description | Types |
 |---|---|---|
-| `agent` | Who or what performs the activity, acting on a different participant (the patient) | person, group, organization, object, substance, vehicle, tool, place, city, country, indoor, outdoor, other |
+| `agent` | Who or what performs the activity, acting on a different participant (the patient) | person, group, organization, object, substance, medication, vehicle, tool, place, city, country, indoor, outdoor, condition, activity, other |
 | `patient` | What the activity acts upon, undergoing a change of state caused by an agent | same as agent |
 | `agent_patient` | A single participant that both performs the activity and undergoes the change it causes (self-affecting action) — used instead of separate agent and patient | same as agent |
 | `experiencer` | The participant experiencing a state or condition, with no change of state and no agent causing it | same as agent |
+| `participant` | A participant in the activity that cannot properly be captured by agent, patient, agent_patient, or experiencer — e.g. a bystander or another party involved without controlling the activity or undergoing its change of state themselves | same as agent |
+| `qualification` | A specific qualification of the activity or condition itself, not of a participant — e.g. "blood sugar levels are high" has qualification "high" | same as agent |
 | `instrument` | Tool or means used | same as agent |
 | `location` | Where the activity takes place | same as agent |
-| `result` | Outcome or purpose of the activity | **goal**, **impact** |
+| `result` | Outcome or purpose of the activity | **goal**, **impact**, **cause** |
 | `time` | When the activity occurs (free text phrase) | — |
 
 ## Activity types

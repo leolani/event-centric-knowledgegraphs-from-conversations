@@ -5,8 +5,9 @@ annotation/annotations.json, exported from annotation_tool.html).
 
 Both files share the same shape: a list of conversations, each a list of
 {chat, date, human, Input, Output} turn entries, where Output is a list of annotation
-entries (perspective, activity, agent, patient, agent_patient, experiencer, instrument,
-location, result, time, time_resolved) — see data_type.py for the field values.
+entries (perspective, activity, agent, patient, agent_patient, experiencer, participant,
+qualification, instrument, location, result, time, time_resolved) — see data_type.py for
+the field values.
 
 Gold and system entries are matched by (chat, Input.turn); within a turn, entries are
 aligned to each other via their activity span (or, for a bare reference entry with no
@@ -29,16 +30,20 @@ import json
 import os
 from collections import Counter, defaultdict
 
-ROLE_FIELDS = ["agent", "patient", "agent_patient", "experiencer", "instrument", "location", "result", "time"]
+ROLE_FIELDS = ["agent", "patient", "agent_patient", "experiencer", "participant", "qualification",
+               "instrument", "location", "result", "time"]
 # Fields that carry a "type" value worth scoring; "time" spans have no type.
 TYPED_FIELDS = ["activity"] + [r for r in ROLE_FIELDS if r != "time"]
 
-# The four roles that all identify the participant undergoing a change or experiencing a
-# state (as opposed to instrument/location/result/time). Gold and system frequently agree on
-# WHICH span is the participant but disagree on which of these four roles it falls under
-# (e.g. gold calls it agent_patient, system calls it patient) -- grouping them lets a lenient
-# "participant" metric and the mismatch log recognize that as a role mismatch, not a full miss.
-PARTICIPANT_ROLES = {"agent", "patient", "agent_patient", "experiencer"}
+# The five roles that all identify the participant undergoing a change or experiencing a state
+# (as opposed to qualification/instrument/location/result/time). "participant" is itself defined
+# as a catch-all for cases that don't cleanly fit agent/patient/experiencer, so it belongs in
+# this group for the same reason agent_patient does. Gold and system frequently agree on WHICH
+# span is the participant but disagree on which of these five roles it falls under (e.g. gold
+# calls it agent_patient, system calls it patient, or one calls it participant where the other
+# picks a more specific role) -- grouping them lets a lenient "participant_group" metric and
+# the mismatch log recognize that as a role mismatch, not a full miss.
+PARTICIPANT_ROLES = {"agent", "patient", "agent_patient", "experiencer", "participant"}
 PARTICIPANT_ROLE_ORDER = [r for r in ROLE_FIELDS if r in PARTICIPANT_ROLES]
 
 
@@ -224,12 +229,14 @@ def score_srl(gold_conversations, sys_conversations, mode):
     (exact offset/length) or lenient (overlapping offset). Also returns the matched
     (gold_span, sys_span) pairs per category, reused by score_types() for lenient mode.
 
-    In lenient mode, an additional "participant" category is included: agent, patient,
-    agent_patient, and experiencer pooled together (via match_participant_roles), scoring
-    whether the participant span was found at all regardless of which of the four specific
-    roles gold and system each assigned it to. This is a supplementary, alternative view of
-    the same spans already scored per-role above -- it is NOT included in "overall" (that
-    would double-count those spans).
+    In lenient mode, an additional "participant_group" category is included: agent, patient,
+    agent_patient, experiencer, and participant pooled together (via match_participant_roles),
+    scoring whether the participant span was found at all regardless of which of the five
+    specific roles gold and system each assigned it to. This is a supplementary, alternative
+    view of the same spans already scored per-role above (including the "participant" role's
+    own row) -- it is NOT included in "overall" (that would double-count those spans). It is
+    named "participant_group" rather than "participant" specifically to avoid colliding with
+    the "participant" role itself, which is one of the five roles pooled into it.
 
     Only chats present in gold are evaluated; system chats gold doesn't cover are ignored
     (see filter_to_gold_chats).
@@ -241,7 +248,7 @@ def score_srl(gold_conversations, sys_conversations, mode):
     sys_by_key = {(c, t): out for c, t, _u, out in flatten_turns(sys_conversations)}
     all_keys = sorted(set(gold_by_key) | set(sys_by_key))
 
-    extra_cats = ["participant"] if mode == "lenient" else []
+    extra_cats = ["participant_group"] if mode == "lenient" else []
     counts = {cat: {"tp": 0, "fp": 0, "fn": 0} for cat in ["activity"] + ROLE_FIELDS + extra_cats}
     matched_pairs_by_cat = {cat: [] for cat in ["activity"] + ROLE_FIELDS + extra_cats}
 
@@ -285,23 +292,23 @@ def score_srl(gold_conversations, sys_conversations, mode):
             for s in unmatched_sys:
                 counts[role]["fp"] += len([d for d in (s.get(role) or []) if span_of(d) is not None])
 
-        # participant: agent/patient/agent_patient/experiencer pooled, lenient only -- see
-        # match_participant_roles for why a two-pass (same-role first) match is used instead
-        # of a single flat pool-and-match.
+        # "participant_group" category: agent/patient/agent_patient/experiencer/participant
+        # pooled, lenient only -- see match_participant_roles for why a two-pass (same-role
+        # first) match is used instead of a single flat pool-and-match.
         if mode == "lenient":
             for g, s in entry_matches:
                 same_matches, cross_matches, remaining_gold, remaining_sys = match_participant_roles(g, s, mode)
-                counts["participant"]["tp"] += len(same_matches) + len(cross_matches)
-                counts["participant"]["fn"] += len(remaining_gold)
-                counts["participant"]["fp"] += len(remaining_sys)
-                matched_pairs_by_cat["participant"].extend(same_matches)
-                matched_pairs_by_cat["participant"].extend((gs, ss) for (_, gs, _, ss) in cross_matches)
+                counts["participant_group"]["tp"] += len(same_matches) + len(cross_matches)
+                counts["participant_group"]["fn"] += len(remaining_gold)
+                counts["participant_group"]["fp"] += len(remaining_sys)
+                matched_pairs_by_cat["participant_group"].extend(same_matches)
+                matched_pairs_by_cat["participant_group"].extend((gs, ss) for (_, gs, _, ss) in cross_matches)
             for g in unmatched_gold:
-                counts["participant"]["fn"] += len(
+                counts["participant_group"]["fn"] += len(
                     [d for role in PARTICIPANT_ROLE_ORDER for d in (g.get(role) or []) if span_of(d) is not None]
                 )
             for s in unmatched_sys:
-                counts["participant"]["fp"] += len(
+                counts["participant_group"]["fp"] += len(
                     [d for role in PARTICIPANT_ROLE_ORDER for d in (s.get(role) or []) if span_of(d) is not None]
                 )
 
@@ -310,7 +317,7 @@ def score_srl(gold_conversations, sys_conversations, mode):
     for cat, c in counts.items():
         p, r, f1 = prf(c["tp"], c["fp"], c["fn"])
         report[cat] = {"tp": c["tp"], "fp": c["fp"], "fn": c["fn"], "precision": p, "recall": r, "f1": f1}
-        if cat != "participant":  # supplementary alternative view of the same role spans -- would double-count "overall"
+        if cat != "participant_group":  # supplementary alternative view of the same role spans -- would double-count "overall"
             tp_sum += c["tp"]; fp_sum += c["fp"]; fn_sum += c["fn"]
     p, r, f1 = prf(tp_sum, fp_sum, fn_sum)
     report["overall"] = {"tp": tp_sum, "fp": fp_sum, "fn": fn_sum, "precision": p, "recall": r, "f1": f1}
@@ -775,7 +782,7 @@ def classify_system_mismatch(value, category, utterance, gold_has_speaker_refere
       fabricated, often actually the text of a DIFFERENT turn the model confused this one with.
     - "speaker_match": the value does occur, refers to a speaker -- a first/second-person
       pronoun or the patient's own name (see is_speaker_reference) -- filling a person role
-      (agent/patient/agent_patient/experiencer), AND gold independently makes its own speaker
+      (agent/patient/agent_patient/experiencer/participant), AND gold independently makes its own speaker
       reference for that SAME role in this turn (gold_has_speaker_reference), regardless of
       whether gold used a name and system used a pronoun or vice versa -- i.e. this isn't just
       "any pronoun in a person slot", it's the system correctly identifying the same person
@@ -825,7 +832,7 @@ def _mismatch_record(chat_id, turn_num, utterance, category, gold_span, sys_span
 
 def _participant_match_record(chat_id, turn_num, utterance, gold_role, gold_span, sys_role, sys_span):
     """A gold item in one participant role and a system item in a DIFFERENT participant role
-    (agent/patient/agent_patient/experiencer) whose spans overlap -- the same real participant,
+    (agent/patient/agent_patient/experiencer/participant) whose spans overlap -- the same real participant,
     just assigned a different specific role by gold vs. system. Not run through
     classify_system_mismatch: by construction (found via an overlapping-span match) the system
     value is grounded in the utterance and matches gold, so it can be neither a hallucination
@@ -843,7 +850,7 @@ def collect_mismatches(gold_conversations, sys_conversations):
     ROLE_FIELDS order. Only chats present in gold are considered (see filter_to_gold_chats).
 
     Each record's "flag" is either "participant_match" (a gold item and a system item in
-    different participant roles -- agent/patient/agent_patient/experiencer -- whose spans
+    different participant roles -- agent/patient/agent_patient/experiencer/participant -- whose spans
     overlap; see match_participant_roles), or, for other system-only records, whatever
     classify_system_mismatch() returns: "hallucination", "speaker_match", or None. A
     "hallucination" record's "detail" additionally carries the number of an EARLIER turn in the
@@ -923,7 +930,7 @@ def collect_mismatches(gold_conversations, sys_conversations):
                         records.append(_mismatch_record(chat_id, turn_num, utterance, role, None, d,
                                                          prior_turns=prior_turns))
 
-        # Participant roles (agent/patient/agent_patient/experiencer): within each matched
+        # Participant roles (agent/patient/agent_patient/experiencer/participant): within each matched
         # entry pair, first match same-role as usual, then pool whatever's left across all
         # four roles -- a leftover gold item and leftover system item that overlap despite
         # different roles are the same real participant, mislabeled, flagged as a
@@ -1031,7 +1038,7 @@ def write_mismatch_log(records, turns, path):
         f.write("#   patient's own name) for a role where gold ALSO makes a speaker reference (pronoun or\n")
         f.write("#   name, not necessarily the same kind), just not aligned with the specific span gold chose\n")
         f.write(f"# {participant_matches} PARTICIPANT MATCH(es): gold and system found the same participant span but\n")
-        f.write("#   filed it under different roles among agent/patient/agent_patient/experiencer\n")
+        f.write("#   filed it under different roles among agent/patient/agent_patient/experiencer/participant\n")
         f.write(f"# Hallucination score (with reference to a previous turn): "
                 f"{hallucinations_with_ref}/{total_turns} = {rate_str(hallucinations_with_ref)}\n")
         f.write(f"# Hallucination score (without reference): "
@@ -1074,7 +1081,7 @@ def fmt_tex(x, spec=".2f"):
 
 
 def srl_table_tex(report, mode):
-    cats = ["activity"] + ROLE_FIELDS + (["participant"] if "participant" in report else []) + ["overall"]
+    cats = ["activity"] + ROLE_FIELDS + (["participant_group"] if "participant_group" in report else []) + ["overall"]
     rows = "\n".join(
         f"{esc_tex(cat)} & {report[cat]['tp']} & {report[cat]['fp']} & {report[cat]['fn']} & "
         f"{fmt_tex(report[cat]['precision'])} & {fmt_tex(report[cat]['recall'])} & {fmt_tex(report[cat]['f1'])} \\\\"
@@ -1216,13 +1223,13 @@ METRIC_LABELS = {
 # CLI args/paths and could contain LaTeX-special characters.
 METRIC_DESCRIPTIONS = {
     "srl": ("Precision/recall/F1 for the activity span and each semantic role (agent, patient, "
-            "agent\\_patient, experiencer, instrument, location, result, time). Strict mode "
-            "requires gold and system spans to share the exact same offset and length; lenient "
-            "mode only requires the spans to overlap. In lenient mode, an additional "
-            "\\textit{participant} row pools agent/patient/agent\\_patient/experiencer into one "
-            "category, scoring whether the participant span was found at all regardless of "
-            "which of those four roles it was assigned to (excluded from the lenient overall "
-            "row to avoid double-counting)."),
+            "agent\\_patient, experiencer, participant, qualification, instrument, location, "
+            "result, time). Strict mode requires gold and system spans to share the exact same "
+            "offset and length; lenient mode only requires the spans to overlap. In lenient "
+            "mode, an additional \\textit{participant} row pools agent/patient/"
+            "agent\\_patient/experiencer/participant into one category, scoring whether the "
+            "participant span was found at all regardless of which of those five roles it was "
+            "assigned to (excluded from the lenient overall row to avoid double-counting)."),
     "blanc": ("BLANC activity-coreference score (Recasens \\& Hovy, 2011): does the system "
               "group turn mentions of the same real-world activity under one activity\\_id the "
               "same way gold does? Reported per chat plus an aggregate; mention alignment uses "
@@ -1324,14 +1331,15 @@ fabricated); [SPEAKER MATCH] if it's a speaker reference (a pronoun or the patie
 in a person role AND gold ALSO makes a speaker reference for that same role in that turn --
 just not the exact span or kind of expression gold chose; or [PARTICIPANT MATCH] if gold and
 system found the same participant span but filed it under different roles among
-agent/patient/agent_patient/experiencer (e.g. gold said agent_patient, system said patient).
+agent/patient/agent_patient/experiencer/participant (e.g. gold said agent_patient, system said patient).
 The log header reports two separate hallucination scores -- with a reference to a previous
 turn, and without -- each as a count / total turns evaluated.
 
-The "srl" command additionally reports a lenient-only "participant" row: agent, patient,
-agent_patient, and experiencer pooled into one category, scoring whether the participant span
-was found at all regardless of which of those four specific roles gold and system each used.
-It is a supplementary view alongside the per-role rows, not included in "overall".
+The "srl" command additionally reports a lenient-only "participant_group" row: agent, patient,
+agent_patient, experiencer, and participant pooled into one category, scoring whether the
+participant span was found at all regardless of which of those five specific roles gold and
+system each used. It is a supplementary view alongside the per-role rows (including the
+"participant" role's own row) -- not included in "overall".
 
 python evaluate.py perspective --gold annotation/annotations.json --system ../../data/event_srl.json --output ../../data
 

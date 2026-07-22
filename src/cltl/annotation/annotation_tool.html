@@ -324,7 +324,7 @@ function importAnns(data) {
   status(`Loaded ${total} annotations`);
 }
 
-const ROLE_KEYS = ['agent','patient','agent_patient','experiencer','instrument','location','result'];
+const ROLE_KEYS = ['agent','patient','agent_patient','experiencer','participant','qualification','instrument','location','result'];
 
 // Normalize one raw Output entry (legacy flat format, new nested "activity" format,
 // or a previous export of this tool) into the tool's internal flat representation,
@@ -535,7 +535,7 @@ function buildAnnCard(chatId, tidx, ei, e) {
     </label>
   </div>`;
 
-  const ROLES = ['agent','patient','agent_patient','experiencer','instrument','location','result'];
+  const ROLES = ['agent','patient','agent_patient','experiencer','participant','qualification','instrument','location','result'];
 
   const roleBoxes = ROLES.map(role => {
     const vals = e[role] || [];
@@ -640,7 +640,7 @@ function renderRopStep2(chatId, tidx) {
   const prevActs = getActivitiesUpTo(chatId, tidx);
   const actOpts = prevActs.map(a => `<option value="${a.id}">${a.id}: ${a.activity}</option>`).join('');
 
-  const ROLES = ['agent','patient','agent_patient','experiencer','instrument','location','result','time'];
+  const ROLES = ['agent','patient','agent_patient','experiencer','participant','qualification','instrument','location','result','time'];
   const rolePills = ROLES.map(r =>
     `<label><input type="radio" name="pr" value="${r}"><span>${r}</span></label>`
   ).join('');
@@ -797,7 +797,7 @@ function openNewAnnModal(chatId, tidx, prefillActivity, prefillOffset, prefillLe
 function confirmNewAnn(chatId, tidx) {
   const annType  = document.querySelector('input[name="at"]:checked')?.value || 'new';
   const annotator = document.getElementById('ann-name').value.trim() || 'unknown';
-  const base = { annotator, agent:[], patient:[], agent_patient:[], experiencer:[], instrument:[], location:[], result:[], time:[], time_resolved:[],
+  const base = { annotator, agent:[], patient:[], agent_patient:[], experiencer:[], participant:[], qualification:[], instrument:[], location:[], result:[], time:[], time_resolved:[],
     emotion: DEFAULT_EMOTION, certainty: DEFAULT_CERTAINTY, factuality: DEFAULT_FACTUALITY };
 
   let entry;
@@ -896,7 +896,7 @@ function openEditActivityModal(chatId, tidx, ei) {
 function openAddRoleModal(chatId, tidx, ei) {
   const conv = convs.find(c => c.chat === parseInt(chatId));
   const utt  = conv?.turns[tidx]?.utterance || '';
-  const ROLES = ['agent','patient','agent_patient','experiencer','instrument','location','result','time'];
+  const ROLES = ['agent','patient','agent_patient','experiencer','participant','qualification','instrument','location','result','time'];
   const rolePills = ROLES.map(r =>
     `<label><input type="radio" name="ar" value="${r}"><span>${r}</span></label>`
   ).join('');
@@ -1191,6 +1191,8 @@ function fmtEntry(e, chatId) {
   out.patient       = e.patient || [];
   out.agent_patient = e.agent_patient || [];
   out.experiencer   = e.experiencer || [];
+  out.participant   = e.participant || [];
+  out.qualification = e.qualification || [];
   out.instrument    = e.instrument || [];
   out.location      = e.location || [];
   out.result        = e.result || [];

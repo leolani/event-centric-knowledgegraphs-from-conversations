@@ -1,6 +1,6 @@
 """
-Classify agent/patient/agent_patient/experiencer/instrument/location values in
-event_srl_time_resolved.json.zip using OpenAI, then write events_srl_typed.json with
+Classify agent/patient/agent_patient/experiencer/participant/qualification/instrument/location
+values in event_srl_time_resolved.json.zip using OpenAI, then write events_srl_typed.json with
 typed role entries.
 
 Usage:
@@ -16,7 +16,7 @@ from pathlib import Path
 from openai import OpenAI
 
 # ── Config ────────────────────────────────────────────────────────────────────
-ROLES       = ["agent", "patient", "agent_patient", "experiencer", "instrument", "location"]
+ROLES       = ["agent", "patient", "agent_patient", "experiencer", "participant", "qualification", "instrument", "location"]
 BATCH_SIZE  = 50          # values per API call
 MODEL       = "gpt-4o-mini"
 CACHE_FILE  = Path("data/role_type_cache.json")
@@ -27,7 +27,8 @@ SYSTEM_PROMPT = """\
 You are an entity-type classifier for a health-dialogue dataset about diabetes management.
 
 Given a JSON list of text spans that appear as semantic role fillers (agent, patient,
-instrument, or location), return a JSON object mapping each span to its entity type.
+agent_patient, experiencer, participant, qualification, instrument, or location), return a
+JSON object mapping each span to its entity type.
 
 Use exactly one of these types:
   person        – named or referred person (patient, caregiver, assistant)

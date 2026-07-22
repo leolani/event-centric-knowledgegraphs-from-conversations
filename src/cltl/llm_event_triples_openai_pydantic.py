@@ -101,6 +101,8 @@ class SRLAnnotation(BaseModel):
     patient: Optional[list[RoleSpan]] = []
     agent_patient: Optional[list[RoleSpan]] = []
     experiencer: Optional[list[RoleSpan]] = []
+    participant: Optional[list[RoleSpan]] = []
+    qualification: Optional[list[RoleSpan]] = []
     instrument: Optional[list[RoleSpan]] = []
     location: Optional[list[RoleSpan]] = []
     result: Optional[list[ResultSpan]] = []
@@ -252,7 +254,7 @@ class LLM_EventExtraction:
                 if activity.offset is not None or activity.length is not None or activity.type is not None:
                     issues.append(f"{prefix}: bare reference to '{activity.activity_id}' should not carry offset, length or type without a value")
 
-            for role_name in ("agent", "patient", "agent_patient", "experiencer", "instrument", "location", "result", "time"):
+            for role_name in ("agent", "patient", "agent_patient", "experiencer", "participant", "qualification", "instrument", "location", "result", "time"):
                 for role in getattr(extraction, role_name):
                     spans.append((role_name, role))
 

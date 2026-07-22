@@ -18,7 +18,8 @@ a list of turn entries:
 ```json
 { "chat": 0, "date": "...", "human": "Jan", "Input": {"turn": 1, "speaker": "...", "utterance": "..."},
   "Output": [ { "activity": {...}, "agent": [...], "patient": [...], "agent_patient": [...],
-                "experiencer": [...], "instrument": [...], "location": [...], "result": [...],
+                "experiencer": [...], "participant": [...], "qualification": [...],
+                "instrument": [...], "location": [...], "result": [...],
                 "time": [...], "time_resolved": [...], "perspective": {...} } ] }
 ```
 
@@ -99,21 +100,24 @@ This alignment underlies every offset-based command below (`srl`, `blanc`, `type
 
 ### SRL scoring (`srl`)
 
-Precision/recall/F1 for the activity span and each semantic role
-(`agent`/`patient`/`agent_patient`/`experiencer`/`instrument`/`location`/`result`/`time`),
-strict or lenient. Roles are scored *within* each matched entry pair; an entry with no
+Precision/recall/F1 for the activity span and each semantic role (`agent`/`patient`/
+`agent_patient`/`experiencer`/`participant`/`qualification`/`instrument`/`location`/`result`/
+`time`), strict or lenient. Roles are scored *within* each matched entry pair; an entry with no
 counterpart in the other side contributes all its role spans as false negatives (gold-only) or
 false positives (system-only).
 
-In **lenient** mode only, an extra **`participant`** row pools `agent`, `patient`,
-`agent_patient`, and `experiencer` together and asks a coarser question: was the participant
-span found at all, regardless of which of those four specific roles gold and system each
-assigned it to? Matching is two-pass (`match_participant_roles`): same-role pairs first, then
-whatever's left over is pooled across all four roles and matched again by span overlap alone —
-a gold `agent_patient` and a system `patient` with overlapping spans count as one participant
-match rather than one false negative plus one false positive. `participant` is a supplementary,
-alternative view of spans already counted in the per-role rows above, so it is **excluded**
-from the `overall` row (including it would double-count those spans).
+In **lenient** mode only, an extra **`participant_group`** row pools `agent`, `patient`,
+`agent_patient`, `experiencer`, and `participant` together and asks a coarser question: was the
+participant span found at all, regardless of which of those five specific roles gold and system
+each assigned it to? (It's named `participant_group` rather than `participant` specifically to
+avoid colliding with the `participant` role itself, which is one of the five pooled into it.)
+Matching is two-pass (`match_participant_roles`): same-role pairs first, then whatever's left
+over is pooled across all five roles and matched again by span overlap alone — a gold
+`agent_patient` and a system `patient` with overlapping spans count as one participant match
+rather than one false negative plus one false positive. `participant_group` is a supplementary,
+alternative view of spans already counted in the per-role rows above (including the
+`participant` role's own row), so it is **excluded** from the `overall` row (including it would
+double-count those spans).
 
 Example (real chat-0 run, lenient mode):
 
@@ -236,8 +240,9 @@ Each system-only record is flagged where applicable:
   reference for that same role in that turn — just not via the exact span or kind of
   expression gold chose.
 - **`[PARTICIPANT MATCH]`** — gold and system found the same participant span but filed it
-  under different roles among `agent`/`patient`/`agent_patient`/`experiencer` (e.g. gold said
-  `agent_patient`, system said `patient`). Category is shown as `gold_role/sys_role`.
+  under different roles among `agent`/`patient`/`agent_patient`/`experiencer`/`participant`
+  (e.g. gold said `agent_patient`, system said `patient`). Category is shown as
+  `gold_role/sys_role`.
 
 As part of `all` (not standalone `mismatches`, which writes only the log), the two
 hallucination scores are also broken down **per category** (activity + each role) and written
@@ -256,7 +261,7 @@ Example:
 #   patient's own name) for a role where gold ALSO makes a speaker reference (pronoun or
 #   name, not necessarily the same kind), just not aligned with the specific span gold chose
 # 0 PARTICIPANT MATCH(es): gold and system found the same participant span but
-#   filed it under different roles among agent/patient/agent_patient/experiencer
+#   filed it under different roles among agent/patient/agent_patient/experiencer/participant
 # Hallucination score (with reference to a previous turn): 8/9 = 0.889
 # Hallucination score (without reference): 0/9 = 0.000
 

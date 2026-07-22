@@ -201,7 +201,7 @@ def main():
             "Semantic role fillers (annotation count per role)", "tab:role-counts", header="Role"),
         distribution_table_tex(
             [(t.value, stats["role_types"][t.value]) for t in data_type.RoleType],
-            "Role filler types (agent/patient/agent\\_patient/experiencer/instrument/location)",
+            "Role filler types (agent/patient/agent\\_patient/experiencer/participant/qualification/instrument/location)",
             "tab:role-types", header="Type"),
         distribution_table_tex(
             [(t.value, stats["result_types"][t.value]) for t in data_type.ResultType],

@@ -42,6 +42,8 @@ class SemanticRole(str, Enum):
           John, not agent: John + patient: John).
         - experiencer: the participant that experiences a state or condition, with no change
           of state and no agent causing it (e.g. "John has a headache" -> experiencer: John).
+        - participant is used for anything that cannot properly be captured by aget, patient, and experiencerI
+        - specific qualification of an activity or event (e.g. "blood suger levels are high" -> qualification: high)
         - instrument: a tool or means used to perform the activity.
         - location: where the activity takes place.
         - result: the outcome or goal that is the effect of the activity.
@@ -51,6 +53,8 @@ class SemanticRole(str, Enum):
         patient = "patient"
         agent_patient = "agent_patient"
         experiencer = "experiencer"
+        participant = "participant"
+        qualification = "qualification"
         instrument = "instrument"
         location = "location"
         result = "result"
@@ -72,6 +76,7 @@ class RoleType(str, Enum):
         organization = "organization"
         object = "object"
         substance = "substance"
+        medication = "medication"
         vehicle = "vehicle"
         tool = "tool"
         place = "place"
@@ -79,12 +84,15 @@ class RoleType(str, Enum):
         country = "country"
         indoor = "indoor"
         outdoor = "outdoor"
+        condition = "condition"
+        activity = "activity"
         other = "other"
 
 
 class ResultType(str, Enum):
         goal = "goal"
         impact = "impact"
+        cause = "cause"
 
 
 class EmotionLabel(str, Enum):

@@ -290,7 +290,7 @@ def get_triples_with_types(event, event_id, utterence_time:date):
 # dicts. "result" is handled separately below (its own ResultType vocabulary, not RoleType);
 # "time" is handled via time_resolved only, matching get_triples_with_types; there is no
 # "manner" role in this schema.
-ROLE_FIELDS_WITH_TYPE = ["agent", "patient", "agent_patient", "experiencer", "instrument", "location"]
+ROLE_FIELDS_WITH_TYPE = ["agent", "patient", "agent_patient", "experiencer", "participant", "qualification", "instrument", "location"]
 
 
 def get_triples_with_types_and_activity_id(event, utterance_time: date):
@@ -302,8 +302,9 @@ def get_triples_with_types_and_activity_id(event, utterance_time: date):
     activity always gets the same subject URI, with no need to track phrases across turns.
 
     Also covers the full current role set (agent, patient, agent_patient, experiencer,
-    instrument, location, result, time) instead of the old agent/patient/manner/instrument/
-    location/time set -- "manner" no longer exists in this schema.
+    participant, qualification, instrument, location, result, time) instead of the old
+    agent/patient/manner/instrument/location/time set -- "manner" no longer exists in this
+    schema.
     """
     triples = []
     activity = event.get('activity') or {}

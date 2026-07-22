@@ -14,6 +14,8 @@ The semantic roles are:
 - patient: this is the diabetes patient if an action implies a change of state for him or her that is being done by another participant.
 - agent_patient: the diabetes patient is acting on him or herself so being both the agent and the patient.
 - experiencer: the diabetes patient is experiencing a condition or state.
+- participant: use only when a participant in the activity cannot properly be captured by agent, patient, agent_patient, or experiencer above — e.g. a bystander or another party involved without controlling the activity or undergoing its change of state themselves (a coach, family member, etc., not the patient).
+- qualification: a specific qualification of the activity or condition itself, not of a participant — e.g. "blood sugar levels are high" has qualification "high".
 - instrument: if something else is used during the activity, this can be a device or a substance or resource.
 - result: the result or goal that is the effect of an activity.
 - location: where this is done.
@@ -83,7 +85,7 @@ You can add more than one activity to the same turn using the "+Add Activity Ann
 - If the turn doesn't have an annotation entry for that activity yet — for example, this is the first mention of it in the current turn, and no word in the turn names the activity itself, only a role about it — one is created automatically, grounded to the activity you picked, without needing to separately create an "Activity reference" first. This is how you attach a role expressed in this turn to an activity that was only mentioned by name in an earlier turn.
 - "Assign role" is disabled until at least one activity has been annotated anywhere in the conversation; use "Activity reference" to create the first one.
 
-Agent, Patient, Agent_Patient and Experiencer are the most important roles, as they identify the participant that is undergoing a change or experiencing a state or condition. Assign exactly one of these four roles to that participant — never both agent and patient for the same participant, and never patient together with agent_patient or experiencer for the same participant.
+Agent, Patient, Agent_Patient and Experiencer are the most important roles, as they identify the participant that is undergoing a change or experiencing a state or condition. Assign exactly one of these four roles to that participant — never both agent and patient for the same participant, and never patient together with agent_patient or experiencer for the same participant. If none of these four properly fits — e.g. a bystander or another party who is involved but neither controls the activity nor undergoes its change of state or experiences a condition — use the participant role instead.
 
 An agent is typically the participant that has control over the activity, acting on a different participant (the patient). However, it can be the case that an agent is acting on him or herself and not on another participant, e.g. when you walk you do the moving of yourself. In that case, we assign the agent_patient role and do not separately annotate agent and patient. When a participant merely experiences a state or condition — with no change of state and no agent causing it — assign experiencer instead of patient.
 
@@ -92,6 +94,8 @@ There are three classical cases:
 1. Action of an agent on a patient: two participants, where the agent acts to change a state of the patient. E.g. "John cooks a meal", in which "John" is the agent and "meal" is the patient.
 2. Action of an agent on him/herself: one participant acting on him/herself, both controlling the activity and undergoing the change it causes. E.g. "John cycles", in which "John" is the agent_patient.
 3. Condition that a participant experiences: one participant experiences a state, with no agent and no change of state. E.g. "John has a headache", in which "John" is the experiencer.
+
+Qualification is different from these participant roles: it describes a property of the activity or condition itself, not of a participant. E.g. "John's blood sugar levels are high", in which "high" is the qualification of "blood sugar levels" — not a role of "John".
 
 The focus of the annotation is to identify the participant that is undergoing the change or experiencing the state or condition. This is either the patient, the agent_patient, or the experiencer role.
 
