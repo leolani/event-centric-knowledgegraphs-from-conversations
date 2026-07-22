@@ -3,12 +3,12 @@ from cltl.commons.discrete import UtteranceType
 from datetime import date, datetime
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
-from perspective.emotion_extraction import GoEmotionDetector
-
-model_path = "AnasAlokla/multilingual_go_emotions"
-#  Languages: Arabic, English, French, Spanish, Dutch, Turkish
-emotion_detector = GoEmotionDetector(model=model_path)
-
+# from perspective.emotion_extraction import GoEmotionDetector
+#
+# model_path = "AnasAlokla/multilingual_go_emotions"
+# #  Languages: Arabic, English, French, Spanish, Dutch, Turkish
+# emotion_detector = GoEmotionDetector(model=model_path)
+#
 negation_words = [    "not", "never", "nobody", "no", "none", "neither", "nor", "hardly", "scarcely", "rarely", "seldom", "little", "few"]
 certainty_words = ["certain", "sure", "definitely", "absolutely", "certainly", "surely"]
 uncertainty_words = ["think", "believe", "might", "maybe", "could", "perhaps"]
@@ -365,35 +365,6 @@ def get_triples_with_types_and_activity_id(event, utterance_time: date):
 
     return triples
 
-
-def get_capsules_from_turn (turn_data):
-    capsules = []
-    turn = turn_data['Input']
-    event_data = turn_data['Output']
-    chat_id = turn_data['chat']
-    chat_date = parser.parse(turn_data['date'])
-    turn_id = turn['turn']
-    if event_data:
-        event_id = random.random()
-        triples = get_triples(event_data, event_id)
-        offset = "0-"+str(len(turn["utterance"]))
-        for triple in triples:
-            capsule = { "chat": chat_id,
-                "turn": turn_id,
-                "author": {"label":turn['speaker'], "type": ["agent"], "uri":"http://cltl.nl/leolani/friends/"+turn['speaker']},
-                "utterance": turn["utterance"],
-                "utterance_type": UtteranceType.STATEMENT,
-                "position": offset,
-                "subject" : triple["subject"],
-                "predicate" : triple["predicate"],
-                "object" : triple["object"],
-                "perspective":  get_utterance_perspective(turn["utterance"], emotion_detector),
-                 "timestamp": datetime.combine(chat_date, datetime.now().time()),
-                 "context_id": event_id
-            }
-            capsules.append(capsule)
-    return capsules
-
 def get_capsule_with_event_details_from_turn (turn_data, emotion_detector):
     turn = turn_data['Input']
     event_data = turn_data['Output']
@@ -526,6 +497,61 @@ def get_capsule_with_event_details_from_turn_with_conversational_context_similar
 ## directly from activity_id (see get_triples_with_types_and_activity_id), and two mentions of
 ## the same activity_id -- in this turn or any other -- automatically resolve to the same URI.
 ##
+# cltl.brain's own Certainty enum only has CERTAIN/PROBABLE/POSSIBLE/UNDERSPECIFIED (see
+# cltl.commons.discrete.Certainty), so our three-way certainty/uncertain/neutral scale is
+# remapped onto its closest equivalent: certain stays certain, neutral (no stated opinion
+# either way) becomes probable, and uncertain becomes possible.
+CERTAINTY_TO_BRAIN = {"certain": "certain", "neutral": "probable", "uncertain": "possible"}
+
+# cltl.brain's Perspective has no "factuality" field at all -- the closest existing field is
+# "polarity" (Polarity.POSITIVE/NEGATIVE/EXPECT/UNDERSPECIFIED), whose docstring describes it as
+# "the main flag to signal negation", i.e. the same confirm/deny axis factuality captures.
+# Polarity.EXPECT covers our third factuality value directly, so all three map one-to-one.
+FACTUALITY_TO_POLARITY = {"confirm": "positive", "deny": "negative", "expect": "expect"}
+
+
+def _prepare_perspective_for_brain(perspective):
+    """Adapt our {emotion, factuality, certainty} perspective dict so it survives
+    cltl.brain.infrastructure.rdf_builder.fill_perspective() unharmed and maps onto its
+    vocabulary as closely as our schema allows.
+
+    - emotion: fill_perspective reads "emotion" for BOTH Ekman's 6 basic emotions and the 28
+      GoEmotion labels from the exact same dict key. If "emotion" is a bare string that also
+      happens to be a valid Ekman emotion name -- this includes "neutral" (our default) plus
+      "anger"/"disgust"/"fear"/"joy"/"sadness"/"surprise" -- fill_perspective's own fallback
+      logic picks that single Ekman Emotion value instead of the GoEmotion list, and
+      cltl.brain.LTM_shared._create_attribution then crashes trying to iterate over it
+      ("TypeError: 'Emotion' object is not iterable"). Wrapping "emotion" in a list sidesteps
+      this: Emotion.as_enum() only ever matches a bare string, so a list always falls through
+      to GoEmotion.as_enum(), which returns a (correctly iterable) GoEmotion list.
+    - certainty: remapped via CERTAINTY_TO_BRAIN so "neutral"/"uncertain" land on a real
+      Certainty value (probable/possible) instead of silently collapsing to UNDERSPECIFIED.
+    - factuality: has no direct home in cltl.brain's Perspective, so it's translated into
+      "polarity" via FACTUALITY_TO_POLARITY (confirm/deny/expect -> positive/negative/expect,
+      one-to-one since Polarity gained an EXPECT member) and dropped from the dict afterwards
+      -- fill_perspective never reads "factuality" itself, so leaving it in place would just
+      mean it's silently ignored.
+    """
+    if not perspective:
+        return perspective
+    fixed = dict(perspective)
+
+    emotion = fixed.get('emotion')
+    if emotion is not None and not isinstance(emotion, list):
+        fixed['emotion'] = [emotion]
+
+    certainty = fixed.get('certainty')
+    if certainty in CERTAINTY_TO_BRAIN:
+        fixed['certainty'] = CERTAINTY_TO_BRAIN[certainty]
+
+    factuality = fixed.pop('factuality', None)
+    polarity = FACTUALITY_TO_POLARITY.get(factuality)
+    if polarity is not None:
+        fixed['polarity'] = polarity
+
+    return fixed
+
+
 ## Perspective is taken directly from the entry's own "perspective" field (emotion, factuality,
 ## certainty -- already annotated by the SRL extraction) instead of being recomputed from the
 ## utterance text via get_utterance_perspective/emotion_detector: it's the same annotation the
@@ -545,7 +571,7 @@ def get_capsule_with_event_details_from_turn_with_activity_id (turn_data):
             continue
         triples = get_triples_with_types_and_activity_id(event_data, chat_date)
         offset = "0-"+str(len(turn["utterance"]))
-        perspective_value = event_data.get('perspective')
+        perspective_value = _prepare_perspective_for_brain(event_data.get('perspective'))
         capsule = { "chat": chat_id,
             "turn": turn_id,
             "author": {"label":turn['speaker'], "type": ["agent"], "uri":"http://cltl.nl/leolani/friends/"+turn['speaker']},
