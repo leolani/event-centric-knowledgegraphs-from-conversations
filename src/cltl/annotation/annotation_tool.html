@@ -58,6 +58,13 @@ body { font-family: system-ui, sans-serif; font-size: 14px; background: #f0f2f5;
 .emotion-label { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 11px; color: #7f8c8d; text-transform: uppercase; letter-spacing: .3px; }
 .emotion-select { padding: 2px 6px; border-radius: 4px; border: 1px solid #ccc; font-size: 11px; background: white; color: #555; text-transform: none; letter-spacing: normal; }
 
+/* Per-activity perspective row on each annotation card -- same look as .emotion-label/-select
+   above (used to live in the turn header, back when perspective was one value per turn) but
+   without the margin-left:auto used there to push it to the right of the turn header. */
+.persp-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
+.persp-label { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #7f8c8d; text-transform: uppercase; letter-spacing: .3px; }
+.persp-select { padding: 2px 6px; border-radius: 4px; border: 1px solid #ccc; font-size: 11px; background: white; color: #555; text-transform: none; letter-spacing: normal; }
+
 .utterance {
   padding: 9px 12px 9px 12px; line-height: 1.65; font-size: 13px; color: #2c3e50;
   cursor: text; user-select: text; border-bottom: 1px solid #f0f0f0;
@@ -187,10 +194,9 @@ body { font-family: system-ui, sans-serif; font-size: 14px; background: #f0f2f5;
 <script>
 // ═══ State ════════════════════════════════════════════════════════════════════
 let convs = [];         // raw conversations array
-let anns  = {};         // { chatId: { turnIdx: [OutputEntry] } }
-let turnEmotions = {};    // { chatId: { turnIdx: 'joy' } } — speaker_emotion per utterance
-let turnCertainty = {};   // { chatId: { turnIdx: 'neutral' } } — speaker_certainty per utterance
-let turnFactuality = {};  // { chatId: { turnIdx: 'confirm' } } — speaker_factuality per utterance
+let anns  = {};         // { chatId: { turnIdx: [OutputEntry] } } — each entry carries its own
+                         // emotion/certainty/factuality (perspective is per ACTIVITY, not per
+                         // turn: a turn can mention several activities with different perspectives).
 let pendingAnnData = null; // annotation JSON held until conversations.json is loaded
 let curChat = null;
 let pendingSel = null;  // { text, chatId, turnIdx }
@@ -272,9 +278,6 @@ document.getElementById('file-input').addEventListener('change', e => {
     try {
       convs = JSON.parse(ev.target.result);
       anns = {};
-      turnEmotions = {};
-      turnCertainty = {};
-      turnFactuality = {};
       // apply annotations that were loaded before conversations
       if (pendingAnnData) {
         applyAnnData(pendingAnnData);
@@ -327,7 +330,15 @@ const ROLE_KEYS = ['agent','patient','agent_patient','experiencer','instrument',
 // or a previous export of this tool) into the tool's internal flat representation,
 // filling in offset/length wherever they're missing.
 function normalizeEntry(raw, utterance) {
-  const entry = { annotator: raw.annotator, time_resolved: raw.time_resolved || [] };
+  const entry = {
+    annotator: raw.annotator, time_resolved: raw.time_resolved || [],
+    // Perspective is per ACTIVITY (this entry), not per turn -- a turn can mention several
+    // activities with different emotion/certainty/factuality. Falls back to the legacy flat
+    // speaker_* fields for files exported before "perspective" was nested.
+    emotion:    raw.perspective?.emotion    ?? raw.speaker_emotion    ?? DEFAULT_EMOTION,
+    certainty:  raw.perspective?.certainty  ?? raw.speaker_certainty  ?? DEFAULT_CERTAINTY,
+    factuality: raw.perspective?.factuality ?? raw.speaker_factuality ?? DEFAULT_FACTUALITY,
+  };
   ROLE_KEYS.forEach(role => { entry[role] = []; });
   entry.time = [];
 
@@ -402,21 +413,6 @@ function applyAnnData(data) {
       anns[chatId][tidx].push(normalizeEntry(entry, utterance));
       count++;
     });
-    const emo = (item.Output || []).map(o => o.perspective?.emotion ?? o.speaker_emotion).find(Boolean);
-    if (emo) {
-      if (!turnEmotions[chatId]) turnEmotions[chatId] = {};
-      turnEmotions[chatId][tidx] = emo;
-    }
-    const cert = (item.Output || []).map(o => o.perspective?.certainty ?? o.speaker_certainty).find(Boolean);
-    if (cert) {
-      if (!turnCertainty[chatId]) turnCertainty[chatId] = {};
-      turnCertainty[chatId][tidx] = cert;
-    }
-    const fact = (item.Output || []).map(o => o.perspective?.factuality ?? o.speaker_factuality).find(Boolean);
-    if (fact) {
-      if (!turnFactuality[chatId]) turnFactuality[chatId] = {};
-      turnFactuality[chatId][tidx] = fact;
-    }
   });
   return count;
 }
@@ -469,26 +465,10 @@ function buildTurnCard(conv, turn, tidx) {
 
   const isHuman = turn.speaker !== 'agent';
   const spBadge = `<span class="speaker-badge ${isHuman ? 'sp-human' : 'sp-agent'}">${esc(turn.speaker)}</span>`;
-  const curEmotion = (turnEmotions[conv.chat] || {})[tidx] || DEFAULT_EMOTION;
-  const emoSelect = `<label class="emotion-label">speaker emotion
-    <select class="emotion-select" onchange="setTurnEmotion(${conv.chat},${tidx},this.value)">
-      ${emotionOpts(curEmotion)}
-    </select>
-  </label>`;
-  const curCertainty = (turnCertainty[conv.chat] || {})[tidx] || DEFAULT_CERTAINTY;
-  const certSelect = `<label class="emotion-label">speaker certainty
-    <select class="emotion-select" onchange="setTurnCertainty(${conv.chat},${tidx},this.value)">
-      ${simpleOpts(CERTAINTY_VALUES, curCertainty)}
-    </select>
-  </label>`;
-  const curFactuality = (turnFactuality[conv.chat] || {})[tidx] || DEFAULT_FACTUALITY;
-  const factSelect = `<label class="emotion-label">speaker factuality
-    <select class="emotion-select" onchange="setTurnFactuality(${conv.chat},${tidx},this.value)">
-      ${simpleOpts(FACTUALITY_VALUES, curFactuality)}
-    </select>
-  </label>`;
+  // Perspective (emotion/certainty/factuality) is annotated per activity now, not per turn --
+  // see the perspective selects on each annotation card in buildAnnCard.
   card.innerHTML = `
-    <div class="turn-header"><span class="turn-num">Turn ${turn.turn}</span>${spBadge}${emoSelect}${certSelect}${factSelect}</div>
+    <div class="turn-header"><span class="turn-num">Turn ${turn.turn}</span>${spBadge}</div>
     <div class="utterance" id="utt-${conv.chat}-${tidx}">${esc(turn.utterance)}</div>
     <div class="anns-area" id="aa-${conv.chat}-${tidx}"></div>
     <div class="add-ann-row">
@@ -535,6 +515,26 @@ function buildAnnCard(chatId, tidx, ei, e) {
   }
   if (e.annotator) head += `<span class="annotator-label">by ${esc(e.annotator)}</span>`;
 
+  // Perspective on THIS activity specifically -- a turn mentioning several activities can
+  // have a different emotion/certainty/factuality for each one.
+  const perspRow = `<div class="persp-row">
+    <label class="persp-label">emotion
+      <select class="persp-select" onchange="setEntryEmotion('${chatId}',${tidx},${ei},this.value)">
+        ${emotionOpts(e.emotion || DEFAULT_EMOTION)}
+      </select>
+    </label>
+    <label class="persp-label">certainty
+      <select class="persp-select" onchange="setEntryCertainty('${chatId}',${tidx},${ei},this.value)">
+        ${simpleOpts(CERTAINTY_VALUES, e.certainty || DEFAULT_CERTAINTY)}
+      </select>
+    </label>
+    <label class="persp-label">factuality
+      <select class="persp-select" onchange="setEntryFactuality('${chatId}',${tidx},${ei},this.value)">
+        ${simpleOpts(FACTUALITY_VALUES, e.factuality || DEFAULT_FACTUALITY)}
+      </select>
+    </label>
+  </div>`;
+
   const ROLES = ['agent','patient','agent_patient','experiencer','instrument','location','result'];
 
   const roleBoxes = ROLES.map(role => {
@@ -562,6 +562,7 @@ function buildAnnCard(chatId, tidx, ei, e) {
 
   card.innerHTML = `
     <div class="ann-card-head">${head}</div>
+    ${perspRow}
     <div class="roles-row">
       ${roleBoxes}
       <div class="role-box"><div class="rl">time</div><div class="rvs">${timeChips}</div></div>
@@ -796,7 +797,8 @@ function openNewAnnModal(chatId, tidx, prefillActivity, prefillOffset, prefillLe
 function confirmNewAnn(chatId, tidx) {
   const annType  = document.querySelector('input[name="at"]:checked')?.value || 'new';
   const annotator = document.getElementById('ann-name').value.trim() || 'unknown';
-  const base = { annotator, agent:[], patient:[], agent_patient:[], experiencer:[], instrument:[], location:[], result:[], time:[], time_resolved:[] };
+  const base = { annotator, agent:[], patient:[], agent_patient:[], experiencer:[], instrument:[], location:[], result:[], time:[], time_resolved:[],
+    emotion: DEFAULT_EMOTION, certainty: DEFAULT_CERTAINTY, factuality: DEFAULT_FACTUALITY };
 
   let entry;
   if (annType === 'new') {
@@ -1037,17 +1039,16 @@ function confirmTR(chatId, tidx, ei) {
   refreshTurn(chatId, tidx);
 }
 
-function setTurnEmotion(chatId, tidx, value) {
-  if (!turnEmotions[chatId]) turnEmotions[chatId] = {};
-  turnEmotions[chatId][tidx] = value || DEFAULT_EMOTION;
+// Perspective setters operate on ONE annotation entry (one activity), not the whole turn --
+// see the perspective selects in buildAnnCard.
+function setEntryEmotion(chatId, tidx, ei, value) {
+  anns[chatId][tidx][ei].emotion = value || DEFAULT_EMOTION;
 }
-function setTurnCertainty(chatId, tidx, value) {
-  if (!turnCertainty[chatId]) turnCertainty[chatId] = {};
-  turnCertainty[chatId][tidx] = value || DEFAULT_CERTAINTY;
+function setEntryCertainty(chatId, tidx, ei, value) {
+  anns[chatId][tidx][ei].certainty = value || DEFAULT_CERTAINTY;
 }
-function setTurnFactuality(chatId, tidx, value) {
-  if (!turnFactuality[chatId]) turnFactuality[chatId] = {};
-  turnFactuality[chatId][tidx] = value || DEFAULT_FACTUALITY;
+function setEntryFactuality(chatId, tidx, ei, value) {
+  anns[chatId][tidx][ei].factuality = value || DEFAULT_FACTUALITY;
 }
 
 // ═══ Delete Helpers ═══════════════════════════════════════════════════════════
@@ -1099,7 +1100,8 @@ function getOrCreateEntryForActivity(chatId, tidx, activityId) {
   let entry = anns[chatId][tidx].find(e => e.activity_id === activityId);
   if (!entry) {
     const annotator = document.getElementById('ann-name').value.trim() || 'unknown';
-    entry = { annotator, activity_id: activityId, time_resolved: [] };
+    entry = { annotator, activity_id: activityId, time_resolved: [],
+      emotion: DEFAULT_EMOTION, certainty: DEFAULT_CERTAINTY, factuality: DEFAULT_FACTUALITY };
     ROLE_KEYS.forEach(role => { entry[role] = []; });
     entry.time = [];
     anns[chatId][tidx].push(entry);
@@ -1147,13 +1149,10 @@ function exportJSON() {
     conv.turns.forEach((turn, tidx) => {
       const entries = ca[tidx] || [];
       if (!entries.length) return;
-      const emotion = (turnEmotions[conv.chat] || {})[tidx] || DEFAULT_EMOTION;
-      const certainty = (turnCertainty[conv.chat] || {})[tidx] || DEFAULT_CERTAINTY;
-      const factuality = (turnFactuality[conv.chat] || {})[tidx] || DEFAULT_FACTUALITY;
       convOut.push({
         chat: conv.chat, date: conv.date, human: conv.human,
         Input: { turn: turn.turn, speaker: turn.speaker, utterance: turn.utterance },
-        Output: entries.map(e => fmtEntry(e, conv.chat, emotion, certainty, factuality))
+        Output: entries.map(e => fmtEntry(e, conv.chat))
       });
     });
     if (convOut.length) output.push(convOut);
@@ -1168,13 +1167,14 @@ function exportJSON() {
   status('Exported!');
 }
 
-function fmtEntry(e, chatId, speakerEmotion, speakerCertainty, speakerFactuality) {
+function fmtEntry(e, chatId) {
+  // Perspective belongs to THIS activity/entry -- see the perspective selects in buildAnnCard.
   const out = {
     annotator: e.annotator,
     perspective: {
-      emotion: speakerEmotion || DEFAULT_EMOTION,
-      factuality: speakerFactuality || DEFAULT_FACTUALITY,
-      certainty: speakerCertainty || DEFAULT_CERTAINTY
+      emotion: e.emotion || DEFAULT_EMOTION,
+      factuality: e.factuality || DEFAULT_FACTUALITY,
+      certainty: e.certainty || DEFAULT_CERTAINTY
     }
   };
   const isRef = isReferenceEntry(chatId, e);

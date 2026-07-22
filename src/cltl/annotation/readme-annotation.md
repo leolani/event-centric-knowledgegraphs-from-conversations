@@ -91,17 +91,17 @@ a non-recurring time expression.
 - Click **×** next to any role value, time expression, or time resolution to remove it.
 - Click **Delete** on a card to remove the entire annotation entry.
 
-### Step 4 — Annotate the speaker's perspective
+### Step 4 — Annotate the speaker's perspective on each activity
 
-Each turn header has three dropdowns next to the speaker badge, capturing the speaker's perspective on their utterance. All three are exported together as a single `perspective` object on each Output entry for the turn (see [Output format](#output-format)).
+Each annotation card has three dropdowns, capturing the speaker's perspective on **that specific activity** — not the turn as a whole. A turn that mentions several activities can have a different perspective for each one (e.g. confident and positive about one activity, uncertain about another in the same utterance); each card's dropdowns are exported as that entry's own `perspective` object (see [Output format](#output-format)).
 
 | Dropdown | Values | Default |
 |---|---|---|
-| **speaker emotion** | The 28 Google GoEmotions classes (`EmotionLabel` in `src/cltl/data_type.py`). `neutral` is pinned at the top; the rest are grouped into **Positive**, **Negative**, and **Ambiguous** (`surprise`, `realization`) per `EMOTION_GROUPS`, each sorted alphabetically. | `neutral` |
-| **speaker certainty** | `certain`, `uncertain`, `neutral` | `neutral` |
-| **speaker factuality** | `confirm`, `deny`, `expect` | `confirm` |
+| **emotion** | The 28 Google GoEmotions classes (`EmotionLabel` in `src/cltl/data_type.py`). `neutral` is pinned at the top; the rest are grouped into **Positive**, **Negative**, and **Ambiguous** (`surprise`, `realization`) per `EMOTION_GROUPS`, each sorted alphabetically. | `neutral` |
+| **certainty** | `certain`, `uncertain`, `neutral` | `neutral` |
+| **factuality** | `confirm`, `deny`, `expect` | `confirm` |
 
-Select the values that best describe the speaker's emotion, certainty, and factuality (confirming, denying, or merely expecting the activity) for that utterance.
+Select the values that best describe the speaker's emotion, certainty, and factuality (confirming, denying, or merely expecting the activity) for that specific activity.
 
 ## Semantic roles
 
@@ -147,13 +147,13 @@ Turns with no annotations are omitted from the export. A **reference entry** (se
 - If the reference was made by selecting a phrase in the current turn (e.g. a pronoun like "it"), the entry's `activity` object carries that phrase's own `value`/`offset`/`length` — offsets relative to the *current* turn's utterance — plus the referenced activity's `type` and `activity_id`, exactly like a new-activity entry.
 - If no phrase was selected (the annotator picked "Reference previous activity" without selecting text), the entry's `activity` object has only `activity_id`, with no `value`, `offset`, `length`, or `type`.
 
-Every Output entry carries a `perspective` object with the turn's speaker-perspective annotations (see [Step 4](#step-4--annotate-the-speakers-perspective)):
+Every Output entry carries its own `perspective` object (see [Step 4](#step-4--annotate-the-speakers-perspective-on-each-activity)):
 
 ```json
 { "perspective": { "emotion": "neutral", "factuality": "confirm", "certainty": "neutral" } }
 ```
 
-Since these three dropdowns apply to the whole turn, every Output entry for the same turn is exported with the same `perspective` values.
+Perspective is per activity, not per turn: two Output entries for the same turn can have different `perspective` values if they describe different activities the speaker feels differently about.
 
 ## Tips
 

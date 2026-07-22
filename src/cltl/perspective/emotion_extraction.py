@@ -1,5 +1,5 @@
 import time
-import emotion_classes as emo
+import perspective.emotion_classes as emo
 from typing import Optional, Any, List, Union
 
 from transformers import pipeline

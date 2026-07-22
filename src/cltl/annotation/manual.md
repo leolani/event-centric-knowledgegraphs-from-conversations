@@ -113,10 +113,10 @@ The end date can also be chosen freely or set to the conversaiotn date. In the c
 
 ### Speaker perspective
 
-In addition to annotating the content of the utterance, the emotional perspective of the speaker can be annotated.
-The emotions are based on the 28 [Google GO emotions](https://github.com/google-research/google-research/tree/master/goemotions). 
-At the right side of the screen a drop down menu is given with the GO emotions, divided into positive, negative and ambiguous emotions.
-The default value is "neutral" which is the most common emotion. If no selection is made the default value is saved.
+In addition to annotating the content of the utterance, the emotional perspective of the speaker can be annotated -- separately for each activity annotated in the turn, not once for the whole turn. A turn can mention more than one activity, and the speaker's perspective can genuinely differ between them (e.g. confident about one activity, uncertain about another in the same utterance), so each annotation card has its own emotion/certainty/factuality dropdowns.
+The emotions are based on the 28 [Google GO emotions](https://github.com/google-research/google-research/tree/master/goemotions).
+Each annotation card shows a drop down menu with the GO emotions, divided into positive, negative and ambiguous emotions, plus certainty and factuality dropdowns.
+The default value is "neutral" (certainty) / "confirm" (factuality) / "neutral" (emotion), the most common values. If no selection is made the default value is saved.
 
 ### Where the drop-down options come from
 

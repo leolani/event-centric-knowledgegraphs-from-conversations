@@ -1,5 +1,7 @@
 
 import json
+import zipfile
+
 import requests
 from cltl.brain.long_term_memory import LongTermMemory
 from cltl.commons.discrete import UtteranceType
@@ -11,9 +13,15 @@ import events_to_capsules
 from dateutil import parser
 from datetime import datetime
 from enum import Enum
-from src.cltl.perspective.emotion_extraction import GoEmotionDetector
+from perspective.emotion_extraction import GoEmotionDetector
 
-def get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector):
+# Expects only SRL input and uses the context to identify the activities. A separate emotion detection is used to infer a perspective
+def get_scenarios_from_srl_annotations_identifying_activities_in_context_and_inferring_perspectives(annotated_conversations):
+    ## requires a sentiment/emotion detection module
+    model_path = "AnasAlokla/multilingual_go_emotions"
+    #  Languages: Arabic, English, French, Spanish, Dutch, Turkish
+    emotion_detector = GoEmotionDetector(model=model_path)
+
     # Define contextual features
     place_id = getrandbits(8)
     location = requests.get("https://ipinfo.io").json()
@@ -29,25 +37,44 @@ def get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector
                                 "region": location['region'],
                                 "city": location['city']}
             capsules = []
-            ### We extract caosules for each turn to that we can ground them to specific turns
-            ### We could also create a function that aggregates all triples related to a single event (subject)
-            ### and create a capsule per event for the complete conversation. This would reduce the number of claims and capsules even further.
-            ### Problem with that is that the source of the claims becomes indistinguishable.
-
             conversational_context= {}
             for turn in conversation:
-                ### new code that combines triples from a single turn into one single capsule
-              #  turn_capsule = events_to_capsules.get_capsule_with_event_details_from_turn(turn, emotion_detector)
-                turn_capsule = events_to_capsules.get_capsule_with_event_details_from_turn_with_conversationa_context(conversational_context=conversational_context, turn_data=turn, emotion_detector=emotion_detector)
+                turn_capsule = events_to_capsules.get_capsule_with_event_details_from_turn_with_conversationa_context_similarity_match_and_time(conversational_context=conversational_context, turn_data=turn, emotion_detector=emotion_detector)
                 if turn_capsule:
                     capsules.append(turn_capsule)
-                ### Old code that extracts separate capsules for each triple
-                # turn_capsules = events_to_capsules.get_capsules_from_turn(turn)
-                # capsules.extend(turn_capsules)
             if capsules:
                 scenario = (scenario_context, capsules)
                 scenarios.append(scenario)
-        #break
+        ###break
+    return scenarios
+
+# The activities are already identified by the LLM when processing the conversations
+def get_scenarios_from_srl_annotations(annotated_conversations):
+    # Define dummy contextual features
+    place_id = getrandbits(8)
+    location = requests.get("https://ipinfo.io").json()
+
+    scenarios = []
+    for conversation in annotated_conversations:
+        if len(conversation) > 0:
+            scenario_context = {"context_id": conversation[0]['chat'],
+                                "date": parser.parse(conversation[0]['date']),
+                                "place": "Piek's office",
+                                "place_id": place_id,
+                                "country": location['country'],
+                                "region": location['region'],
+                                "city": location['city']}
+            capsules = []
+            for turn in conversation:
+                ### activities and conditions are identified by activity_id per conversation
+                ### because there can be multiple activities in the same turn, we get a list of capsules
+                turn_capsules = events_to_capsules.get_capsule_with_event_details_from_turn_with_activity_id(turn_data=turn)
+                if turn_capsules:
+                    capsules.extend(turn_capsules)
+            if capsules:
+                scenario = (scenario_context, capsules)
+                scenarios.append(scenario)
+        break
     return scenarios
 
 
@@ -108,31 +135,31 @@ class CapsuleEncoder(json.JSONEncoder):
         return super().iterencode(self._preprocess(obj), _one_shot)
 
 def main():
+    INPUT_ZIP = Path("../../data/event_srl.json.zip")
 
-    ### Initialisation of the path for logging and of the GraDB repository for saving the data
-    # Create folders
     scenario_filepath = Path('../../data/')
     graph_filepath = scenario_filepath / Path('graph/')
     graph_filepath.mkdir(parents=True, exist_ok=True)
 
     # Create brain connection
-    brain = LongTermMemory(address="http://localhost:7200/repositories/diabetes_event_details",  # Location to save accumulated graph
+    brain = LongTermMemory(address="http://localhost:7200/repositories/event_sandbox",  # Location to save accumulated graph
                            log_dir=graph_filepath,  # Location to save step-wise graphs
                            clear_all=True)  # To start from an empty brain
 
-    model_path = "AnasAlokla/multilingual_go_emotions"
-    #  Languages: Arabic, English, French, Spanish, Dutch, Turkish
-    emotion_detector = GoEmotionDetector(model=model_path)
-
     ## Input is a JSON file that has the conversations, the meta data and the SRL results on a turn by turn basis
-    f = open("../../data/event_srl.json", "r")
-    annotated_conversations = json.load(f)
+    print(f"Loading {INPUT_ZIP} …")
+    with zipfile.ZipFile(INPUT_ZIP) as z:
+        inner = [n for n in z.namelist() if n.endswith(".json")][0]
+        with z.open(inner) as f:
+            annotated_conversations = json.load(f)
+
     print('Total number of annotated conversations', len(annotated_conversations))
     print(annotated_conversations[0])
+
     ### A scenario has a context_capsule that identifies the scenario and a list of capsules extracted for a single conversation that need to be added to the brain.
-    # The context capsule contains contextual information about the scenario (e.g. location, date, etc.) and
-    # the capsules contain the information that needs to be added to the brain (e.g. triples, event details, etc.)
-    scenarios = get_scenarios_from_srl_annotations(annotated_conversations, emotion_detector)
+    # The context capsule contains contextual information about the scenario (e.g. location, date) and
+    # the capsules contain the information that needs to be added to the brain (e.g. triples, event details)
+    scenarios = get_scenarios_from_srl_annotations(annotated_conversations)
     print('Total nr of scenarios', len(scenarios))
     f = open(scenario_filepath / "capsules_with_event_details.json", "w")
     json.dump(scenarios, f, indent=4, cls=CapsuleEncoder)
