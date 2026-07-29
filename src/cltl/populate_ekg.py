@@ -134,17 +134,56 @@ class CapsuleEncoder(json.JSONEncoder):
     def iterencode(self, obj, _one_shot=False):
         return super().iterencode(self._preprocess(obj), _one_shot)
 
+def populate_ekg_from_annotations(annotated_conversations, kg_address, log_dir, clear_all=False,
+                                   capsules_out_path=None):
+    """Push already-loaded annotation JSON (the annotation tool's export format) into a knowledge graph.
+
+    :param annotated_conversations: array-of-conversations JSON, as produced by the annotation
+        tool's "Export JSON" / "Push to Knowledge Graph" and consumed by ``get_scenarios_from_srl_annotations``.
+    :param kg_address: SPARQL repository address of the target knowledge graph (e.g.
+        ``http://localhost:7200/repositories/event_sandbox``).
+    :param log_dir: directory to write step-wise graph logs to.
+    :param clear_all: whether to start from an empty brain instead of appending to the existing graph.
+    :param capsules_out_path: optional path to also dump the derived capsules as JSON, for debugging.
+    :return: dict summarizing how many conversations/capsules were added.
+    """
+    log_dir = Path(log_dir)
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    brain = LongTermMemory(address=kg_address,  # Location to save accumulated graph
+                           log_dir=log_dir,  # Location to save step-wise graphs
+                           clear_all=clear_all)
+
+    ### A scenario has a context_capsule that identifies the scenario and a list of capsules extracted for a single conversation that need to be added to the brain.
+    # The context capsule contains contextual information about the scenario (e.g. location, date) and
+    # the capsules contain the information that needs to be added to the brain (e.g. triples, event details)
+    scenarios = get_scenarios_from_srl_annotations(annotated_conversations)
+    print('Total nr of scenarios', len(scenarios))
+
+    if capsules_out_path:
+        with open(capsules_out_path, "w") as f:
+            json.dump(scenarios, f, indent=4, cls=CapsuleEncoder)
+
+    total_capsules = 0
+    # Loop through the scenarios
+    for (context_capsule, conversation_capsules) in tqdm(scenarios):
+        print('Conversation id', context_capsule['context_id'], 'Total number of capsules extracted for this conversation', len(conversation_capsules))        # Create context
+        brain.capsule_context(context_capsule)
+        # Add information to the brain
+        for capsule in conversation_capsules:
+            print('chat', capsule['chat'], 'out of ', len(scenarios), 'turn', capsule['turn'], 'out of', len(conversation_capsules), 'turns')
+           # brain.capsule_statement(capsule, reason_types=True, return_thoughts=False, create_label=True)
+            brain.capsule_event(capsule, reason_types=True, return_thoughts=False, create_label=True)
+            total_capsules += 1
+
+    return {"conversations": len(scenarios), "capsules": total_capsules}
+
+
 def main():
     INPUT_ZIP = Path("../../data/event_srl.json.zip")
 
     scenario_filepath = Path('../../data/')
     graph_filepath = scenario_filepath / Path('graph/')
-    graph_filepath.mkdir(parents=True, exist_ok=True)
-
-    # Create brain connection
-    brain = LongTermMemory(address="http://localhost:7200/repositories/event_sandbox",  # Location to save accumulated graph
-                           log_dir=graph_filepath,  # Location to save step-wise graphs
-                           clear_all=True)  # To start from an empty brain
 
     ## Input is a JSON file that has the conversations, the meta data and the SRL results on a turn by turn basis
     print(f"Loading {INPUT_ZIP} …")
@@ -156,23 +195,13 @@ def main():
     print('Total number of annotated conversations', len(annotated_conversations))
     print(annotated_conversations[0])
 
-    ### A scenario has a context_capsule that identifies the scenario and a list of capsules extracted for a single conversation that need to be added to the brain.
-    # The context capsule contains contextual information about the scenario (e.g. location, date) and
-    # the capsules contain the information that needs to be added to the brain (e.g. triples, event details)
-    scenarios = get_scenarios_from_srl_annotations(annotated_conversations)
-    print('Total nr of scenarios', len(scenarios))
-    f = open(scenario_filepath / "capsules_with_event_details.json", "w")
-    json.dump(scenarios, f, indent=4, cls=CapsuleEncoder)
-
-    # Loop through the scenarios
-    for (context_capsule, conversation_capsules) in tqdm(scenarios):
-        print('Conversation id', context_capsule['context_id'], 'Total number of capsules extracted for this conversation', len(conversation_capsules))        # Create context
-        brain.capsule_context(context_capsule)
-        # Add information to the brain
-        for capsule in conversation_capsules:
-            print('chat', capsule['chat'], 'out of ', len(scenarios), 'turn', capsule['turn'], 'out of', len(conversation_capsules), 'turns')
-           # brain.capsule_statement(capsule, reason_types=True, return_thoughts=False, create_label=True)
-            brain.capsule_event(capsule, reason_types=True, return_thoughts=False, create_label=True)
+    populate_ekg_from_annotations(
+        annotated_conversations,
+        kg_address="http://localhost:7200/repositories/event_sandbox",
+        log_dir=graph_filepath,
+        clear_all=True,  # To start from an empty brain
+        capsules_out_path=scenario_filepath / "capsules_with_event_details.json",
+    )
 
 if __name__ == '__main__':
     main()

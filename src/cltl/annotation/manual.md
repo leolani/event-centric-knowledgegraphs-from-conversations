@@ -142,4 +142,11 @@ To continue the annotation, first load the conversations again and next load the
 
 An example of annotation of the first chat in the data set can be found in ```annotation.json``` in the data folder.
 
+### Pushing directly to a knowledge graph
+
+Instead of exporting to a file and running `populate_ekg.py` separately, you can push the annotations
+straight into a running knowledge graph with the purple **Push to Knowledge Graph** button. This requires
+the local API server to be running first — see "Pushing to a knowledge graph" in `readme-annotation.md`
+for how to start it and what the button does.
+
 

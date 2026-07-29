@@ -12,26 +12,27 @@ No installation required. Open `annotation_tool.html` in any modern web browser 
 2. Click **Load conversations.json** and select `data/conversations.json`.
 3. Select a conversation from the sidebar.
 4. Annotate turns (see workflow below).
-5. Click **Export JSON** to save your work.
+5. Click **Export JSON** to save your work, or **Push to Knowledge Graph** to load it straight into a
+   knowledge graph (see [Pushing to a knowledge graph](#pushing-to-a-knowledge-graph)).
 
 You can load in either order: if you load an annotations file before `conversations.json`, the tool queues it and applies it automatically once the conversations are loaded.
 
 ## Interface overview
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  Annotator: [piek]  [Load conversations.json]        │
-│  [Load Existing Annotations]  [Export JSON]          │
-├──────────────┬──────────────────────────────────────┤
-│ CONVERSATIONS│  Chat 0 — Jan — 2013,Apr,13           │
-│              │  ┌─────────────────────────────────┐  │
-│ Chat 0  [3]  │  │ Turn 1  agent                   │  │
-│ Chat 1       │  │ Hey Jan, I see that you're a... │  │
-│ Chat 2       │  │ [chat0.1] cycling [exercise]    │  │
-│  ...         │  │  agent: Jan(person)  time: ...  │  │
-│              │  │  + Add Activity Annotation      │  │
-│              │  └─────────────────────────────────┘  │
-└──────────────┴──────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────┐
+│  Annotator: [piek]  [Load conversations.json]                     │
+│  [Load Existing Annotations]  [Export JSON]  [Push to KG]         │
+├──────────────┬────────────────────────────────────────────────────┤
+│ CONVERSATIONS│  Chat 0 — Jan — 2013,Apr,13                        │
+│              │  ┌─────────────────────────────────┐               │
+│ Chat 0  [3]  │  │ Turn 1  agent                    │               │
+│ Chat 1       │  │ Hey Jan, I see that you're a...  │               │
+│ Chat 2       │  │ [chat0.1] cycling [exercise]     │               │
+│  ...         │  │  agent: Jan(person)  time: ...   │               │
+│              │  │  + Add Activity Annotation       │               │
+│              │  └─────────────────────────────────┘               │
+└──────────────┴────────────────────────────────────────────────────┘
 ```
 
 The sidebar lists all conversations with a badge showing how many annotation entries have been made. Use the filter box at the top of the sidebar to search by human name, date, or chat number.
@@ -156,6 +157,36 @@ Every Output entry carries its own `perspective` object (see [Step 4](#step-4--a
 ```
 
 Perspective is per activity, not per turn: two Output entries for the same turn can have different `perspective` values if they describe different activities the speaker feels differently about.
+
+## Pushing to a knowledge graph
+
+The purple **Push to Knowledge Graph** button sends the current annotations (the same payload
+**Export JSON** would produce) directly to a running knowledge graph, without going through a
+downloaded file and a separate run of `populate_ekg.py`.
+
+Because the annotation tool is a static HTML page with no backend of its own, this requires a
+small local API server, `annotation_api_server.py`, running alongside it:
+
+```
+pip install -r requirements.txt   # adds flask and flask-cors
+python src/cltl/annotation/annotation_api_server.py
+```
+
+This starts a server on `http://127.0.0.1:5050`. Leave it running, then in the annotation tool:
+
+1. Click **Push to Knowledge Graph**.
+2. Enter the target knowledge graph's SPARQL repository address (defaults to
+   `http://localhost:7200/repositories/event_sandbox`).
+3. Optionally check **Clear existing graph before pushing** to start from an empty graph instead
+   of appending to it.
+4. Click **Push**. A status message reports how many capsules and conversations were added, or
+   any error returned by the server (e.g. the knowledge graph being unreachable).
+
+Under the hood, the server's `/api/populate-ekg` endpoint calls
+`populate_ekg.populate_ekg_from_annotations(annotations, kg_address, log_dir, clear_all)`
+in `src/cltl/populate_ekg.py` — the same function `populate_ekg.py`'s `main()` uses when run from
+the command line on a saved export file, refactored so it can be called directly with in-memory
+JSON instead of only reading `data/event_srl.json.zip`.
 
 ## Tips
 

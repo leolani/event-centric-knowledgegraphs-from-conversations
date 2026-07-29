@@ -19,6 +19,7 @@ body { font-family: system-ui, sans-serif; font-size: 14px; background: #f0f2f5;
 .btn-green  { background: #27ae60; color: white; }
 .btn-blue   { background: #2980b9; color: white; }
 .btn-gray   { background: #7f8c8d; color: white; }
+.btn-purple { background: #8e44ad; color: white; }
 .btn-red    { background: #c0392b; color: white; }
 .btn-orange { background: #d35400; color: white; }
 #status-msg { font-size: 11px; color: #aaa; margin-left: 4px; }
@@ -147,6 +148,7 @@ body { font-family: system-ui, sans-serif; font-size: 14px; background: #f0f2f5;
     <input type="file" id="ann-input" accept=".json" style="display:none">
   </label>
   <button class="topbtn btn-green" onclick="exportJSON()">Export JSON</button>
+  <button class="topbtn btn-purple" onclick="openPushToKGModal()">Push to Knowledge Graph</button>
   <span id="status-msg"></span>
 </div>
 
@@ -1141,7 +1143,7 @@ function nextActivityId(chatId) {
 }
 
 // ═══ Export ═══════════════════════════════════════════════════════════════════
-function exportJSON() {
+function buildExportPayload() {
   const output = [];
   convs.forEach(conv => {
     const ca = anns[conv.chat] || {};
@@ -1157,7 +1159,11 @@ function exportJSON() {
     });
     if (convOut.length) output.push(convOut);
   });
+  return output;
+}
 
+function exportJSON() {
+  const output = buildExportPayload();
   const name = document.getElementById('ann-name').value.trim() || 'export';
   const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
@@ -1165,6 +1171,52 @@ function exportJSON() {
   a.href = url; a.download = `annotations_${name}.json`; a.click();
   URL.revokeObjectURL(url);
   status('Exported!');
+}
+
+// ═══ Push to Knowledge Graph ══════════════════════════════════════════════════
+const EKG_API_URL = 'http://127.0.0.1:5050/api/populate-ekg';
+const DEFAULT_KG_ADDRESS = 'http://localhost:7200/repositories/event_sandbox';
+
+function openPushToKGModal() {
+  const output = buildExportPayload();
+  if (!output.length) { alert('No annotations to push yet.'); return; }
+
+  showModal('Push to Knowledge Graph', `
+    <p style="font-size:13px;color:#555">
+      Sends the current annotations (${output.length} annotated conversation${output.length===1?'':'s'})
+      to <code>${esc(EKG_API_URL)}</code>, which must be running locally
+      (<code>python annotation_api_server.py</code>).
+    </p>
+    <label>Knowledge graph address<br>
+      <input type="text" id="kg-address" style="width:100%" value="${esc(DEFAULT_KG_ADDRESS)}">
+    </label><br><br>
+    <label><input type="checkbox" id="kg-clear-all"> Clear existing graph before pushing</label>
+    <p id="kg-push-status" style="font-size:12px;color:#555"></p>
+  `, [
+    { label: 'Cancel', cls: 'btn-gray', fn: closeModal },
+    { label: 'Push', cls: 'btn-purple', fn: () => confirmPushToKG(output) }
+  ]);
+}
+
+function confirmPushToKG(output) {
+  const kgAddress = document.getElementById('kg-address').value.trim();
+  const clearAll = document.getElementById('kg-clear-all').checked;
+  const statusEl = document.getElementById('kg-push-status');
+  if (!kgAddress) { statusEl.textContent = 'Please enter a knowledge graph address.'; return; }
+
+  statusEl.textContent = 'Pushing…';
+  fetch(EKG_API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ annotations: output, kg_address: kgAddress, clear_all: clearAll })
+  })
+    .then(r => r.json().then(body => ({ ok: r.ok, body })))
+    .then(({ ok, body }) => {
+      if (!ok) throw new Error(body.error || 'Unknown error');
+      closeModal();
+      status(`Pushed ${body.capsules} capsule(s) from ${body.conversations} conversation(s) to the knowledge graph`);
+    })
+    .catch(err => { statusEl.textContent = `Failed: ${err.message}`; });
 }
 
 function fmtEntry(e, chatId) {
