@@ -640,7 +640,8 @@ function renderRopStep1(chatId, tidx) {
 // that activity doesn't have one here yet.
 function renderRopStep2(chatId, tidx) {
   const prevActs = getActivitiesUpTo(chatId, tidx);
-  const actOpts = prevActs.map(a => `<option value="${a.id}">${a.id}: ${a.activity}</option>`).join('');
+  const defaultActId = getMostRecentActivityId(chatId, tidx) ?? (prevActs.length ? prevActs[prevActs.length - 1].id : null);
+  const actOpts = prevActs.map(a => `<option value="${a.id}"${a.id === defaultActId ? ' selected' : ''}>${a.id}: ${a.activity}</option>`).join('');
 
   const ROLES = ['agent','patient','agent_patient','experiencer','participant','qualification','instrument','location','result','time'];
   const rolePills = ROLES.map(r =>
@@ -719,7 +720,8 @@ function openNewAnnModal(chatId, tidx, prefillActivity, prefillOffset, prefillLe
   const conv = convs.find(c => c.chat === chatId);
   const utterance = conv?.turns[tidx]?.utterance || '';
 
-  const prevOpts = prevActs.map(a => `<option value="${a.id}">${a.id}: ${a.activity}</option>`).join('');
+  const defaultRefActId = getMostRecentActivityId(chatId, tidx) ?? (prevActs.length ? prevActs[prevActs.length - 1].id : null);
+  const prevOpts = prevActs.map(a => `<option value="${a.id}"${a.id === defaultRefActId ? ' selected' : ''}>${a.id}: ${a.activity}</option>`).join('');
   const atypeOpts = ACTIVITY_TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
 
   const actVal = prefillActivity ? ` value="${esc(prefillActivity)}"` : '';
@@ -1090,6 +1092,20 @@ function getActivitiesUpTo(chatId, tidx) {
     });
   });
   return result;
+}
+
+// The activity_id most recently referred to (by any entry — origin or bare reference,
+// e.g. a role assignment) at or before tidx. This is usually the activity an annotator
+// wants to connect a new mention/role to, so dropdowns default to it instead of the
+// first-annotated activity.
+function getMostRecentActivityId(chatId, tidx) {
+  const ca = anns[chatId] || {};
+  let lastId = null;
+  Object.keys(ca).map(Number).sort((a,b) => a-b).forEach(t => {
+    if (t > tidx) return;
+    ca[t].forEach(e => { if (e.activity_id) lastId = e.activity_id; });
+  });
+  return lastId;
 }
 
 // Find this turn's entry for the given activity_id, or create a bare reference entry
